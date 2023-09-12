@@ -1,8 +1,29 @@
+import Header from '@/components/navbar/Navbar';
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({
+	subsets: ['latin'],
+	weight: ['100', '400', '700', '900'],
+	variable: '--inter',
+});
+
+// const notoSansKr = Noto_Sans_KR({
+// 	subsets: ['latin'],
+// 	weight: ['100', '400', '700', '900'],
+// 	variable: '--notoSansKr',
+// });
+
+// const roboto = Roboto({
+// 	subsets: ['latin'],
+// 	weight: ['100', '400', '700'],
+// 	variable: '--roboto', // CSS 변수 방식으로 스타일을 지정할 경우에 사용합니다.
+// });
+
+export const cls = (...classnames: string[]) => {
+	return classnames.join(' ');
+};
 
 export const metadata: Metadata = {
 	title: 'Create Next App',
@@ -16,7 +37,12 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en">
-			<body className={inter.className}>{children}</body>
+			<body className={inter.className}>
+				<div className="px-6 max-w-3xl mx-auto font-sans text-basicFont">
+					<Header />
+					{children}
+				</div>
+			</body>
 		</html>
 	);
 }
