@@ -1,7 +1,7 @@
 export default function Home() {
 	return (
 		<div className="font-normal">
-			<h1 className="text-5xl font-extrabold">Blog</h1>
+			<h1 className="text-5xl font-extrabold">ddaeunbb</h1>
 			Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore magnam
 			atque beatae ea. Obcaecati doloremque inventore voluptates officiis
 			tenetur similique, consectetur, expedita facere consequatur dicta

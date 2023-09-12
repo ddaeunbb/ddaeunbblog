@@ -38,7 +38,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={inter.className}>
-				<div className="px-6 max-w-3xl mx-auto font-sans text-basicFont">
+				<div className="font-sans text-basicFont mx-auto max-w-3xl px-6 lg:max-w-6xl lg:px-8">
 					<Header />
 					{children}
 				</div>
