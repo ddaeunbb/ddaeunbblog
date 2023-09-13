@@ -1,10 +1,11 @@
+import Path from '@/router/path';
 import Image from 'next/image';
 import Tab from '@/components/tab/Tab';
 
 export default function Navbar() {
 	return (
 		<nav className="py-12 flex items-end w-full">
-			<Tab>
+			<Tab path={Path.home}>
 				<Image
 					className="fill-[rgb(244, 201, 13)]"
 					src="/navbar/logo.svg"
@@ -13,10 +14,10 @@ export default function Navbar() {
 					height={25}
 				/>
 			</Tab>
-			<Tab>Log</Tab>
-			<Tab>Articles</Tab>
-			<Tab>Archives</Tab>
-			<Tab>Note</Tab>
+			<Tab path={Path.log}>Log</Tab>
+			<Tab path={Path.articles}>Articles</Tab>
+			<Tab path={Path.archives}>Archives</Tab>
+			<Tab path={Path.note}>Note</Tab>
 			<button
 				aria-label="Toggle Dark Mode"
 				type="button"
