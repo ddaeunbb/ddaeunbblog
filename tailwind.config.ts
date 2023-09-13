@@ -9,10 +9,10 @@ const config: Config = {
 	theme: {
 		extend: {
 			colors: {
-				basicFont: 'rgba(23, 23, 23, 1)',
-				middleGray: 'rgba(82, 82, 82, 1)',
-				lightGray: 'rgba(115, 115, 115, 1)',
-				tabGary: 'rgba(64, 64, 64, 1)',
+				basicFont: '#171717',
+				middleGray: '#525252',
+				lightGray: '#737373',
+				tabGary: '#404040',
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
