@@ -14,8 +14,9 @@ export default function Navbar() {
 				/>
 			</Tab>
 			<Tab>Log</Tab>
-			<Tab>Note</Tab>
+			<Tab>Articles</Tab>
 			<Tab>Archives</Tab>
+			<Tab>Note</Tab>
 			<button
 				aria-label="Toggle Dark Mode"
 				type="button"
