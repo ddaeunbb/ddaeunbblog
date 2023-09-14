@@ -85,7 +85,7 @@ const components = {
 	blockquote: ({ className, ...props }) => (
 		<blockquote
 			className={cn(
-				'mt-6 border-l-2 pl-6 italic [&>*]:text-muted-foreground',
+				'mt-6 border-l-2 pl-6 italic [&>*]:text-muted-foreground text-blue-400 font-black',
 				className,
 			)}
 			{...props}
@@ -132,7 +132,7 @@ const components = {
 	pre: ({ className, ...props }) => (
 		<pre
 			className={cn(
-				'mb-4 mt-6 overflow-x-auto rounded-lg border bg-black py-4',
+				'mb-4 mt-6 overflow-x-auto rounded-lg border bg-black',
 				className,
 			)}
 			{...props}
@@ -141,7 +141,7 @@ const components = {
 	code: ({ className, ...props }) => (
 		<code
 			className={cn(
-				'relative rounded border px-[0.3rem] py-[0.2rem] font-mono text-sm',
+				'relative rounded p-5 font-mono text-sm bg-slate',
 				className,
 			)}
 			{...props}
@@ -160,7 +160,7 @@ export function Mdx({ code }: MdxProps) {
 	const Component = useMDXComponent(code);
 
 	return (
-		<div className="mdx">
+		<div className="mdx py-12 prose dark:prose-dark">
 			<Component components={components} />
 		</div>
 	);

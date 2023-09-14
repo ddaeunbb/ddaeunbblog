@@ -1,3 +1,4 @@
+import readingTime from 'reading-time';
 import { defineDocumentType, makeSource } from 'contentlayer/source-files';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypePrettyCode from 'rehype-pretty-code';
@@ -14,6 +15,10 @@ const computedFields = {
 		type: 'string',
 		resolve: doc => doc._raw.flattenedPath.split('/').slice(1).join('/'),
 	},
+	readingTime: {
+		type: 'json',
+		resolve: doc => readingTime(doc.body.raw),
+	},
 };
 
 export const Log = defineDocumentType(() => ({
@@ -25,12 +30,12 @@ export const Log = defineDocumentType(() => ({
 			type: 'string',
 			required: true,
 		},
+		category: {
+			type: 'string',
+			required: true,
+		},
 		description: {
 			type: 'string',
-		},
-		published: {
-			type: 'boolean',
-			default: true,
 		},
 	},
 	computedFields,

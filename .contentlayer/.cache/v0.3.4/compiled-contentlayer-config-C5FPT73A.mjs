@@ -1,4 +1,5 @@
 // contentlayer.config.js
+import readingTime from "reading-time";
 import { defineDocumentType, makeSource } from "contentlayer/source-files";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypePrettyCode from "rehype-pretty-code";
@@ -12,6 +13,10 @@ var computedFields = {
   slugAsParams: {
     type: "string",
     resolve: (doc) => doc._raw.flattenedPath.split("/").slice(1).join("/")
+  },
+  readingTime: {
+    type: "json",
+    resolve: (doc) => readingTime(doc.body.raw)
   }
 };
 var Log = defineDocumentType(() => ({
@@ -20,6 +25,10 @@ var Log = defineDocumentType(() => ({
   contentType: "mdx",
   fields: {
     title: {
+      type: "string",
+      required: true
+    },
+    category: {
       type: "string",
       required: true
     },
@@ -73,4 +82,4 @@ export {
   Log,
   contentlayer_config_default as default
 };
-//# sourceMappingURL=compiled-contentlayer-config-X35IDIC7.mjs.map
+//# sourceMappingURL=compiled-contentlayer-config-C5FPT73A.mjs.map

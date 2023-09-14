@@ -19,12 +19,13 @@ export type Log = {
 	_raw: Local.RawDocumentData;
 	type: 'Log';
 	title: string;
+	category: string;
 	description?: string | undefined;
-	published: boolean;
 	/** MDX file body */
 	body: MDX;
 	slug: string;
 	slugAsParams: string;
+	readingTime: json;
 };
 
 /** Nested types */
