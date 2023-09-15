@@ -1,4 +1,6 @@
 import type { Config } from 'tailwindcss';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { spacing } = require('tailwindcss/defaultTheme');
 
 const config: Config = {
 	content: [
@@ -8,11 +10,22 @@ const config: Config = {
 	],
 	theme: {
 		extend: {
+			typography: () => ({
+				DEFAULT: {
+					css: {
+						//...
+						'h1,h2,h3,h4': {
+							'scroll-margin-top': spacing[32],
+						},
+					},
+				},
+			}),
 			colors: {
 				basicFont: '#171717',
 				middleGray: '#525252',
 				lightGray: '#737373',
 				tabGary: '#404040',
+				blackquote: '#e5e5e5',
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -40,6 +53,9 @@ const config: Config = {
 			},
 		},
 	},
-	plugins: [],
+	variants: {
+		typography: ['dark'],
+	},
+	plugins: [require('@tailwindcss/typography')],
 };
 export default config;

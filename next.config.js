@@ -1,12 +1,10 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { withContentlayer } = require('next-contentlayer');
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-	experimental: {
-		turbo: {
-			loaders: {
-				'.svg': ['@svgr/webpack'],
-			},
-		},
-	},
+const options = {
+	reactStrictMode: true,
+	swcMinify: true,
 };
 
-module.export = nextConfig;
+module.exports = withContentlayer(options);
