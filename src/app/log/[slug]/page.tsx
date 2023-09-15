@@ -56,9 +56,21 @@ const Page = async ({ params }: PageProps) => {
 
 			{/* // 본문 */}
 			<div className="relative gap-8 lg:flex">
-				<div className="w-full max-w-5xl prose prose-neutral  font-spoqa dark:prose-dark">
+				<div className="w-full max-w-5xl prose prose-neutral text-basicFont dark:prose-dark py-12">
 					<Mdx code={log.body.code} />
 				</div>
+			</div>
+
+			<div>
+				{log.headings.map(heading => {
+					return (
+						<div key={`#${heading.slug}`} className="toc">
+							<a data-level={heading.level} href={`#${heading.slug}`}>
+								{heading.text}
+							</a>
+						</div>
+					);
+				})}
 			</div>
 		</section>
 	);

@@ -17,7 +17,6 @@
 		]
 	},
 	"dependencies": {
-		"@tailwindcss/typography": "^0.5.10",
 		"@types/node": "20.6.0",
 		"@types/react": "18.2.21",
 		"@types/react-dom": "18.2.7",
@@ -32,24 +31,26 @@
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"reading-time": "^1.5.0",
-		"rehype-highlight": "^7.0.0",
-		"rehype-pretty-code": "^0.10.1",
-		"shiki": "^0.14.4",
 		"tailwind-merge": "^1.14.0",
 		"tailwindcss": "3.3.3",
 		"typescript": "5.2.2"
 	},
 	"devDependencies": {
 		"@svgr/webpack": "^8.1.0",
+		"@tailwindcss/typography": "^0.5.10",
 		"@typescript-eslint/eslint-plugin": "^6.7.0",
 		"@typescript-eslint/parser": "^6.7.0",
 		"eslint-config-prettier": "^9.0.0",
 		"eslint-plugin-prettier": "^5.0.0",
+		"github-slugger": "^2.0.0",
 		"husky": "^8.0.3",
 		"lint-staged": "^14.0.1",
 		"prettier": "^3.0.3",
+		"rehype": "^13.0.1",
 		"rehype-autolink-headings": "^7.0.0",
+		"rehype-pretty-code": "^0.10.1",
 		"rehype-slug": "^6.0.0",
-		"remark-gfm": "^3.0.1"
+		"remark-gfm": "^3.0.1",
+		"shiki": "^0.14.4"
 	}
 }

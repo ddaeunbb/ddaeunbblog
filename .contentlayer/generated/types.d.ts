@@ -26,6 +26,7 @@ export type Log = {
 	slug: string;
 	slugAsParams: string;
 	readingTime: json;
+	headings: json;
 };
 
 /** Nested types */

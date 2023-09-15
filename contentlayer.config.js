@@ -1,7 +1,8 @@
+import GithubSlugger from 'github-slugger';
+import rehypePrettyCode from 'rehype-pretty-code';
 import readingTime from 'reading-time';
 import { defineDocumentType, makeSource } from 'contentlayer/source-files';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
-import rehypePrettyCode from 'rehype-pretty-code';
 import rehypeSlug from 'rehype-slug';
 import remarkGfm from 'remark-gfm';
 
@@ -18,6 +19,25 @@ const computedFields = {
 	readingTime: {
 		type: 'json',
 		resolve: doc => readingTime(doc.body.raw),
+	},
+	headings: {
+		type: 'json',
+		resolve: async doc => {
+			const regXHeader = /\n(?<flag>#{1,6})\s+(?<content>.+)/g;
+			const slugger = new GithubSlugger();
+			const headings = Array.from(doc.body.raw.matchAll(regXHeader)).map(
+				({ groups }) => {
+					const flag = groups?.flag;
+					const content = groups?.content;
+					return {
+						level: flag.length,
+						text: content,
+						slug: content ? slugger.slug(content) : undefined,
+					};
+				},
+			);
+			return headings;
+		},
 	},
 };
 
@@ -71,7 +91,7 @@ export default makeSource({
 				rehypeAutolinkHeadings,
 				{
 					properties: {
-						className: ['subheading-anchor'],
+						className: ['anchor'],
 						ariaLabel: 'Link to section',
 					},
 				},
