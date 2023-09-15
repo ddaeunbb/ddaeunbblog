@@ -11,6 +11,12 @@ interface PageProps {
 	};
 }
 
+interface Heading {
+	level: number;
+	text: string;
+	slug: string;
+}
+
 async function getLogFromParams(slug: string) {
 	const log = allLogs.find(log => log.slugAsParams === slug);
 
@@ -62,7 +68,7 @@ const Page = async ({ params }: PageProps) => {
 			</div>
 
 			<div>
-				{log.headings.map(heading => {
+				{log.headings.map((heading: Heading) => {
 					return (
 						<div key={`#${heading.slug}`} className="toc">
 							<a data-level={heading.level} href={`#${heading.slug}`}>
