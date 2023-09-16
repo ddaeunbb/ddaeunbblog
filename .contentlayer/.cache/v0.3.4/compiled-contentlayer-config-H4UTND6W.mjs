@@ -52,8 +52,9 @@ var Log = defineDocumentType(() => ({
       type: "string",
       required: true
     },
-    description: {
-      type: "string"
+    date: {
+      type: "date",
+      required: true
     }
   },
   computedFields
@@ -87,7 +88,7 @@ var contentlayer_config_default = makeSource({
         {
           properties: {
             className: ["anchor"],
-            ariaLabel: "Link to section"
+            ariaLabel: "anchor"
           }
         }
       ]
@@ -98,4 +99,4 @@ export {
   Log,
   contentlayer_config_default as default
 };
-//# sourceMappingURL=compiled-contentlayer-config-H34KULG6.mjs.map
+//# sourceMappingURL=compiled-contentlayer-config-H4UTND6W.mjs.map

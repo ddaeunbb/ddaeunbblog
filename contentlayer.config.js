@@ -54,8 +54,9 @@ export const Log = defineDocumentType(() => ({
 			type: 'string',
 			required: true,
 		},
-		description: {
-			type: 'string',
+		date: {
+			type: 'date',
+			required: true,
 		},
 	},
 	computedFields,
@@ -92,7 +93,7 @@ export default makeSource({
 				{
 					properties: {
 						className: ['anchor'],
-						ariaLabel: 'Link to section',
+						ariaLabel: 'anchor',
 					},
 				},
 			],

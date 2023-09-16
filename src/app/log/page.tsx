@@ -1,3 +1,4 @@
+import RenderAnimation from '@/framer/RenderAnimation';
 import SearchIcon from '@/components/icons/SearchIcon';
 
 export default function Log() {
@@ -6,9 +7,9 @@ export default function Log() {
 			<h1 className="mb-4 text-3xl font-extrabold tracking-tight sm:text-5xl">
 				Blog
 			</h1>
-			<div>
+			<RenderAnimation>
 				<div>
-					<p className="text-tertiary mb-4">
+					<p className="mb-4 text-neutral-600">
 						심도있게 탐구하고 싶었던 것을 기록하는 공간입니다.
 						<br />
 						보고싶은 포스트는 검색창에 입력해 찾아볼 수 있습니다.🧐
@@ -27,7 +28,7 @@ export default function Log() {
 					</h2>
 					<span className="font-normal text-sm text-middleGray">{39}</span>
 				</div>
-			</div>
+			</RenderAnimation>
 		</main>
 	);
 }

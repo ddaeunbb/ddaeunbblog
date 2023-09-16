@@ -20,7 +20,7 @@ export type Log = {
 	type: 'Log';
 	title: string;
 	category: string;
-	description?: string | undefined;
+	date: IsoDateTimeString;
 	/** MDX file body */
 	body: MDX;
 	slug: string;
