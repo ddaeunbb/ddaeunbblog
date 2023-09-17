@@ -5,7 +5,11 @@ import RenderAnimation from '@/framer/RenderAnimation';
 function getTotalTags(logs: Log[], articles: Articles[]) {
 	const total = [...logs, ...articles];
 	const tags: string[] = [];
-	total.map(el => tags.push(...el.tags));
+	total.forEach(el => {
+		if (el && el.tags) {
+			tags.push(...el.tags);
+		}
+	});
 	return [...new Set(tags)];
 }
 
