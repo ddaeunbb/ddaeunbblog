@@ -2,10 +2,10 @@ import ScrollBottomBtn from '@/components/button/ScrollBottomBtn';
 import ScrollTopBtn from '@/components/button/ScrollTopBtn';
 import CopyIcon from '@/components/icons/CopyIcon';
 
-import { Log } from 'contentlayer/generated';
+import { Articles, Log, Archives } from 'contentlayer/generated';
 
 interface TocProp {
-	log: Log;
+	list: Log | Archives | Articles;
 }
 
 interface Heading {
@@ -14,7 +14,7 @@ interface Heading {
 	slug: string;
 }
 
-export default function Toc({ log }: TocProp) {
+export default function Toc({ list }: TocProp) {
 	return (
 		<div className="sticky top-[120px] hidden min-w-[220px] max-w-[260px] self-start lg:block">
 			<div className="overflow-hidden rounded-xl border border-neutral-200 transition-all dark:border-neutral-800">
@@ -26,7 +26,7 @@ export default function Toc({ log }: TocProp) {
 						Written on this Page
 					</p>
 					<ul className="mt-2 flex flex-col items-start justify-start text-sm">
-						{log.headings.map((heading: Heading) => {
+						{list.headings.map((heading: Heading) => {
 							return (
 								<li key={`#${heading.slug}`} className="toc">
 									<a

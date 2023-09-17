@@ -41,30 +41,52 @@ const computedFields = {
 	},
 };
 
+const fields = {
+	title: {
+		type: 'string',
+		required: true,
+	},
+	category: {
+		type: 'string',
+		required: true,
+	},
+	date: {
+		type: 'date',
+		required: true,
+	},
+	tags: {
+		type: 'list',
+		of: { type: 'string' },
+	},
+};
+
 export const Log = defineDocumentType(() => ({
 	name: 'Log',
 	filePathPattern: `log/**/*.mdx`,
 	contentType: 'mdx',
-	fields: {
-		title: {
-			type: 'string',
-			required: true,
-		},
-		category: {
-			type: 'string',
-			required: true,
-		},
-		date: {
-			type: 'date',
-			required: true,
-		},
-	},
+	fields: fields,
+	computedFields,
+}));
+
+export const Archives = defineDocumentType(() => ({
+	name: 'Archives',
+	filePathPattern: `archives/**/*.mdx`,
+	contentType: 'mdx',
+	fields: fields,
+	computedFields,
+}));
+
+export const Articles = defineDocumentType(() => ({
+	name: 'Articles',
+	filePathPattern: `articles/**/*.mdx`,
+	contentType: 'mdx',
+	fields: fields,
 	computedFields,
 }));
 
 export default makeSource({
 	contentDirPath: './content',
-	documentTypes: [Log],
+	documentTypes: [Log, Articles, Archives],
 	mdx: {
 		remarkPlugins: [remarkGfm],
 		rehypePlugins: [

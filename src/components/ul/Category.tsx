@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 const Categories = {
 	log: 'Log',
-	article: 'Article',
+	article: 'Articles',
 	archives: 'Archives',
 	note: 'Note',
 };

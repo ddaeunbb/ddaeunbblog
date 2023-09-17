@@ -39,29 +39,47 @@ var computedFields = {
     }
   }
 };
+var fields = {
+  title: {
+    type: "string",
+    required: true
+  },
+  category: {
+    type: "string",
+    required: true
+  },
+  date: {
+    type: "date",
+    required: true
+  },
+  tag: {
+    type: "array"
+  }
+};
 var Log = defineDocumentType(() => ({
   name: "Log",
   filePathPattern: `log/**/*.mdx`,
   contentType: "mdx",
-  fields: {
-    title: {
-      type: "string",
-      required: true
-    },
-    category: {
-      type: "string",
-      required: true
-    },
-    date: {
-      type: "date",
-      required: true
-    }
-  },
+  fields,
+  computedFields
+}));
+var Archives = defineDocumentType(() => ({
+  name: "Archives",
+  filePathPattern: `archives/**/*.mdx`,
+  contentType: "mdx",
+  fields,
+  computedFields
+}));
+var Articles = defineDocumentType(() => ({
+  name: "Articles",
+  filePathPattern: `articles/**/*.mdx`,
+  contentType: "mdx",
+  fields,
   computedFields
 }));
 var contentlayer_config_default = makeSource({
   contentDirPath: "./content",
-  documentTypes: [Log],
+  documentTypes: [Log, Articles, Archives],
   mdx: {
     remarkPlugins: [remarkGfm],
     rehypePlugins: [
@@ -96,7 +114,9 @@ var contentlayer_config_default = makeSource({
   }
 });
 export {
+  Archives,
+  Articles,
   Log,
   contentlayer_config_default as default
 };
-//# sourceMappingURL=compiled-contentlayer-config-H4UTND6W.mjs.map
+//# sourceMappingURL=compiled-contentlayer-config-AWSGJGML.mjs.map
