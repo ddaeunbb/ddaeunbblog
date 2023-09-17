@@ -29,8 +29,9 @@ export default function PostItem(props: {
 				/>
 			</div>
 			<div className="p-6">
-				<div className="mb-2 flex w-full items-end">
+				<div className="mb-2 flex w-full items-center gap-1">
 					<CalendarIcon />
+					<span className="text-xs">{props.date}</span>
 				</div>
 				<p className="text-xl font-bold tracking-tight md:text-lg">
 					{props.title}

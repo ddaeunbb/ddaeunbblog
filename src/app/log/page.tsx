@@ -1,5 +1,10 @@
+'use client';
+import { motion } from 'framer-motion';
+import { staggerHalf, fadeInUp, fadeIn } from '@/constants/animations';
+import { allLogs } from 'contentlayer/generated';
 import RenderAnimation from '@/framer/RenderAnimation';
 import SearchIcon from '@/components/icons/SearchIcon';
+import PostListItem from '@/components/postListItem/PostListItem';
 
 export default function Log() {
 	return (
@@ -18,7 +23,7 @@ export default function Log() {
 				<div className="relative mb-4 w-full">
 					<input
 						className="block w-full rounded-md border px-4 py-2 border-neutral-200 bg-white placeholder:text-tertiary dark:border-neutral-900 dark:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-200 dark:focus:ring-neutral-800"
-						placeholder="포스트 제목, 태그 검색"
+						placeholder="검색 기능은 아직 준비중이예요.🥲"
 					/>
 					<SearchIcon />
 				</div>
@@ -26,8 +31,29 @@ export default function Log() {
 					<h2 className="text-2xl font-bold tracking-tight md:text-4xl">
 						All Posts
 					</h2>
-					<span className="font-normal text-sm text-middleGray">{39}</span>
+					<span className="font-normal text-sm text-middleGray">
+						{`(${allLogs.length})`}
+					</span>
 				</div>
+
+				<motion.div
+					className="mt-12 grid w-full gap-5 lg:grid-cols-2 lg:gap-6"
+					variants={staggerHalf}
+				>
+					{allLogs.map(log => (
+						<motion.div key={log.slug} variants={fadeInUp}>
+							<motion.div
+								variants={fadeIn}
+								initial="initial"
+								whileInView="animate"
+								exit="exit"
+								viewport={{ amount: 0.6, once: true }}
+							>
+								<PostListItem log={log} />
+							</motion.div>
+						</motion.div>
+					))}
+				</motion.div>
 			</RenderAnimation>
 		</main>
 	);

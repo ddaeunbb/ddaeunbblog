@@ -41,7 +41,7 @@ export default function Home() {
 					initial="initial"
 					animate="animate"
 				>
-					<motion.div variants={fadeIn}>
+					<motion.div variants={fadeIn} initial="initial" animate="animate">
 						<h2 className="text-2xl font-bold tracking-tight md:text-4xl mb-6">
 							Featured Posts
 						</h2>
@@ -52,28 +52,10 @@ export default function Home() {
 						className="grid gap-6 md:grid-cols-4"
 					>
 						<PostItem
-							href="/blog/dnd-master/1-drag-event"
-							imgUrl={'/sample/one.png'}
-							title="Drag 이벤트 뽀개기"
-							date="2022.10.01"
-						/>
-						<PostItem
-							href="/blog/2022/css-in-js"
-							imgUrl={'/sample/one.png'}
-							title="CSS-in-JS 라이브러리들에 대한 고찰"
-							date="2022.02.11"
-						/>
-						<PostItem
-							href="/blog/retrospect/2021-pass-kakao"
-							imgUrl={'/sample/one.png'}
-							title="2022 카카오 블라인드 공채 합격 후기"
-							date="2021.12.20"
-						/>
-						<PostItem
-							href="/blog/retrospect/2021-in-startup"
-							imgUrl={'/sample/one.png'}
-							title="5개월간 스타트업에서 굴렀다. 그리고 얻었다."
-							date="2021.12.14"
+							href="/log/Making-Blog-With-NextJs"
+							imgUrl={'/featured/featured3.jpeg'}
+							title="Next.js로 블로그 만들기"
+							date="2023.09.17"
 						/>
 					</motion.div>
 
