@@ -1,3 +1,5 @@
+import Link from 'next/link';
+import Image from 'next/image';
 import { getLogFromParams, getFromReadingTime } from '@/lib/getPagefn';
 import ProgressBar from '@/components/progressbar/ProgressBar';
 import MdxComponent from '@/components/mdx/MdxComponent';
@@ -6,6 +8,9 @@ import CalendarIcon from '@/components/icons/CalendarIcon';
 import ClockIcon from '@/components/icons/ClockIcon';
 import Toc from '@/components/toc/Toc';
 import { allLogs } from 'contentlayer/generated';
+import GihubIcon from '@/components/icons/GithubIcon';
+import MailIcon from '@/components/icons/MailIcon';
+import InstaIcon from '@/components/icons/InstaIcon';
 
 interface PageProps {
 	params: {
@@ -62,17 +67,27 @@ export default async function Slug({ params }: PageProps) {
 				</div>
 				<div className="mt-12 space-y-8 lg:mt-24">
 					<div className="flex gap-2">
-						<a href="/archives/tags/darkmode">
-							<div className="rounded-lg px-2 py-0.5 transition-colors bg-[#ededed] hover:text-basicFont hover:bg-neutral-200 text-neutral-700 font-normal">
-								Darkmode
-							</div>
-						</a>
+						{posting.tags?.map(tag => (
+							<Link href={`/archives/tags/${tag}`} key={tag}>
+								<div className="rounded-lg px-2 py-0.5 transition-colors bg-[#ededed] hover:text-basicFont hover:bg-neutral-200 text-neutral-700 font-normal">
+									{tag}
+								</div>
+							</Link>
+						))}
 					</div>
 					<hr className="border-[0.5px] w-full border-neutral-300 transition-all dark:border-neutral-700" />
 
-					<div className="flex w-full items-center justify-center">
-						<div className="flex items-center gap-4 sm:gap-8 sm:p-12">
-							<div></div>
+					<div className="flex w-full items-center justify-center max-lg:pb-10 pb-10">
+						<div className="flex items-center gap-4 sm:gap-6 sm:p-12">
+							<div>
+								<Image
+									src="/profile.png"
+									alt="김다은 이모지"
+									width={96}
+									height={96}
+									className="h-24 w-24 select-none overflow-hidden rounded-full border bg-yellow-400"
+								/>
+							</div>
 
 							<div>
 								<div className="font-bold">Daeun Kim</div>
@@ -80,7 +95,29 @@ export default async function Slug({ params }: PageProps) {
 									Junior Frontend Engineer
 								</div>
 								{/* svg넣기 */}
-								<div className="flex space-x-2 mt-2 text-sm"></div>
+								<div className="flex space-x-2 mt-2 text-sm">
+									<a
+										href="mailto:ddaeunbb@gmail.com"
+										target="_blank"
+										className="transition"
+									>
+										<MailIcon />
+									</a>
+									<a
+										href="https://github.com/ddaeunbb"
+										target="_blank"
+										className="transition"
+									>
+										<GihubIcon />
+									</a>
+									<a
+										href="https://www.instagram.com/daeunx_x/"
+										target="_blank"
+										className="transition"
+									>
+										<InstaIcon />
+									</a>
+								</div>
 							</div>
 						</div>
 					</div>

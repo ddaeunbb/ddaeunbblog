@@ -6,7 +6,7 @@ import Footer from '@/components/footer/Footer';
 
 const inter = Inter({
 	subsets: ['latin'],
-	weight: ['100', '400', '700', '900'],
+	weight: ['100', '400', '700', '800', '900'],
 	variable: '--inter',
 });
 

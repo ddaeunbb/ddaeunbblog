@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { getLogFromParams, getFromReadingTime } from '@/lib/getPagefn';
 import ProgressBar from '@/components/progressbar/ProgressBar';
@@ -76,7 +77,16 @@ export default async function Slug({ params }: PageProps) {
 
 					<div className="flex w-full items-center justify-center">
 						<div className="flex items-center gap-4 sm:gap-8 sm:p-12">
-							<div></div>
+							<div>
+								{' '}
+								<Image
+									src="/profile.png"
+									alt="김다은 이모지"
+									width={96}
+									height={96}
+									className="h-24 w-24 select-none overflow-hidden rounded-full border bg-yellow-400"
+								/>
+							</div>
 
 							<div>
 								<div className="font-bold">Daeun Kim</div>

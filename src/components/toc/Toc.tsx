@@ -1,3 +1,5 @@
+'use client';
+
 import ScrollBottomBtn from '@/components/button/ScrollBottomBtn';
 import ScrollTopBtn from '@/components/button/ScrollTopBtn';
 import CopyIcon from '@/components/icons/CopyIcon';
@@ -15,6 +17,11 @@ interface Heading {
 }
 
 export default function Toc({ list }: TocProp) {
+	const handleCopyClipboard = async () => {
+		const url = window.location.href;
+		await navigator.clipboard.writeText(url);
+	};
+
 	return (
 		<div className="sticky top-[120px] hidden min-w-[220px] max-w-[260px] self-start lg:block">
 			<div className="overflow-hidden rounded-xl border border-neutral-200 transition-all dark:border-neutral-800">
@@ -48,6 +55,7 @@ export default function Toc({ list }: TocProp) {
 						aria-label="copy-link"
 						type="button"
 						className="flex h-9 w-9 items-center justify-center rounded-lg transition-all text-secondary mr-auto hover:bg-mute"
+						onClick={handleCopyClipboard}
 					>
 						<CopyIcon />
 					</button>
