@@ -1,7 +1,7 @@
 import { allLogs } from 'contentlayer/generated';
 import RenderAnimation from '@/framer/RenderAnimation';
 import SearchIcon from '@/components/icons/SearchIcon';
-import PostListAnimation from '@/framer/PostListAnimation';
+import PostListItem from '@/components/postListItem/PostListItem';
 
 export default function Log() {
 	return (
@@ -33,7 +33,15 @@ export default function Log() {
 					</span>
 				</div>
 
-				<PostListAnimation />
+				<div className="mt-12 grid w-full gap-5 lg:grid-cols-2 lg:gap-6">
+					{allLogs.map(log => (
+						<div key={log.slug}>
+							<div>
+								<PostListItem log={log} />
+							</div>
+						</div>
+					))}
+				</div>
 			</RenderAnimation>
 		</main>
 	);

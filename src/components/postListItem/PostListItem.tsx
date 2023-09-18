@@ -8,8 +8,6 @@ interface PostListItemProp {
 }
 
 export default function PostListItem({ log }: PostListItemProp) {
-	console.log(log);
-
 	return (
 		<div className="w-full py-4 hover:drop-shadow-base border px-3 rounded-xl bg-neutral-50 hover:shadow-lg transition-all">
 			<Link href={log.slug} className="hover:drop-shadow-base">

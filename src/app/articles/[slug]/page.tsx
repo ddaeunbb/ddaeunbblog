@@ -14,6 +14,12 @@ interface PageProps {
 	};
 }
 
+export async function generateStaticParams() {
+	return [...allArticles].map(log => {
+		slug: log.slugAsParams;
+	});
+}
+
 export default async function Slug({ params }: PageProps) {
 	const posting = await getLogFromParams(allArticles, params.slug);
 	const readingTime = await getFromReadingTime(allArticles, params.slug);
