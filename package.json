@@ -8,9 +8,7 @@
 		"lint": "next lint",
 		"prepare": "husky install",
 		"lint-staged": "lint-staged",
-		"build": "next build",
-		"predeploy": "npm run build",
-		"deploy": "touch out/.nojekyll && gh-pages -d out --dotfiles"
+		"build": "next build"
 	},
 	"lint-staged": {
 		"*.{ts,tsx}": [
