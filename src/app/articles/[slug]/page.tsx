@@ -70,14 +70,7 @@ export default async function Slug({ params }: PageProps) {
 
 					<div className="flex w-full items-center justify-center">
 						<div className="flex items-center gap-4 sm:gap-8 sm:p-12">
-							<div>
-								<img
-									src="https://avatars.githubusercontent.com/u/82816029?v=4"
-									className="h-24 w-24 overflow-hidden rounded-full"
-									alt="프로필 사진"
-									draggable="false"
-								/>
-							</div>
+							<div></div>
 
 							<div>
 								<div className="font-bold">Daeun Kim</div>
