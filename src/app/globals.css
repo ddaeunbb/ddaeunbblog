@@ -19,7 +19,7 @@
 }
 
 .prose p {
-  @apply text-base mx-5 text-neutral-700;
+  @apply text-base leading-9 mx-5 text-neutral-700;
 }
 
 .prose a {
@@ -45,11 +45,11 @@
 }
 
 .prose pre {
-  @apply rounded-xl shadow-2xl;
+  @apply rounded-xl shadow-lg py-5;
 }
 
 .prose pre > code {
-  @apply bg-[#24292e] text-sm font-medium font-mono;
+  @apply bg-[#24292e] text-[15px] font-medium font-mono leading-6;
 }
 
 .prose code {

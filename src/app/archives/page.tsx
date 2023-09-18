@@ -30,7 +30,7 @@ export default function Archives() {
 				<section>
 					<div className="mt-12 ">
 						<h2 className="text-2xl font-bold tracking-tight md:text-4xl">
-							Tags<span className="ml-2 text-sm">{`(${allLogs.length})`}</span>
+							Tags<span className="ml-2 text-sm">{`(${tags.length})`}</span>
 						</h2>
 					</div>
 

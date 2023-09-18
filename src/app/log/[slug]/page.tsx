@@ -29,7 +29,7 @@ export default async function Slug({ params }: PageProps) {
 			<ProgressBar />
 			<section>
 				<div>
-					<h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl mx-auto mb-4 max-w-3xl text-center">
+					<h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl mx-auto mb-4 max-w-4xl text-center">
 						{posting.title}
 					</h1>
 					<div className="mt-2 flex justify-center gap-1">
@@ -53,7 +53,7 @@ export default async function Slug({ params }: PageProps) {
 
 				{/* // 본문 */}
 				<div className="relative gap-8 lg:flex">
-					<div className="w-full max-w-5xl prose prose-neutral text-basicFont dark:prose-dark py-12">
+					<div className="w-full max-w-4xl prose prose-neutral text-basicFont dark:prose-dark py-12">
 						<MdxComponent code={posting.body.code} />
 					</div>
 					<div className="mt-12 ml-auto">

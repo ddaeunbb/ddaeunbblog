@@ -7,7 +7,7 @@ export default function Log() {
 	return (
 		<main className="relative pb-16">
 			<h1 className="mb-4 text-3xl font-extrabold tracking-tight sm:text-5xl">
-				Blog
+				Log
 			</h1>
 			<RenderAnimation>
 				<div>
@@ -26,7 +26,7 @@ export default function Log() {
 				</div>
 				<div className="mt-16 mb-4 flex items-end gap-2">
 					<h2 className="text-2xl font-bold tracking-tight md:text-4xl">
-						All Posts
+						All Logs
 					</h2>
 					<span className="font-normal text-sm text-middleGray">
 						{`(${allLogs.length})`}
@@ -37,7 +37,7 @@ export default function Log() {
 					{allLogs.map(log => (
 						<div key={log.slug}>
 							<div>
-								<PostListItem log={log} />
+								<PostListItem post={log} />
 							</div>
 						</div>
 					))}

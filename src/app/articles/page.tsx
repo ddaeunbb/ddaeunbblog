@@ -1,4 +1,6 @@
+import { allArticles } from 'contentlayer/generated';
 import RenderAnimation from '@/framer/RenderAnimation';
+import PostListItem from '@/components/postListItem/PostListItem';
 
 export default function Articles() {
 	return (
@@ -13,6 +15,25 @@ export default function Articles() {
 						<br />
 						아티클의 내용과 추가적으로 공부한 내용을 보실 수 있습니다.🤓
 					</p>
+				</div>
+
+				<div className="mt-16 mb-4 flex items-end gap-2">
+					<h2 className="text-2xl font-bold tracking-tight md:text-4xl">
+						All Scraps
+					</h2>
+					<span className="font-normal text-sm text-middleGray">
+						{`(${allArticles.length})`}
+					</span>
+				</div>
+
+				<div className="mt-12 grid w-full gap-5 lg:grid-cols-2 lg:gap-6">
+					{allArticles.map(scrap => (
+						<div key={scrap.slug}>
+							<div>
+								<PostListItem post={scrap} />
+							</div>
+						</div>
+					))}
 				</div>
 			</RenderAnimation>
 		</main>

@@ -34,8 +34,8 @@ export default function Toc({ list }: TocProp) {
 										data-level={heading.level}
 										href={`#${heading.slug}`}
 									>
-										{heading.text.length > 15
-											? heading.text.slice(0, 15) + '...'
+										{heading.text.length > 20
+											? heading.text.slice(0, 20) + '...'
 											: heading.text}
 									</a>
 								</li>
