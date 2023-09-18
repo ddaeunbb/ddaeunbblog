@@ -10,7 +10,8 @@
 		"lint-staged": "lint-staged",
 		"build": "next build",
 		"predeploy": "npm run build",
-		"deploy": "touch out/.nojekyll && gh-pages -d out --dotfiles"
+		"deploy": "touch out/.nojekyll && gh-pages -d out --dotfiles",
+		"export": "next export"
 	},
 	"lint-staged": {
 		"*.{ts,tsx}": [
