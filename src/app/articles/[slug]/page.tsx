@@ -14,6 +14,8 @@ interface PageProps {
 	};
 }
 
+export async function generateStaticParams() {}
+
 export default async function Slug({ params }: PageProps) {
 	const posting = await getLogFromParams(allArticles, params.slug);
 	const readingTime = await getFromReadingTime(allArticles, params.slug);
