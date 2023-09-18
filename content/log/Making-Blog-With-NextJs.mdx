@@ -21,3 +21,260 @@ npm install contentlayer next-contentlayer
 ```
 
 다음, `next.config.js`를 아래와 같이 설정해주세요.
+```typescript
+// next.config.js
+const { withContentlayer } = require('next-contentlayer');
+
+/** @type {import('next').NextConfig} */
+const options = {
+  reactStrictMode: true,
+  swcMinify: true,
+};
+
+module.exports = withContentlayer(options);
+```
+
+이후 `tsconfig.json`을 아래와 같이 설정해주세요.
+```typescript
+// tsconfig.json
+{
+  "compilerOptions": {
+    // ...
+    "paths": {
+      "contentlayer/generated": ["./.contentlayer/generated"]
+    }
+    // ...
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "./.contentlayer/generated"
+  ]
+  // ...
+}
+```
+다음 `contentlayer` 관련 설정을 해줘야하는데요, 이전에 필요한 라이브러리들을 설치합니다.
+```javascript
+// 코드블럭 관련 디자인 라이브러리 
+npm i -D rehype-highlight rehype-pretty-code shiki 
+
+// mdx 관련 자동 Toc 제공 라이브러리 
+npm i -D rehype-autolink-heading
+
+// mdx 읽는 시간 계산해주는 라이브러리 
+npm i -D reading-time
+
+// mdx 파싱 관련 라이브러리
+npm i -D remark-gfm rehype-slug
+```
+
+
+다음 루트경로에 `contentlayer.config.js` 파일을 만들어 아래와 같이 설정해주세요.
+```javascript
+import { defineDocumentType, makeSource } from 'contentlayer/source-files';
+import rehypePrettyCode from 'rehype-pretty-code';
+import readingTime from 'reading-time';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
+import rehypeSlug from 'rehype-slug';
+import remarkGfm from 'remark-gfm';
+
+/** @type {import('contentlayer/source-files').ComputedFields} */
+const computedFields = {
+  // 각 mdx 마다 경로 파싱
+	slug: {
+		type: 'string',
+		resolve: doc => `/${doc._raw.flattenedPath}`,
+	},
+
+  // 각 mdx 마다 경로 생성
+	slugAsParams: {
+		type: 'string',
+		resolve: doc => doc._raw.flattenedPath.split('/').slice(1).join('/'),
+	},
+
+  // 각 mdx 마다 읽는 시간 추정
+	readingTime: {
+		type: 'json',
+		resolve: doc => readingTime(doc.body.raw),
+	},
+};
+
+// mdx 필드 (mdx 마다 어떤 제목, 종류, 작성날짜, 태그)
+const fields = {
+	title: {
+		type: 'string',
+		required: true,
+	},
+	category: {
+		type: 'string',
+		required: true,
+	},
+	date: {
+		type: 'date',
+		required: true,
+	},
+	tags: {
+		type: 'list',
+		of: { type: 'string' },
+	},
+};
+
+export const Log = defineDocumentType(() => ({
+	name: 'Log',
+  // 어떤 경로에 있는 mdx들을 파싱할건지
+	filePathPattern: `log/**/*.mdx`,
+	contentType: 'mdx',
+	fields: fields,
+	computedFields,
+}));
+
+export default makeSource({
+  // 실제 파일에서 mdx가 어디 경로에 있는지 (설정이 매우 중요해요!!)
+	contentDirPath: './content',
+	documentTypes: [Log],
+	mdx: {
+		remarkPlugins: [remarkGfm],
+		rehypePlugins: [
+			rehypeSlug,
+			[
+				rehypePrettyCode,
+				{
+					theme: 'github-dark',
+					onVisitLine(node) {
+						// Prevent lines from collapsing in `display: grid` mode, and allow empty
+						// lines to be copy/pasted
+						if (node.children.length === 0) {
+							node.children = [{ type: 'text', value: ' ' }];
+						}
+					},
+					onVisitHighlightedLine(node) {
+						node.properties.className.push('line--highlighted');
+					},
+					onVisitHighlightedWord(node) {
+						node.properties.className = ['word--highlighted'];
+					},
+				},
+			],
+			[
+				rehypeAutolinkHeadings,
+				{
+					properties: {
+						className: ['anchor'],
+						ariaLabel: 'anchor',
+					},
+				},
+			],
+		],
+	},
+});
+
+```
+
+이후에 저는 루트경로에 `content` 라는 폴더를 만들어주었습니다.
+그다음 log라는 파일을 또 생성해, 그 파일 안에  mdx 파일을 만들어주었어요.
+
+**content(config모여있는 루트경로) > log > hello.mdx**
+```mdx
+---
+title: Next.js 13으로 나만의 블로그 만들기
+date: 2023-09-16
+category: Log
+tags:
+  - Next.js
+  - typescript
+  - contentlayer
+---
+
+- 안녕하세요?
+  - 반가워요!
+```
+
+이후 터미널에 `npm run dev`를 실행해줍니다. 그럼 루트 경로에 `.contentlayer`라는 폴더가 생기게 됩니다.
+**.contentlayer > generated > Log > index.json** 파일을 보게되면, mdx파일이 파싱되어 저장되는 것을 볼 수 있습니다. 
+
+---
+
+## app 라우터 경로 설정
+
+이제 mdx들이 모두 파싱되었는데, 어떻게 페이지에 렌더링해서 보여줄 수 있을까요?
+먼저, 페이지들을 가져오는 함수를 만들어주었습니다.
+**src > lib > getPagefn.ts**
+
+```typescript
+import { notFound } from 'next/navigation';
+import { Log } from 'contentlayer/generated';
+
+type AllType = Log[]
+
+export async function getLogFromParams(all: AllType, slug: string) {
+	const posting = all.find(doc => doc.slugAsParams === slug);
+
+	if (!posting) notFound();
+	return posting;
+}
+
+export async function getFromReadingTime(all: AllType, slug: string) {
+	const posting = all.find(doc => doc.slugAsParams === slug);
+
+	if (!posting) notFound();
+	return posting.readingTime.text.slice(0, -8).trim();
+}
+```
+- `contentlayer/generated`로 부터 생성되고 제공되는 `Log` type을 가져와 타입을 지정해주었습니다.
+- 이후 `getLogFromParams`라는 함수를 정의해줍니다. 이 함수는 mdx의 배열을 받아 현재 경로와 같은 mdx를 찾아냅니다.
+- 찾지 못했다면 `Next.js`에서 기본적으로 제공해주는 `notFound` 경로를 보여주게 되고, 찾았다면 mdx가 담긴 객체를 리턴해줍니다.
+<br/>
+이후 폴더를 만들어 경로 설정을 해주어야합니다.
+저는 **content > log** 폴더안에 mdx 파일을 생성했는데요, 따라서 app 폴더 내에도 똑같이 경로를 설정해주어야합니다.
+
+저는 아래와 같이 경로를 설정해주었습니다.
+
+**app > log > [slug] > page.tsx**
+
+```tsx
+import MdxComponent from '@/components/mdx/MdxComponent';
+
+interface PageProps {
+	params: {
+		slug: string;
+	};
+}
+
+export default async function Slug({ params }: PageProps) {
+	const posting = await getLogFromParams(allLogs, params.slug);
+	const readingTime = await getFromReadingTime(allLogs, params.slug);
+	const date = posting.date.slice(0, 10);
+
+  return (<MdxComponent code={posting.body.code} />)
+}
+```
+- 컴포넌트에서 `params`를 받으면, 현재 경로가 들어오게 됩니다.
+- 이후 `getLogFromParams`로 mdx관련 정보가 담긴 객체를 받아옵니다.
+- 이 객체에 mdx 관련 코드와 제목, 태그 등 모든 프로퍼티를 사용할 수 있습니다.
+
+리턴문에 `MdxComponent`를 볼 수 있는데요, 이제 파싱된 mdx 객체의 `body.code`를 넣어주게되면 정말 md 파일 형식 그대로 보이게 됩니다.
+
+아래와 같이 `MdxComponent`는 `contentlayer`에서 자체적으로 지원해주는 hook으로, 자동적으로 mdx를 파싱해줍니다.
+
+```tsx
+import { useMDXComponent } from 'next-contentlayer/hooks';
+
+interface MdxProps {
+	code: string;
+}
+
+export default function MdxComponent({ code }: MdxProps) {
+	const Component = useMDXComponent(code);
+
+	return <Component />;
+}
+```
+그럼 블로그 만들기 거의 절반이나 완성이게 됩니다...!
+
+---
+
+## 만들기 전, 참고하기 좋은 DOC
+- [contentlayer 사용법](https://youtu.be/YC6LqIYVHxI?si=HdMzPL_LgUkjS_YH)
+- [contentlayer 공식문서](https://contentlayer.dev/docs/reference/next-contentlayer-e6e7eb3a)
+
