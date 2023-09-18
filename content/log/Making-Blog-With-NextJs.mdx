@@ -3,83 +3,21 @@ title: Next.js 13으로 나만의 블로그 만들기
 date: 2023-09-16
 category: Log
 tags:
-  - javascript
+  - Next.js
   - typescript
+  - contentlayer
 ---
 
-## 제목
+next.js에 대해서 공부하기 위해 **무언가 같이 만들면서 공부를 하면 어떨까?** 라는 생각과 함께 next.js 12버전이 아닌 13버전으로 블로그를 만들게 되었습니다.
 
-- 내용 1
-- 내용 2
+`gatsby`, `도큐사우루스`, `contentlayer` 등 여러 라이브러리가 있었지만, 개인적으로 커스텀할 수 있는 블로그를 만들고 싶었습니다. 티스토리를 사용하면서 불편했던 점이 조금 있었거든요.
 
-### 다시해봐
+하지만 `contentlayer`가 Next.js 13을 제대로 지원해주지 않는다는 이야기를 여럿 들어서 13으로 만들지 12로 만들지 고민이 있었는데요, 그래도 13으로 강행해 만들게 되었습니다.
 
-## 너를
-
-# 반갑습니다.
-
-- 내용 1
-  - 내용 2
-  - 내용 3
-  - 내용 4
-  
-- 내용 2
-
-```javascript
-import { GetStaticPaths, GetStaticProps } from 'next';
-
-import { getAllPosts } from '../../libs/post';
-
-export const getStaticPaths: GetStaticPaths = () => {
-  const posts = getAllPosts();
-
-  return {
-    paths: posts.map((post) => post.slug),
-    fallback: 'blocking',
-  };
-};
+## contentlayer 설치 및 설정
+먼저 `contentlayer`와 관련된 라이브러리들을 설치해줍니다.
+```
+npm install contentlayer next-contentlayer
 ```
 
-<p>어디한번적어봐라!!!</p>
-<hr />
-
-asdfasdfsakldjflkasjdklfjaskljdfkljaskldjfklasjd안머라ㅣㅁ너이ㅏ럼나ㅣ어라ㅣㅁ너아ㅣ럼나ㅣ어라ㅣㅁ너아ㅣ러
-ㅁㄴ아ㅣ럼니ㅏ어라ㅣㅁ너아ㅣ럼나ㅣ어라ㅣㅁ너아ㅣ
-ㅁ니아ㅓ리ㅏㅁ너이ㅏ러ㅏㅣㄴㅁ
-
-ㅁ나ㅣ어라ㅣㅁ너알
-
-<blockquote>마!어디함해봐라!sdflkjaskldfjkalsjfdklajskd</blockquote>
-
-`code`를 ㅃ보아봅시다...
-
-<a href="https://tailwindcss.com/docs/font-family" target="\_blank" rel="noopener noreferrer">링크달아버리기</a>
-
-<hr/>
-
-<strong>나는 강하다!</strong>
-
-<a href="https://github.com/hashicorp next-mdx-remote" target="\_blank" rel="noopener noreferrer"><strong>next-mdx-remote</strong></a>
-
-1. 하이요
-2. 반가워
-3. 너모
-4. ㅂ더
-
-띄어쓰기가 이렇게 되나요?  
-그냥이렇게 하면되긴하네
-
----
-
-> 인용문
-
-
-# 반가워요. 진짜 이렇게 하는게 마증ㄹ
-## 마지못해인사합니다.
-## 그래요?
-## 아녕ㅇ??
-### 그렇게 부속으로
-### 적습니다.
-
-- [ ] 이게돼?
-- [x] dlrpehoa?
+다음, `next.config.js`를 아래와 같이 설정해주세요.
