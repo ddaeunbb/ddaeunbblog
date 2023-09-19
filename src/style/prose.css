@@ -14,7 +14,7 @@
 }
 
 .prose p {
-  @apply text-base leading-9 mx-5 text-neutral-700 dark:text-neutral-400;
+  @apply text-base leading-9 mx-5 text-neutral-700 dark:text-neutral-400 max-sm:text-sm max-sm:leading-8;
 }
 
 .prose a {
@@ -44,12 +44,12 @@
 }
 
 .prose code {
-  @apply rounded-lg py-0.5 px-2 font-semibold text-sm dark:text-neutral-300;
+  @apply rounded-lg py-0.5 px-2 font-semibold text-sm;
   font-family: var(--font-mono), Consolas, Monaco, 'Andale Mono', monospace;
 }
 
 .prose pre > code {
-  @apply bg-[#24292e] text-[15px] font-medium font-mono leading-6 dark:bg-[#24292e];
+  @apply bg-[#24292e] text-[15px] font-medium font-mono leading-6 dark:bg-[#24292e] max-sm:text-xs;
 }
 
 .prose ul > ul {
@@ -92,13 +92,9 @@
   @apply visible border-2 border-slate-400;  
 }
 
-.prose code {
-  @apply font-mono;
-}
-
 .prose code:not(:where(pre *)) {
   @apply text-basicFont rounded-lg px-2 py-0.5 content-none;
-  @apply bg-neutral-200 dark:bg-[var(--prism-background)];
+  @apply bg-neutral-200 dark:bg-yellow-200;
 }
 
 .prose pre::-webkit-scrollbar {
