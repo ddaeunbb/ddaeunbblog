@@ -1,9 +1,12 @@
+import { sortDocsFromRecent } from '@/lib/getPagefn';
 import { allLogs } from 'contentlayer/generated';
 import RenderAnimation from '@/framer/RenderAnimation';
 import SearchIcon from '@/components/icons/SearchIcon';
 import PostListItem from '@/components/postListItem/PostListItem';
 
 export default function Log() {
+	const sortedLogs = sortDocsFromRecent(allLogs);
+
 	return (
 		<main className="relative pb-16">
 			<h1 className="mb-4 text-3xl font-extrabold tracking-tight sm:text-5xl">
@@ -34,7 +37,7 @@ export default function Log() {
 				</div>
 
 				<div className="mt-12 grid w-full gap-5 lg:grid-cols-2 lg:gap-6">
-					{allLogs.map(log => (
+					{sortedLogs.map(log => (
 						<div key={log.slug}>
 							<div>
 								<PostListItem post={log} />

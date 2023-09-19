@@ -1,0 +1,71 @@
+---
+title: Toc(목차) 만들기
+date: 2023-09-19
+category: Log
+tags:
+  - Next.js
+  - typescript
+  - github-slugger
+---
+
+블로그를 만들다보니, 티스토리에서 쓰던 것처럼 목차를 활용하고 싶다는 생각이 들었습니다.  
+그리고 해당 목차를 누르면 해당 글로 이동하는 `Toc(Table-of-contents)`를 만들어보겠습니다.
+
+## github-slugger
+먼저, `Toc`를 만드는데 필요한 라이브러리를 설치합니다.
+```bsh
+npm i -D github-slugger
+```
+다음 `contentlayer.config.js` 파일로 넘어와, 아래와 같이 설정합니다.
+
+```javascript
+const computedFields = {
+	...
+	headings: {
+		type: 'json',
+		resolve: async doc => {
+			const regXHeader = /\n(?<flag>#{1,6})\s+(?<content>.+)/g;
+			const slugger = new GithubSlugger();
+			const headings = Array.from(doc.body.raw.matchAll(regXHeader)).map(
+				({ groups }) => {
+					const flag = groups?.flag;
+					const content = groups?.content;
+					return {
+            // 이 부분이 각 mdx의 프로퍼티로 추가됩니다.
+						level: flag.length,
+						text: content,
+						slug: content ? slugger.slug(content) : undefined,
+					};
+				},
+			);
+			return headings;
+		},
+	},
+};
+```  
+`allLogs[ ]` 에 담긴 각 `Logs` 객체에 `level, text, slug`프로퍼티로 담기게 됩니다.  
+`allLogs[ ]`는 제가 지정한 `documentType`이기때문에, 다를 수 있습니다.  
+아래는 `## github-slugger` 라는 텍스트가 mdx에 포함되었을 때의 예시입니다.
+```javascript
+[ { level: 2, text: 'github-slugger', slug: 'github-slugger' } ]
+```
+
+이처럼 `h`태그들만 가져와 보여주며, 태그들의 레벨과 내용까지 보여주게됩니다.  
+`slug`프로퍼티는 목차 클릭 시 이동될 수 있는 경로로 활용할 수 있습니다.
+```jsx
+{
+  list.headings.map(head => (
+    <li key={head.text}>
+      <a href={`#${heading.slug}`}>{head.text}</a>
+    </li>
+  ))
+}
+...
+```
+테이블 디자인은 테일윈드를 사용해서 쉽게 디자인할 수 있습니다.  
+디자인 관련해서는 아래 레퍼런스를 참고해보시면 좋습니다.
+
+---
+
+## Reference Doc
+- [Making a table of contents with Contentlayer](https://yusuf.fyi/posts/contentlayer-table-of-contents#installing-the-necessary-packages)
