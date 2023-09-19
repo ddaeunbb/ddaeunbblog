@@ -1,3 +1,4 @@
+import remarkBreaks from 'remark-breaks';
 import GithubSlugger from 'github-slugger';
 import rehypePrettyCode from 'rehype-pretty-code';
 import readingTime from 'reading-time';
@@ -88,7 +89,7 @@ export default makeSource({
 	contentDirPath: './content',
 	documentTypes: [Log, Articles, Archives],
 	mdx: {
-		remarkPlugins: [remarkGfm],
+		remarkPlugins: [remarkGfm, remarkBreaks],
 		rehypePlugins: [
 			rehypeSlug,
 			[

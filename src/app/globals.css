@@ -1,7 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url(./prose.css);
 
 .prose h1 {
   @apply text-3xl font-bold;
@@ -54,6 +53,7 @@
 
 .prose code {
   @apply rounded-lg py-0.5 px-2 bg-neutral-200 font-semibold text-sm;
+  font-family: var(--font-mono), Consolas, Monaco, 'Andale Mono', monospace;
 }
 .prose ul > ul {
   @apply m-0;
