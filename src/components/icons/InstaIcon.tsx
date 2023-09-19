@@ -4,7 +4,7 @@ const InstaIcon = () => (
 		width={20}
 		height={20}
 		fill="color"
-		className="hover:fill-middleGray"
+		className="hover:fill-middleGray dark:fill-neutral-300 dark:hover:fill-yellow-300"
 	>
 		<path
 			fill="color"

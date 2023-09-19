@@ -25,10 +25,10 @@ export default function Toc({ list }: TocProp) {
 	return (
 		<div className="sticky top-[120px] hidden min-w-[220px] max-w-[260px] self-start lg:block">
 			<div className="overflow-hidden rounded-xl border border-neutral-200 transition-all dark:border-neutral-800">
-				<div className="p-4 pr-2 dark:border-neutral-700 dark:bg-neutral-800">
+				<div className="p-4 pr-2 dark:border-neutral-700 dark:bg-neutral-900">
 					<p
 						id="toc-header"
-						className="text-primary text-sm font-extrabold leading-6"
+						className="text-primary text-sm font-extrabold leading-6 dark:text-neutral-300"
 					>
 						Written on this Page
 					</p>
@@ -37,7 +37,7 @@ export default function Toc({ list }: TocProp) {
 							return (
 								<li key={`#${heading.slug}`} className="toc">
 									<a
-										className="group block py-1 text-secondary hover:text-primary hover:drop-shadow-base-bold dark:hover:drop-shadow-base hover:font-extrabold toc-li"
+										className="group block py-1 text-secondary hover:text-primary hover:drop-shadow-base-bold dark:hover:drop-shadow-base hover:font-extrabold dark:text-neutral-400 toc-li"
 										data-level={heading.level}
 										href={`#${heading.slug}`}
 									>

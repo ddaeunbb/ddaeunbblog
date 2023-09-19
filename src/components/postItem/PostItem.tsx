@@ -31,9 +31,9 @@ export default function PostItem(props: {
 			<div className="p-6">
 				<div className="mb-2 flex w-full items-center gap-1">
 					<CalendarIcon />
-					<span className="text-xs">{props.date}</span>
+					<span className="text-xs dark:text-neutral-300">{props.date}</span>
 				</div>
-				<p className="text-xl font-bold tracking-tight md:text-lg">
+				<p className="text-xl font-bold tracking-tight md:text-lg dark:text-neutral-300">
 					{props.title}
 				</p>
 			</div>

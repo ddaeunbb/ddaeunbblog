@@ -4,7 +4,7 @@ const MailIcon = () => (
 		xmlSpace="preserve"
 		width={20}
 		height={20}
-		className="hover:fill-middleGray"
+		className="hover:fill-middleGray dark:hover:fill-yellow-300 dark:fill-neutral-300"
 		fill="color"
 		viewBox="0 0 32 32"
 	>

@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'prose.css';
+@import 'toc.css';
+
+::selection {
+  @apply bg-neutral-400/30;
+}
+
+.dark ::selection {
+  @apply bg-neutral-500/90;
+}

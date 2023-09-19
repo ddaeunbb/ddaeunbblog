@@ -13,18 +13,17 @@ export default function page() {
 			animate="animate"
 			className="w-full h-[520px] flex justify-center items-center flex-col"
 		>
-			<h2 className="mb-4 text-3xl font-extrabold tracking-tight">
-				태그 페이지는 준비중이예요.
-			</h2>
-
 			<Link href={'/'}>
 				<button
 					type="button"
-					className="py-2 px-3 bg-neutral-100 border  rounded-2xl transition-all hover:scale-105"
+					className="py-2 px-3 rounded-2xl transition-all hover:scale-105 bg-neutral-100 border dark:border-none dark:bg-transparent"
 				>
 					<ChickIcon />
 				</button>
 			</Link>
+			<span className="dark:text-neutral-500 mt-5">
+				아직 병아리가 채워지지 않은 페이지입니다.
+			</span>
 		</motion.section>
 	);
 }

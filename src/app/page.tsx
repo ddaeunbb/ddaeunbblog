@@ -9,12 +9,12 @@ import RenderAnimation from '@/framer/RenderAnimation';
 export default function Home() {
 	return (
 		<>
-			<h1 className="mb-4 text-3xl font-extrabold tracking-tight sm:text-5xl">
+			<h1 className="mb-4 text-3xl font-extrabold tracking-tight sm:text-5xl dark:text-neutral-300">
 				ddaeunbb
 			</h1>
 			<RenderAnimation>
 				<section className="font-normal">
-					<main className="mt-0.5 inline-block font-bold underline-offset-4 hover:underline mb-4">
+					<main className="mt-0.5 inline-block font-bold underline-offset-4 hover:underline mb-4 dark:text-neutral-300">
 						Frontend Developer
 					</main>
 					<div>
@@ -42,7 +42,7 @@ export default function Home() {
 					animate="animate"
 				>
 					<motion.div variants={fadeIn} initial="initial" animate="animate">
-						<h2 className="text-2xl font-bold tracking-tight md:text-4xl mb-6">
+						<h2 className="text-2xl font-bold tracking-tight md:text-4xl mb-6 dark:text-neutral-300">
 							Featured Posts
 						</h2>
 					</motion.div>

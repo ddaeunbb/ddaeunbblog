@@ -7,6 +7,7 @@ const CalendarIcon = () => (
 		stroke="currentColor"
 		width="14"
 		height="14"
+		className="dark:stroke-neutral-300"
 	>
 		<path
 			strokeLinecap="round"
