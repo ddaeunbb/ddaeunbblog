@@ -1,3 +1,4 @@
+import ThemeSwitch from '@/components/theme/ThemeSwitch';
 import Path from '@/router/path';
 import Image from 'next/image';
 import Tab from '@/components/tab/Tab';
@@ -18,18 +19,9 @@ export default function Navbar() {
 			<Tab path={Path.articles}>Articles</Tab>
 			<Tab path={Path.archives}>Archives</Tab>
 			<Tab path={Path.note}>Note</Tab>
-			<button
-				aria-label="Toggle Dark Mode"
-				type="button"
-				className="ml-auto flex items-center p-1.5 transition-all font-normal rounded-lg hover:bg-[rgba(237,237,237,1)]"
-			>
-				<Image
-					src="/navbar/sunny.svg"
-					width={24}
-					height={25}
-					alt="다크모드버튼"
-				/>
-			</button>
+			<div className="ml-auto flex items-center gap-2">
+				<ThemeSwitch />
+			</div>
 		</nav>
 	);
 }

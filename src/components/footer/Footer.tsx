@@ -31,12 +31,12 @@ export default function Footer() {
 					</a>
 				</div>
 				<p>
-					<span>© 2023 </span>
-					<a>ddaeunbblog </a>
-					<span>Powerd by </span>
+					<span className="max-sm:text-xs">© 2023 </span>
+					<a className="max-sm:text-xs">ddaeunbblog</a>
+					<span className="max-sm:text-xs">Powerd by </span>
 					<a
 						href="https://nextjs.org/"
-						className="transition hover:text-secondary"
+						className="transition hover:text-secondary max-sm:text-xs"
 						target="_blank"
 						rel="noopener noreferrer"
 					>
@@ -45,7 +45,7 @@ export default function Footer() {
 					<span>, </span>
 					<a
 						href="https://pages.github.com/"
-						className="transition hover:text-secondary"
+						className="transition hover:text-secondary max-sm:text-xs"
 						target="_blank"
 						rel="noopener noreferrer"
 					>

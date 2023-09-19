@@ -1,5 +1,6 @@
+import NextThemeProvider from '@/components/theme/NextThemeProvider';
 import Header from '@/components/navbar/Navbar';
-import './globals.css';
+import '../style/globals.css';
 import type { Metadata } from 'next';
 import Footer from '@/components/footer/Footer';
 import { $ } from '../lib/core';
@@ -16,7 +17,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }) {
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning>
 			<body
 				className={$(
 					fontSans.variable,
@@ -25,11 +26,13 @@ export default function RootLayout({
 					'font-sans',
 				)}
 			>
-				<div className="font-sans text-neutral-800 mx-auto max-w-3xl px-6 lg:max-w-6xl lg:px-8">
-					<Header />
-					{children}
-					<Footer />
-				</div>
+				<NextThemeProvider>
+					<div className="font-sans text-neutral-800 mx-auto max-w-3xl px-6 lg:max-w-6xl lg:px-8 ">
+						<Header />
+						{children}
+						<Footer />
+					</div>
+				</NextThemeProvider>
 			</body>
 		</html>
 	);

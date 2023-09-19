@@ -1,18 +1,18 @@
-import type { Config } from 'tailwindcss';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { fontFamily } = require('tailwindcss/defaultTheme');
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { spacing } = require('tailwindcss/defaultTheme');
 
-const config: Config = {
+const config = {
 	content: [
 		'./src/pages/**/*.{js,ts,jsx,tsx,mdx}',
 		'./src/components/**/*.{js,ts,jsx,tsx,mdx}',
 		'./src/app/**/*.{js,ts,jsx,tsx,mdx}',
 	],
+	darkMode: 'class',
 	theme: {
 		extend: {
-			typography: () => ({
+			typography: theme => ({
 				DEFAULT: {
 					css: {
 						'h1,h2,h3,h4': {
@@ -22,6 +22,20 @@ const config: Config = {
 						'blockquote p:last-of-type::after': false,
 						'code::before': false,
 						'code::after': false,
+					},
+					dark: {
+						css: {
+							blockquote: {
+								borderLeftColor: theme('colors.neutral.700'),
+								color: theme('colors.neutral.300'),
+							},
+							'hr, thead, tbody tr': {
+								borderColor: theme('colors.neutral.700'),
+							},
+							'ol li::marker, ul li::marker': {
+								color: theme('colors.neutral.500'),
+							},
+						},
 					},
 				},
 			}),
