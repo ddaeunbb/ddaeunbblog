@@ -1,14 +1,9 @@
 import Header from '@/components/navbar/Navbar';
 import './globals.css';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import Footer from '@/components/footer/Footer';
-
-const inter = Inter({
-	subsets: ['latin'],
-	weight: ['100', '400', '700', '800', '900'],
-	variable: '--inter',
-});
+import { $ } from '../lib/core';
+import { fontMono, fontSans, fontSpoqa } from '../lib/fonts';
 
 export const metadata: Metadata = {
 	title: 'ddaeunbblog',
@@ -22,7 +17,14 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en">
-			<body className={inter.className}>
+			<body
+				className={$(
+					fontSans.variable,
+					fontSpoqa.variable,
+					fontMono.variable,
+					'font-sans',
+				)}
+			>
 				<div className="font-sans text-neutral-800 mx-auto max-w-3xl px-6 lg:max-w-6xl lg:px-8">
 					<Header />
 					{children}

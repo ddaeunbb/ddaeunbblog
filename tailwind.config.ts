@@ -1,5 +1,7 @@
 import type { Config } from 'tailwindcss';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
+const { fontFamily } = require('tailwindcss/defaultTheme');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { spacing } = require('tailwindcss/defaultTheme');
 
 const config: Config = {
@@ -36,23 +38,9 @@ const config: Config = {
 					'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
 			},
 			fontFamily: {
-				sans: [
-					'var(--inter)',
-					'ui-sans-serif',
-					'system-ui',
-					'-apple-system',
-					'BlinkMacSystemFont',
-					'Segoe UI',
-					'Roboto',
-					'Helvetica Neue',
-					'Arial',
-					'Noto Sans',
-					'sans-serif',
-					'Apple Color Emoji',
-					'Segoe UI Emoji',
-					'Segoe UI Symbol',
-					'Noto Color Emoji',
-				],
+				sans: ['var(--font-sans)', ...fontFamily.sans],
+				spoqa: ['var(--font-spoqa)', ...fontFamily.sans],
+				mono: ['var(--font-mono)', ...fontFamily.mono],
 			},
 		},
 	},

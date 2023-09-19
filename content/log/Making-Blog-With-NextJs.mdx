@@ -8,7 +8,7 @@ tags:
   - contentlayer
 ---
 
-next.js에 대해서 공부하기 위해 **무언가 같이 만들면서 공부를 하면 어떨까?** 라는 생각과 함께  
+next.js에 대해서 공부하기 위해 ✨**무언가 같이 만들면서 공부를 하면 어떨까?** 라는 생각과 함께  
  next.js 12버전이 아닌 13버전으로 블로그를 만들게 되었습니다.
 
 `gatsby`, `도큐사우루스`, `contentlayer` 등 여러 라이브러리가 있었지만,  
@@ -175,7 +175,6 @@ export default makeSource({
 ```
 
 이후에 저는 루트경로에 `content` 라는 폴더를 만들어주었습니다.
-
 그다음 log라는 파일을 또 생성해, 그 파일 안에  mdx 파일을 만들어주었어요.
 
 **content(config모여있는 루트경로) > log > hello.mdx**
@@ -203,7 +202,6 @@ tags:
 ## app 라우터 경로 설정
 
 이제 mdx들이 모두 파싱되었는데, 어떻게 페이지에 렌더링해서 보여줄 수 있을까요?
-
 먼저, 페이지들을 가져오는 함수를 만들어주었습니다.
 
 **src > lib > getPagefn.ts**
@@ -233,9 +231,7 @@ export async function getFromReadingTime(all: AllType, slug: string) {
 - 찾지 못했다면 `Next.js`에서 기본적으로 제공해주는 `notFound` 경로를 보여주게 되고, 찾았다면 mdx가 담긴 객체를 리턴해줍니다.
 <br/>
 이후 폴더를 만들어 경로 설정을 해주어야합니다.
-
 저는 **content > log** 폴더안에 mdx 파일을 생성했는데요, 따라서 app 폴더 내에도 똑같이 경로를 설정해주어야합니다.
-
 저는 아래와 같이 경로를 설정해주었습니다.
 
 **app > log > [slug] > page.tsx**
@@ -262,9 +258,7 @@ export default async function Slug({ params }: PageProps) {
 - 이 객체에 mdx 관련 코드와 제목, 태그 등 모든 프로퍼티를 사용할 수 있습니다.
 <br/>
 리턴문에 `MdxComponent`을 확인해봅시다.
-
- 이제 파싱된 mdx 객체의 `body.code`를 넣어주게되면 정말 md 파일 형식 그대로 보이게 됩니다.
-
+이제 파싱된 mdx 객체의 `body.code`를 넣어주게되면 정말 md 파일 형식 그대로 보이게 됩니다.
 아래와 같이 `MdxComponent`는 `contentlayer`에서 자체적으로 지원해주는 hook으로, 자동적으로 mdx를 파싱해줍니다.
 
 ```tsx
