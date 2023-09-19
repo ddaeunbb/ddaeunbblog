@@ -1,0 +1,61 @@
+---
+title: generateStaticParams로 SSG 배포하기
+date: 2023-09-19
+category: Log
+tags:
+  - Next.js
+  - typescript
+  - contentlayer
+---
+
+대략 블로그의 구조와 디자인을 잡고 난 후, `vercel`을 통해 배포를 진행하였습니다.
+
+배포 한 이후에, 경로가 없다는 404 에러를 마주하게되었는데요,
+
+next.js를 처음 다뤄보면서 동적 라우팅 되는 부분들을 빌드시점에 미리 파일을 만들어야 하더군요.  
+그리고 그 개념이 SSG 였습니다. 이전 next.js 12버전에서는 `getStaticPaths` 함수를 사용했었다면,  
+13버전부터는 **generateStaticParams** 함수를 사용해야합니다.
+
+---
+
+## generateStaticParams
+
+<a href="https://nextjs.org/docs/app/api-reference/functions/generate-static-params" target="_blank">**generateStaticParams**</a> 관련 공식 문서를 확인하면, 아래와 같이 사용법이 적혀있습니다.
+
+```javascript
+// Return a list of `params` to populate the [slug] dynamic segment
+export async function generateStaticParams() {
+  const posts = await fetch('https://.../posts').then((res) => res.json())
+ 
+  return posts.map((post) => ({
+    slug: post.slug,
+  }))
+}
+```
+- `[{ slug: post.slug }]` 형식처럼 배열 안에 경로를 담아 return
+
+따라서 위의 방식으로 제 에러를 해결해보았습니다.
+
+## 에러 해결방법
+**app > log > [slug] > page.tsx**
+```tsx
+import { allLogs } from 'contentlayer/generated';
+
+export async function generateStaticParams() {
+  // [{ slug: '경로' }] 형태로 return
+	return [...allLogs].map(log => {
+		slug: log.slugAsParams;
+	});
+}
+
+export default async function Slug({ params }: PageProps) {
+  ...
+}
+```
+
+`generateStaticParams`를 사용해 정적으로 경로를 생성해주니 에러를 해결할 수 있었습니다.
+
+추가적으로 모든 동적 라우팅을 사용하는 파일에 설정해주어야합니다.
+
+## Reference Doc
+- [Next.js 공식문서](https://nextjs.org/docs/app/api-reference/functions/generate-static-params)

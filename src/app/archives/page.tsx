@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { allLogs, allArticles, Articles, Log } from 'contentlayer/generated';
 import RenderAnimation from '@/framer/RenderAnimation';
+import { sortDocsFromRecent } from '@/lib/getPagefn';
 
 function getTotalTags(logs: Log[], articles: Articles[]) {
 	const total = [...logs, ...articles];
@@ -15,6 +16,8 @@ function getTotalTags(logs: Log[], articles: Articles[]) {
 
 export default function Archives() {
 	const tags = getTotalTags(allLogs, allArticles);
+	const sortedLogs = sortDocsFromRecent(allLogs);
+	const sortedArticles = sortDocsFromRecent(allArticles);
 
 	return (
 		<main className="relative pb-16">
@@ -59,7 +62,7 @@ export default function Archives() {
 								<span className="ml-1 text-sm">{`(${allLogs.length})`}</span>
 							</div>
 							<ul>
-								{allLogs.map(log => (
+								{sortedLogs.map(log => (
 									<li key={log.title}>
 										<Link
 											href={log.slug}
@@ -88,7 +91,7 @@ export default function Archives() {
 								<span className="ml-1 text-sm">{`(${allArticles.length})`}</span>
 							</div>
 							<ul>
-								{allArticles.map(log => (
+								{sortedArticles.map(log => (
 									<li key={log.title}>
 										<Link
 											href={log.slug}
