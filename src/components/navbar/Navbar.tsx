@@ -19,7 +19,7 @@ export default function Navbar() {
 			<Tab path={Path.articles}>Articles</Tab>
 			<Tab path={Path.archives}>Archives</Tab>
 			<Tab path={Path.note}>Note</Tab>
-			<div className="ml-auto flex items-center gap-2">
+			<div className="ml-auto flex items-center gap-2 max-sm:hidden">
 				<ThemeSwitch />
 			</div>
 		</nav>

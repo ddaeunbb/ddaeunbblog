@@ -53,19 +53,26 @@ export default function Home() {
 					>
 						<PostItem
 							href="/log/Making-Blog-With-NextJs"
-							imgUrl={'/featured/featured3.jpeg'}
+							imgUrl={'/featured/featured1.jpeg'}
 							title="Next.js 13로 블로그 만들기"
 							date="2023.09.16"
 						/>
 						<PostItem
-							href="/articles/React-Props-Children"
-							imgUrl={'/featured/featured1.jpeg'}
-							title="TypeScript에서 React children 타입 정하기"
+							href="/log/Making-Table-Of-Contents"
+							imgUrl={'/featured/featured2.jpeg'}
+							title="Toc(목차) 만들기"
 							date="2023.09.19"
 						/>
 						<PostItem
+							href="/log/Making-Table-Of-Contents"
+							imgUrl={'/featured/featured3.jpeg'}
+							title="Toc(목차) 만들기"
+							date="2023.09.19"
+						/>
+
+						<PostItem
 							href="/articles/CSR-SSR-ISR-SSG"
-							imgUrl={'/featured/featured2.jpeg'}
+							imgUrl={'/featured/featured4.jpg'}
 							title="CSR, SSR, ISR, SSG 알아보기"
 							date="2023.09.19"
 						/>

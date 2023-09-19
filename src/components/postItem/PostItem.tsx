@@ -24,7 +24,7 @@ export default function PostItem(props: {
 					alt={props.title}
 					width={300}
 					height={300}
-					className="h-64 w-full object-cover max-md:h-40"
+					className="h-64 w-full object-cover max-md:h-40 max-sm:object-bottom"
 					draggable={false}
 				/>
 			</div>
