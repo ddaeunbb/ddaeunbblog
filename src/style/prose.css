@@ -9,7 +9,7 @@
 }
 
 .prose h3 {
-  @apply text-base mb-[1em] font-bold dark:text-neutral-300;
+  @apply text-lg mb-[1em] font-bold dark:text-neutral-300 flex items-end;
   line-height: 1.3333333;
 }
 
