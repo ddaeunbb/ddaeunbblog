@@ -64,10 +64,10 @@ export default function Home() {
 							date="2023.09.19"
 						/>
 						<PostItem
-							href="/log/Making-Table-Of-Contents"
+							href="/articles/Cookie-Session"
 							imgUrl={'/featured/featured3.jpeg'}
-							title="Toc(목차) 만들기"
-							date="2023.09.19"
+							title="프로젝트와 섞어 말하는 쿠키와 세션"
+							date="2023.09.20"
 						/>
 
 						<PostItem

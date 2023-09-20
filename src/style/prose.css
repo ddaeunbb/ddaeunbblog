@@ -9,12 +9,12 @@
 }
 
 .prose h3 {
-  @apply text-xl mb-[1em] font-bold;
+  @apply text-base mb-[1em] font-bold dark:text-neutral-300;
   line-height: 1.3333333;
 }
 
 .prose p {
-  @apply text-base leading-9 mx-5 text-neutral-700 dark:text-neutral-400 max-sm:text-sm max-sm:leading-8;
+  @apply text-base leading-9 mx-5 text-neutral-700 dark:text-neutral-400 max-sm:text-sm max-sm:leading-8 max-sm:mx-2;
 }
 
 .prose a {
@@ -40,7 +40,7 @@
 }
 
 .prose pre {
-  @apply rounded-xl shadow-lg py-5;
+  @apply rounded-xl shadow-lg py-5 max-sm:py-3 max-sm:px-2;
 }
 
 .prose code {
@@ -56,8 +56,16 @@
   @apply m-0;
 }
 
-.prose li {
-  @apply dark:text-neutral-400;
+.prose ul > li::marker {
+  @apply text-yellow-300;
+}
+
+.prose ul > li {
+  @apply font-medium dark:text-neutral-300 max-sm:text-sm;
+}
+
+.prose ul > li > ul > li::marker {
+  @apply text-neutral-300;
 }
 
 .prose strong{
@@ -94,7 +102,7 @@
 
 .prose code:not(:where(pre *)) {
   @apply text-basicFont rounded-lg px-2 py-0.5 content-none;
-  @apply bg-neutral-200 dark:bg-yellow-200;
+  @apply bg-neutral-200 dark:bg-yellow-200 max-sm:px-1;
 }
 
 .prose pre::-webkit-scrollbar {
