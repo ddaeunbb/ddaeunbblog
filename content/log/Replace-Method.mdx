@@ -1,0 +1,44 @@
+---
+title: replace 메서드 타파하기
+date: 2023-09-20
+category: Log
+tags:
+  - javascript
+---
+
+알고리즘 스터디를 하다가 최근 정규식과 `String.prototype.replace()` 메서드를 자주 접하게 되면서,
+자주 쓰지 않다보니 잊어버리게 되어 다시 되새김질 하고자 메서드 정리를 포스팅합니다.
+
+## String.replace( )
+`replace` 메서드는 문자열이나 정규표현식만 첫번째 매개변수에 받을 수 있고,
+두번째 매개변수로는 해당되는 문자열을 어떤 문자열로 바꿀 것인지에 대한 입력을 받습니다.
+또한 `replace` 메서드는 원본을 변형시키지 않습니다.
+
+```javascript
+const message = 'Hello world! how beautiful world is it?'
+
+let test = message.replace('world', 'daeun');
+console.log(test); // Hello daeun! how beautiful world is it?
+```
+
+`replace` 메서드는 해당되는 문자 **하나만** 찾아 바꿔줍니다.
+
+## String.replaceAll( )
+따라서 해당되는 모든 문자를 찾아 바꾸고 싶다면, `replaceAll` 메서드를 사용해야합니다.
+
+```javascript
+const message = 'Hello world! how beautiful world is it?'
+
+let test = message.replaceAll('world', 'daeun');
+console.log(test); // 'Hello daeun! how beautiful daeun is it?'
+```
+
+또한 `replaceAll`을 사용하지 않고도 모든 문자를 바꿀 수 있는데요,
+바로 정규식을 활용하면 됩니다.
+```javascript
+const message = 'Hello world! how beautiful world is it?'
+
+let test = message.replace(/world/g, 'daeun');
+console.log(test); // 'Hello daeun! how beautiful daeun is it?'
+```
+정규식에서 `g` 플래그를 사용해 전역을 찾아 모든 문자열을 바꿔주었습니다.
