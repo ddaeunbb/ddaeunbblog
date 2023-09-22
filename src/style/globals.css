@@ -5,6 +5,10 @@
 @import 'prose.css';
 @import 'toc.css';
 
+:root {
+  
+}
+
 ::selection {
   @apply bg-neutral-400/30;
 }
