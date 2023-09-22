@@ -26,11 +26,9 @@ export default function Home() {
 						<a
 							href="https://ddaeunbb.tistory.com/"
 							target="_blank"
-							className="flex gap-x-1 items-center"
+							className="gap-x-1 items-center text-lightGray hover:text-basicFont"
 						>
-							<span className="text-lightGray hover:text-basicFont">
-								More about me ⇢
-							</span>
+							More about me ⇢
 						</a>
 					</div>
 				</section>

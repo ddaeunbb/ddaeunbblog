@@ -1,8 +1,11 @@
+import { sortDocsFromRecent } from '@/lib/getPagefn';
 import { allArticles } from 'contentlayer/generated';
 import RenderAnimation from '@/framer/RenderAnimation';
 import PostListItem from '@/components/postListItem/PostListItem';
 
 export default function Articles() {
+	const sortedArticles = sortDocsFromRecent(allArticles);
+
 	return (
 		<main className="relative pb-16">
 			<h1 className="mb-4 text-3xl font-extrabold tracking-tight sm:text-5xl dark:text-neutral-300">
@@ -27,7 +30,7 @@ export default function Articles() {
 				</div>
 
 				<div className="mt-12 grid w-full gap-5 lg:grid-cols-2 lg:gap-6">
-					{allArticles.map(scrap => (
+					{sortedArticles.map(scrap => (
 						<div key={scrap.slug}>
 							<div>
 								<PostListItem post={scrap} />
