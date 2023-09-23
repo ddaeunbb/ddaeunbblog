@@ -1,29 +1,71 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import ChickIcon from '@/components/icons/ChickIcon';
-import { fadeIn } from '@/constants/animations';
+import { useParams } from 'next/navigation';
+import { sortBasedOnSlug } from '@/lib/getPagefn';
+import { allLogs, allArticles } from 'contentlayer/generated';
+import RenderAnimation from '@/framer/RenderAnimation';
+import PostListItem from '@/components/postListItem/PostListItem';
 
-export default function page() {
+export default function Page() {
+	const { slug } = useParams();
+
+	const sortedLogs = sortBasedOnSlug(allLogs, slug as string);
+	const sortedArticles = sortBasedOnSlug(allArticles, slug as string);
+
 	return (
-		<motion.section
-			variants={fadeIn}
-			initial="initial"
-			animate="animate"
-			className="w-full h-[520px] flex justify-center items-center flex-col"
-		>
-			<Link href={'/'}>
-				<button
-					type="button"
-					className="py-2 px-3 rounded-2xl transition-all hover:scale-105 bg-neutral-100 border dark:border-none dark:bg-transparent"
-				>
-					<ChickIcon />
-				</button>
-			</Link>
-			<span className="dark:text-neutral-500 mt-5">
-				아직 병아리가 채워지지 않은 페이지입니다.
-			</span>
-		</motion.section>
+		<main className="relative pb-16">
+			<div className="mb-4 flex items-end gap-2">
+				<h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl dark:text-yellow-300">
+					Tags - {slug}
+				</h1>
+				<span className="font-normal text-sm text-middleGray dark:text-neutral-400">
+					{`(${sortedLogs.length + sortedArticles.length})`}
+				</span>
+			</div>
+
+			<hr />
+
+			<RenderAnimation>
+				<div className="mt-12 flex items-end gap-2">
+					<h2 className="text-2xl font-bold tracking-tight md:text-4xl dark:text-neutral-300">
+						Log
+					</h2>
+					<span className="font-normal text-sm text-middleGray dark:text-neutral-400">
+						{`(${sortedLogs.length})`}
+					</span>
+				</div>
+
+				<div className="mt-4 grid w-full gap-5 lg:grid-cols-2 lg:gap-6">
+					{sortedLogs &&
+						sortedLogs.map(scrap => (
+							<div key={scrap.slug}>
+								<div>
+									<PostListItem post={scrap} />
+								</div>
+							</div>
+						))}
+				</div>
+
+				<div className="mt-12 flex items-end gap-2">
+					<h2 className="text-2xl font-bold tracking-tight md:text-4xl dark:text-neutral-300">
+						Articles
+					</h2>
+					<span className="font-normal text-sm text-middleGray dark:text-neutral-400">
+						{`(${sortedArticles.length})`}
+					</span>
+				</div>
+
+				<div className="mt-4 grid w-full gap-5 lg:grid-cols-2 lg:gap-6">
+					{sortedArticles &&
+						sortedArticles.map(scrap => (
+							<div key={scrap.slug}>
+								<div>
+									<PostListItem post={scrap} />
+								</div>
+							</div>
+						))}
+				</div>
+			</RenderAnimation>
+		</main>
 	);
 }

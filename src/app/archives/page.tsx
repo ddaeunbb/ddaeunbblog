@@ -1,3 +1,4 @@
+import SearchIcon from '@/components/icons/SearchIcon';
 import Link from 'next/link';
 import { allLogs, allArticles, Articles, Log } from 'contentlayer/generated';
 import RenderAnimation from '@/framer/RenderAnimation';
@@ -27,9 +28,18 @@ export default function Archives() {
 			<RenderAnimation>
 				<div>
 					<p className="mb-4 text-neutral-600 dark:text-neutral-400">
-						모든 기록물들을 한곳에 저장하는 짹짹
+						모이들의 집합 열심히 쪼아먹자🐥
 					</p>
 				</div>
+
+				<div className="relative w-96 mb-4">
+					<input
+						className="block w-full rounded-md border px-4 py-2 border-neutral-200 bg-white placeholder:text-tertiary dark:border-neutral-900 dark:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-200 dark:focus:ring-neutral-800"
+						placeholder="모이 찾기가 아직 걸리는 중..."
+					/>
+					<SearchIcon />
+				</div>
+
 				<section>
 					<div className="mt-12 ">
 						<h2 className="text-2xl font-bold tracking-tight md:text-4xl dark:text-neutral-300">
@@ -41,7 +51,7 @@ export default function Archives() {
 					<div className="mt-4 flex flex-wrap gap-2">
 						{tags.map(tag => (
 							<Link href={`archives/tags/${tag}`} key={tag}>
-								<div className="rounded-lg px-2 py-0.5 transition-colors bg-[#ededed] hover:text-basicFont hover:bg-neutral-200 text-neutral-700 font-normal dark:bg-neutral-500 dark:text-neutral-300 dark:hover:bg-neutral-400">
+								<div className="rounded-lg px-2 py-0.5 transition-colors bg-[#ededed] hover:text-basicFont hover:bg-yellow-300 text-neutral-700 font-normal dark:bg-neutral-500 dark:text-neutral-300 dark:hover:bg-yellow-300 dark:hover:text-neutral-700">
 									{tag}
 								</div>
 							</Link>
@@ -66,7 +76,7 @@ export default function Archives() {
 									<li key={log.title}>
 										<Link
 											href={log.slug}
-											className="text-neutral-600 transition hover:text-basicFont dark:text-neutral-500 dark:hover:text-neutral-300"
+											className="text-neutral-600 transition hover:text-basicFont dark:text-neutral-500 dark:hover:text-yellow-300"
 										>
 											<div className="flex items-end gap-1">
 												<span className="mb-0.5 w-8 text-xs">
@@ -95,7 +105,7 @@ export default function Archives() {
 									<li key={log.title}>
 										<Link
 											href={log.slug}
-											className="text-neutral-600 transition hover:text-basicFont dark:text-neutral-500 dark:hover:text-neutral-300"
+											className="text-neutral-600 transition hover:text-basicFont dark:text-neutral-500 dark:hover:text-yellow-300"
 										>
 											<div className="flex items-end gap-1">
 												<span className="mb-0.5 w-8 text-xs">

@@ -21,7 +21,7 @@ export default function PostListItem({ post }: PostListItemProp) {
 					{post.tags &&
 						post.tags.map(tag => (
 							<Link href={`/archives/tags/${tag}`} key={tag}>
-								<div className="rounded-lg px-2 py-0.5 transition-colors bg-[#ededed] hover:text-basicFont hover:bg-neutral-200 text-neutral-700 font-normal text-sm">
+								<div className="rounded-lg px-2 py-0.5 transition-colors bg-[#ededed] hover:text-basicFont hover:bg-yellow-300 text-neutral-700 font-normal text-sm">
 									{tag}
 								</div>
 							</Link>

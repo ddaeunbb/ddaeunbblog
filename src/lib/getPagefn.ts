@@ -26,3 +26,11 @@ export function sortDocsFromRecent(all: PartType) {
 	});
 	return copy;
 }
+
+export function sortBasedOnSlug(all: PartType, slug: string) {
+	const copy = [...all].filter(doc => {
+		if (doc.tags) return doc.tags?.includes(slug);
+		return false;
+	});
+	return copy;
+}

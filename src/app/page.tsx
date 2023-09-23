@@ -43,7 +43,7 @@ export default function Home() {
 			>
 				<motion.div
 					variants={staggerHalf}
-					className="grid gap-2 md:grid-cols-4"
+					className="grid gap-2 md:grid-cols-4 max-md:gap-5"
 				>
 					<PostItem
 						href="/log/Making-Blog-With-NextJs"

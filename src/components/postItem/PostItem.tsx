@@ -13,14 +13,14 @@ export default function PostItem(props: {
 }) {
 	return (
 		<motion.div
-			className="w-full h-80 max-md:h-60 relative overflow-hidden rounded-xl caption-box dark:hover:border"
+			className="w-full h-80 max-md:h-60 max-md:m-auto relative overflow-hidden rounded-xl caption-box dark:hover:border"
 			variants={fadeInUp}
 			whileHover={{ scale: 0.98, transformOrigin: 'center' }}
 			whileTap={{ scale: 0.98 }}
 		>
 			<Link href={props.href}>
 				<div className="absolute p-3 opacity-0 bg-neutral-900/80 w-full h-full flex justify-center items-center flex-col caption transition-opacity">
-					<p className="text-xl text-center w-full font-bold tracking-tight md:text-lg dark:text-neutral-300 text-neutral-300">
+					<p className="text-2xl text-center w-full font-extrabold tracking-tight md:text-base dark:text-neutral-300 text-neutral-300">
 						{props.title}
 					</p>
 					<div className="absolute bottom-2 right-5 mb-2 flex w-ful gap-1 text-neutral-400">
