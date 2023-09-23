@@ -59,6 +59,10 @@ const fields = {
 		type: 'list',
 		of: { type: 'string' },
 	},
+	featured: {
+		type: 'boolean',
+		default: false,
+	},
 };
 
 export const Log = defineDocumentType(() => ({

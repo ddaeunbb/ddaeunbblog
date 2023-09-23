@@ -56,6 +56,10 @@ var fields = {
   tags: {
     type: "list",
     of: { type: "string" }
+  },
+  featured: {
+    type: "boolean",
+    default: false
   }
 };
 var Log = defineDocumentType(() => ({
@@ -121,4 +125,4 @@ export {
   Log,
   contentlayer_config_default as default
 };
-//# sourceMappingURL=compiled-contentlayer-config-PKWMCHUI.mjs.map
+//# sourceMappingURL=compiled-contentlayer-config-DZVD2XQF.mjs.map

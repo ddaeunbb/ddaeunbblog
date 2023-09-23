@@ -22,6 +22,7 @@ export type Archives = {
 	category: string;
 	date: IsoDateTimeString;
 	tags?: string[] | undefined;
+	featured: boolean;
 	/** MDX file body */
 	body: MDX;
 	slug: string;
@@ -39,6 +40,7 @@ export type Articles = {
 	category: string;
 	date: IsoDateTimeString;
 	tags?: string[] | undefined;
+	featured: boolean;
 	/** MDX file body */
 	body: MDX;
 	slug: string;
@@ -56,6 +58,7 @@ export type Log = {
 	category: string;
 	date: IsoDateTimeString;
 	tags?: string[] | undefined;
+	featured: boolean;
 	/** MDX file body */
 	body: MDX;
 	slug: string;
