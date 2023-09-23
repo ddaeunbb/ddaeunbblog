@@ -31,7 +31,7 @@ export default async function Slug({ params }: PageProps) {
 			<ProgressBar />
 			<section>
 				<div>
-					<h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl mx-auto mb-4 max-w-4xl text-center dark:text-neutral-300">
+					<h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl mx-auto mb-4 max-w-4xl text-center dark:text-yellow-300">
 						{posting.title}
 					</h1>
 					<div className="mt-2 flex justify-center gap-1 dark:text-neutral-400">

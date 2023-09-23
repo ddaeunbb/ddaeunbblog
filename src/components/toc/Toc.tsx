@@ -1,5 +1,6 @@
 'use client';
 
+import ThemeSwitch from '@/components/theme/ThemeSwitch';
 import ScrollBottomBtn from '@/components/button/ScrollBottomBtn';
 import ScrollTopBtn from '@/components/button/ScrollTopBtn';
 import CopyIcon from '@/components/icons/CopyIcon';
@@ -61,6 +62,7 @@ export default function Toc({ list }: TocProp) {
 					</button>
 					<ScrollTopBtn />
 					<ScrollBottomBtn />
+					<ThemeSwitch />
 				</div>
 			</div>
 		</div>
