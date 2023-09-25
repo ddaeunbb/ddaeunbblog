@@ -5,5 +5,6 @@ import articles__cookieSessionMdx from './articles__Cookie-Session.mdx.json' ass
 import articles__frontendAccessTokenRefreshTokenMdx from './articles__Frontend-accessToken-refreshToken.mdx.json' assert { type: 'json' }
 import articles__reactPropsChildrenMdx from './articles__React-Props-Children.mdx.json' assert { type: 'json' }
 import articles__tokenAndJwtMdx from './articles__Token-and-JWT.mdx.json' assert { type: 'json' }
+import articles__oauthMdx from './articles__Oauth.mdx.json' assert { type: 'json' }
 
-export const allArticles = [articles__csrSsrIsrSsgMdx, articles__cookieSessionMdx, articles__frontendAccessTokenRefreshTokenMdx, articles__reactPropsChildrenMdx, articles__tokenAndJwtMdx]
+export const allArticles = [articles__csrSsrIsrSsgMdx, articles__cookieSessionMdx, articles__frontendAccessTokenRefreshTokenMdx, articles__reactPropsChildrenMdx, articles__tokenAndJwtMdx, articles__oauthMdx]
