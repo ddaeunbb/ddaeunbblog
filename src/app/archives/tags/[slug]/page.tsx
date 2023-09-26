@@ -1,13 +1,16 @@
-'use client';
-
-import { useParams } from 'next/navigation';
 import { sortBasedOnSlug } from '@/lib/getPagefn';
 import { allLogs, allArticles } from 'contentlayer/generated';
 import RenderAnimation from '@/framer/RenderAnimation';
 import PostListItem from '@/components/postListItem/PostListItem';
 
-export default function Page() {
-	const { slug } = useParams();
+interface PageProps {
+	params: {
+		slug: string;
+	};
+}
+
+export default function Page({ params }: PageProps) {
+	const slug = params.slug;
 
 	const sortedLogs = sortBasedOnSlug(allLogs, slug as string);
 	const sortedArticles = sortBasedOnSlug(allArticles, slug as string);

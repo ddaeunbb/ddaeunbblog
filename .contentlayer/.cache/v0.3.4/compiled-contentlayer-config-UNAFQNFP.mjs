@@ -69,13 +69,6 @@ var Log = defineDocumentType(() => ({
   fields,
   computedFields
 }));
-var Archives = defineDocumentType(() => ({
-  name: "Archives",
-  filePathPattern: `archives/**/*.mdx`,
-  contentType: "mdx",
-  fields,
-  computedFields
-}));
 var Articles = defineDocumentType(() => ({
   name: "Articles",
   filePathPattern: `articles/**/*.mdx`,
@@ -85,7 +78,7 @@ var Articles = defineDocumentType(() => ({
 }));
 var contentlayer_config_default = makeSource({
   contentDirPath: "./content",
-  documentTypes: [Log, Articles, Archives],
+  documentTypes: [Log, Articles],
   mdx: {
     remarkPlugins: [remarkGfm, remarkBreaks],
     rehypePlugins: [
@@ -120,9 +113,8 @@ var contentlayer_config_default = makeSource({
   }
 });
 export {
-  Archives,
   Articles,
   Log,
   contentlayer_config_default as default
 };
-//# sourceMappingURL=compiled-contentlayer-config-DZVD2XQF.mjs.map
+//# sourceMappingURL=compiled-contentlayer-config-UNAFQNFP.mjs.map
