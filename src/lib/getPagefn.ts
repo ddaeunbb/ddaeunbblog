@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
-import { Log, Archives, Articles } from 'contentlayer/generated';
+import { Log, Articles } from 'contentlayer/generated';
 
-type AllType = Log[] | Archives[] | Articles[];
+type AllType = Log[] | Articles[];
 type PartType = Log[] | Articles[];
 
 export async function getLogFromParams(all: AllType, slug: string) {

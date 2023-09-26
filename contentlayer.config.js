@@ -73,14 +73,6 @@ export const Log = defineDocumentType(() => ({
 	computedFields,
 }));
 
-export const Archives = defineDocumentType(() => ({
-	name: 'Archives',
-	filePathPattern: `archives/**/*.mdx`,
-	contentType: 'mdx',
-	fields: fields,
-	computedFields,
-}));
-
 export const Articles = defineDocumentType(() => ({
 	name: 'Articles',
 	filePathPattern: `articles/**/*.mdx`,
@@ -91,7 +83,7 @@ export const Articles = defineDocumentType(() => ({
 
 export default makeSource({
 	contentDirPath: './content',
-	documentTypes: [Log, Articles, Archives],
+	documentTypes: [Log, Articles],
 	mdx: {
 		remarkPlugins: [remarkGfm, remarkBreaks],
 		rehypePlugins: [

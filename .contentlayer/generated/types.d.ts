@@ -13,24 +13,6 @@ export { isType } from 'contentlayer/client';
 export type { Markdown, MDX, ImageFieldData, IsoDateTimeString };
 
 /** Document types */
-export type Archives = {
-	/** File path relative to `contentDirPath` */
-	_id: string;
-	_raw: Local.RawDocumentData;
-	type: 'Archives';
-	title: string;
-	category: string;
-	date: IsoDateTimeString;
-	tags?: string[] | undefined;
-	featured: boolean;
-	/** MDX file body */
-	body: MDX;
-	slug: string;
-	slugAsParams: string;
-	readingTime: json;
-	headings: json;
-};
-
 export type Articles = {
 	/** File path relative to `contentDirPath` */
 	_id: string;
@@ -74,8 +56,8 @@ export type Log = {
 export type AllTypes = DocumentTypes | NestedTypes;
 export type AllTypeNames = DocumentTypeNames | NestedTypeNames;
 
-export type DocumentTypes = Archives | Articles | Log;
-export type DocumentTypeNames = 'Archives' | 'Articles' | 'Log';
+export type DocumentTypes = Articles | Log;
+export type DocumentTypeNames = 'Articles' | 'Log';
 
 export type NestedTypes = never;
 export type NestedTypeNames = never;
@@ -84,7 +66,6 @@ export type DataExports = {
 	allDocuments: DocumentTypes[];
 	allLogs: Log[];
 	allArticles: Articles[];
-	allArchives: Archives[];
 };
 
 export interface ContentlayerGenTypes {
@@ -103,7 +84,6 @@ declare global {
 }
 
 export type DocumentTypeMap = {
-	Archives: Archives;
 	Articles: Articles;
 	Log: Log;
 };
