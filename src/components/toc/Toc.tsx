@@ -5,10 +5,10 @@ import ScrollBottomBtn from '@/components/button/ScrollBottomBtn';
 import ScrollTopBtn from '@/components/button/ScrollTopBtn';
 import CopyIcon from '@/components/icons/CopyIcon';
 
-import { Articles, Log, Archives } from 'contentlayer/generated';
+import { Articles, Log } from 'contentlayer/generated';
 
 interface TocProp {
-	list: Log | Archives | Articles;
+	list: Log | Articles;
 }
 
 interface Heading {
