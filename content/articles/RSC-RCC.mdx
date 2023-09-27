@@ -1,0 +1,203 @@
+---
+title: React Server Component 톺아보기
+date: 2023-09-27
+category: Articles
+tags:
+  - RSC
+  - RCC
+  - SSR
+featured: true
+---
+
+문득 이 블로그를 SSG로 배포하면서, SSG로 배포했다면 그 하위 페이지들은 모두 SSG로 배포해야하나?에 대한 의문점이 생겼습니다. 오늘은 저의 작은 의문점에서 `RSC(React-Server-Component)`를 학습하게된 흐름과, `RSC`개념에 대해서 포스팅해보고자 합니다.
+
+
+Next.js를 공부하면서 저는 SSR방식을 아래와 같이 이해하고 있었습니다.
+![230927-144642](/posts/RSC-RCC/230927-144642.png)
+- **내가 이해하고 있던 SSR(서버-사이드-렌더링)**
+  - 클라이언트가 페이지를 서버에게 요청한다.
+  - 서버는 요청에 맞는 페이지 데이터 (HTML, CSS)를 응답으로 건네준다.
+  - 클라이언트는 HTML, CSS를 로드하고 먼저 브라우저에 페이지를 보여준다.
+  - 이후 JS를 로드하면서 인터렉티브한 페이지가 만들어진다.
+
+그래서 저는 Next.js가 `SSR` 방식으로 렌더링을 한다고 했을 때, 위의 방식으로 서버가 매번 페이지를 만들어주고, 매 페이지마다 클라이언트가 페이지를 로드받는 것으로 이해하고 있었습니다.
+하지만 제가 이해하고 있던 방식은 매우 전통적인 `SSR` 방식이었습니다.
+
+---
+
+## 전통적인 SSR 방식의 문제
+`SSR`방식은 서버에서 렌더링해주고 클라이언트 쪽에서 전달해준다는 점에서 `TTV`가 빠르다는 장점이 있었지만, `TTI`가 느리다는 고질적인 단점이 있었습니다. SEO에는 강점이었지만, JS가 로드되어야지만 `TTI`가 가능해진다는 단점 때문에 CSR이 대세였던 이유도 있었다고 생각합니다. 매번 페이지를 로드하고 보여줘야하니 blinking 현상도 있었던 단점이 있습니다.
+따라서 Next.js는 CSR의 장점과 (빠른 인터렉팅), SSR의 장점(SEO, 빠른 TTV)을 섞은 것이라고 생각합니다.
+
+### 정리
+- Next.js는 모든 장점을 적절히 취하고자 함
+  - SSR: 빠른 TTV, SEO의 장점
+  - CSR: 빠른 TTI, JS를 클라이언트에서 실행하면서 blinking이 없는 현상
+---
+
+## 전통적인 SSR에서 Next.js를 이해하고자 한다면
+
+next.js의 app router를 사용한다고 가정하면, 페이지인 `page.tsx`에서 'use client'를 directive를 명시해주지 않았다면 SSR방식으로 배포가 되는 것으로 이해했습니다.
+
+SSR이나 SSG로 배포한다고하면, 모든 페이지마다 `index.html`를 만들어 클라이언트가 요청하면 전달해준다고 생각했는데요, 그렇다면 아래와 같은 의문점에 도달하게 됩니다.
+
+> 어떻게 다른 html 파일에서 전역상태가 공유되지?
+**결론적으로 정답은 Next.js는 only SSR이 아니라 CSR과 SSR의 방식을 섞은 것입니다.**
+
+따라서 RSC와 RCC 컴포넌트를 적재적소에 배치하면서 SSR + CSR 방식을 구현해 낼 수 있습니다.
+
+---
+
+## RSC 동작방식
+만약에 RSC와 RCC를 섞어 사용한 스크린이 있다고 가정해보겠습니다.
+![230927-152117](/posts/RSC-RCC/230927-152117.png)
+
+사용자는 해당 페이지를 띄우기 위해 서버에 요청을 보냅니다.
+그럼 그때부터 서버는 트리를 root부터 실행하며 **직렬화**된 Json형태로 재구성하기 시작합니다.
+
+> 직렬화란 다른 컴퓨터 환경에 데이터를 저장 및 전송하기 위해 (파일이나 메모리 버퍼)
+나중에 재구성할 수 있는 포맷으로 변환하는 과정을 뜻한다.
+JS에서는 Json.Stringify( ) 메서드가 직렬화를 하는 방법
+Json.parse( )는 데이터를 사용할 때, 즉 역직렬화하는 방법
+
+즉, 쉽게 말하자면 서로 컴퓨터 간의 데이터를 전송하고 저장하기 위해서 어떤 일련의 데이터 가공이 필요한데(객체를 바이트 스트림으로 변환하는 과정) 이를 하는 것이 직렬화라고 할 수 있겠습니다.
+
+주의할 점은 함수는 직렬화할 수 없습니다. (함수는 실행 컨텍스트, 스코프, 클로저 등 복잡한 개념이 포함되어있기 때문에)
+
+직렬화 과정은 모든 서버 컴포넌트를 실행하면서 Json 객체 형태의 트리로 재구성될 때까지 진행됩니다.
+예를 들어 아래와 같습니다.
+
+```typescript
+<div style={{backgroundColor:'green'}}>hello world</div> //JSX 코드는 createElement의 syntax sugar
+
+> React.createElement(div,{style:{backgroundColor:'green'}},"hello world")
+
+> {
+  $$typeof: Symbol(react.element),
+  type: "div",
+  props: { style:{backgroundColor:"green"}, children:"hello world" },
+  ...
+} //이런 형태로 모든 컴포넌트를 순차적으로 실행한다.
+```
+
+다만 이 과정을 모든 컴포넌트에 대하여 진행하는게 아니라, RCC일 경우 건너뛰게 됩니다.
+하지만 RCC를 서버에서 해석하지 않고 건너 뛴다고해서 비워 둔다면 실제 컴포넌트 트리와 괴리가 생기게 됩니다.
+따라서 RCC의 경우 직접 해석하는 것이 아니라 “이곳은 RCC가 렌더링되는 위치입니다”라는 placeholder를 대신 배치합니다.
+
+```typescript
+{
+  $$typeof: Symbol(react.element),
+  type: {
+    $$typeof: Symbol(react.module.reference),
+    name: "default", //export default를 의미
+    filename: "./src/ClientComponent.js" //RCC가 있는 파일 경로
+  },
+  props: { children: "some children" },
+}
+```
+
+아까도 언급했듯이 RCC는 곧 함수이므로, 직렬화를 할 수 없습니다.
+따라서 함수를 직접 참조하는 것이 아니라 “module reference” 라고 하는 새로운 타입을 적용하고,
+해당 컴포넌트의 경로를 명시함으로써 직렬화를 우회하고 있습니다.
+
+이러한 직렬화 작업을 마친 후 생성된 JSON Tree를 도식화하면 다음과 같은 형태를 띠고 있습니다.
+
+![230927-153158](/posts/RSC-RCC/230927-153158.png)
+
+이제 이렇게 도출된 결과물을 `Stream` 형태로 클라이언트가 전달받게 되고, 함께 다운로드한 js bundle을 참조하여 `module reference` 타입이 등장할 때마다 RCC를 렌더링해서 빈 공간을 채워놓은 뒤, DOM에 반영하면 실제 화면에 스크린이 보여지게 되는 것입니다.
+![230927-153416](/posts/RSC-RCC/230927-153416.png)
+
+### RCC에서 RSC를 return 해야한다면?
+RCC는 컴포넌트 즉, 함수인데 직렬화가 될 수 없다는 제약사항이 있었는데요. 만약에 RSC를 직접적으로 return 해야한다면 어떻게 해야할까요?
+next.js 공식문서에도 나와있지만 RCC가 RSC를 직접 return할 수 없기 때문에 children prop형태로 받아 넘겨주어야한다고 이야기하고 있습니다.
+
+```jsx
+// RCC
+function ParentClientComponent({children}) {
+	...// children 형태로 받아 넘긴다.
+  return <div onChange={...}>{children}</div>;
+}
+
+// RSC
+function ChildServerComponent() {
+	...
+  return <div>server component</div>;
+}
+
+// 공통부모
+function ContainerServerComponent() {
+  return <ParentClientComponent>
+			<ChildServerComponent/>
+	</ParentClientComponent>;
+}
+```
+
+- `ParentClientComponent`는 RCC인데, `ChildServerComponent` RSC를 childeren 형태로 받아 넘기고 있다.
+`ContainerServerComponent`는 이 둘의 공통 부모인 RSC입니다. 실제로 데이터를 해석하는 과정에서는 `ContainerServerComponent`가 해석될 때, 같이 해석이 됩니다. 하지만 RCC인 `ParentClientComponent`는 해석을 우회하게 됩니다.
+
+```typescript
+{
+  // The ClientComponent element placeholder with "module reference"
+  $$typeof: Symbol(react.element),
+  type: {
+    $$typeof: Symbol(react.module.reference),
+    name: "default",
+    filename: "./src/ParentClientComponent.js"
+  },
+  // prop으로 전달받은 children은 해석되고 있음
+  props: {
+    children: {
+      $$typeof: Symbol(react.element),
+      type: "div",
+      props: {
+        children: "server component"
+      }
+    }
+  }
+}
+```
+따라서 위와 같은 방식으로 RSC이면 직렬화를 하고, RCC인 경우 직렬화를 우회해서 전달합니다.
+prop으로 전달해야하는 이유는 직렬화의 구분? 경계를 두기위해서라고 이해했습니다.
+
+---
+
+## CSR과 SSR
+
+### CSR
+React, Vue, Angular와 같은 SPA는 CSR방식으로 렌더링을 하게 되는데요,
+CSR같은 경우 비어있는 html파일에 JS bundle을 다운받고 클라이언트쪽에서 해석하면서 페이지를 그려나가게 됩니다.
+따라서 무거운 JS bundle을 받아오기 때문에 초기 로딩속도가 느리지만 인터랙션에서는 장점이 있습니다.
+![230927-160216](/posts/RSC-RCC/230927-160216.png)
+
+### SSR
+반대로 SSR같은 경우 아까 위의 설명한 바와 같습니다. 하지만 Next.js는 전통적인 SSR은 아닙니다.
+즉, 초기 로딩속도가 느리다는 CSR의 단점을 보완하기 위해 초기 로딩시에는 html파일을 SSR을 통해 빠르게 받아오고,
+이와 병렬적으로 js번들도 함께 가져와서 미리 받아온 html과 병합하는 `hydration`과정을 거치는 것입니다.
+그 결과 빠른 로딩에 강점이 있는 SSR과 인터렉션에 강점이 있는 CSR의 장점을 모두 취할 수 있게 됩니다.
+![230927-160719](/posts/RSC-RCC/230927-160719.png)
+
+---
+
+## RSC의 장점
+
+### Zero Bundle Size
+RSC는 모두 직렬화되어 JSON 스트림 형태로 전달되기 때문에 어떠한 JS bundle도 필요가 없다. 실제로 네트워크탭에서 확인하면
+클라이언트 컴포넌트만 번들에 포함되어있고 RSC 컴포넌트 코드는 볼 수 없다. 따라서 API요청을 하는 RSC 같은 경우 코드가 보이지 않기 때문에 보안적인 장점이 있다. 또한 번들 크기가 작기 때문에 빠르게 TTI의 개선에 기여할 수 있다.
+
+### Automatic Code Splitting
+원래 코드스플리팅 하려면 React.lazy나 dynamic import를 사용해야 했는데, RSC가 실행될 때 RCC는 실행되지 않기때문에 자연스럽게 코드스플리팅이 적용됩니다.
+
+---
+
+## 결론
+결론적으로 서버는 RSC와 RCC를 실행하며 해석해 **html파일이 아닌 직렬화된 스트림** 형태로 클라이언트에 전달하게 된다.
+클라이언트에서는 이 스트림을 해석하면서 virtualDOM을 형성하고 재조정 작업을 통해 뷰를 갱신하게 된다.
+여기서 재조정은 RCC를 hydrate 하는 과정이다.
+
+
+## Reference Doc
+[next.js의 SSG 제대로 이해하고 사용하기](https://parkgang.github.io/blog/2021/09/07/lets-properly-understand-and-use-the-ssg-of-nextjs/)
+[서버 컴포넌트(React Server Component)에 대한 고찰](https://velog.io/@2ast/React-%EC%84%9C%EB%B2%84-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8React-Server-Component%EC%97%90-%EB%8C%80%ED%95%9C-%EA%B3%A0%EC%B0%B0#nextjs%EC%9D%98-ssr)
+[React Server vs Client Component in Next.js 13](https://velog.io/@brgndy/React-Server-vs-Client-Component-in-Next.js-13-%ED%95%B4%EC%84%9D/)
+[Next.js 13 으로 알아보는 FE 렌더링 방식 (SSR vs RSC)](https://haesoo9410.tistory.com/404)
+[Next.js 공식문서-Server Component](https://nextjs.org/docs/app/building-your-application/rendering/server-components#using-server-components-in-nextjs)
