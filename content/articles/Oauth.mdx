@@ -45,7 +45,7 @@ featured: true
 그 플랫폼에서 유저가 이용하려는 서비스에게 접근 권한을 주어, 유저의 개인정보를 얻어내는 방식입니다.
 <br />
 ### 인증방식
-
+![230927-141439](/posts/Oauth/230927-141439.png)
 ```javascript
 1. 유저가 한 서비스에 네이버로 로그인하겠다고 요청한다.
 2. 서비스는 네이버 로그인 페이지으로 연결시켜준다.
@@ -86,6 +86,7 @@ featured: true
 OAuth2는 다양한 구현방식이 있는데요, 대표적으로 `Authorization Code Grant Type`입니다. 이는 액세스 토큰을 발급 받기 이전에, 또 다른 권한증인 `Authorization Code`을 사용해 유효한지 검증을 더 추가해 액세스 토큰을 발급 받는 방식입니다.
 
 **Authorization Code Grant Type**
+![230927-141221](/posts/Oauth/230927-141221.png)
 ```javascript
 1. 유저가 한 서비스에 네이버로 로그인하겠다고 요청한다.
 2. 서비스는 네이버 로그인 페이지으로 연결시켜준다.
@@ -107,3 +108,4 @@ Oauth2의 또다른 대표적인 방식 중 하나로 `Refresh Token Grant Type`
 ## Reference Doc
 [OAuth, OAuth2 개념과 동작 방식 정리](https://wildeveloperetrain.tistory.com/247)
 [OAuth](https://github.com/minwan1/spring-security-oauth2-example/blob/master/docs/step-1%3Aoauth1%2Coauth2%EB%9E%80.md#request-token-%EB%B0%9C%EA%B8%89-%EB%A7%A4%EA%B0%9C%EB%B3%80%EC%88%98)
+

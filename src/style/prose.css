@@ -39,17 +39,13 @@
 	@apply decoration-[#b5b5b5];
 }
 
-.prose pre {
-  @apply rounded-xl shadow-lg py-5 max-sm:py-3 max-sm:px-2;
-}
-
 .prose code {
   @apply rounded-lg py-0.5 px-2 font-semibold text-sm;
   font-family: var(--font-mono), Consolas, Monaco, 'Andale Mono', monospace;
 }
 
 .prose pre > code {
-  @apply bg-[#24292e] text-[15px] font-medium font-mono leading-6 dark:bg-[#24292e] max-sm:text-xs;
+  @apply bg-[#24292e] text-[15px] font-medium font-mono leading-6 dark:bg-[#24292e] max-sm:text-xs w-full;
 }
 
 .prose ul > ul {
@@ -108,14 +104,17 @@
 .prose pre::-webkit-scrollbar {
   display: none;
 }
+
 .prose pre {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+  @apply rounded-xl shadow-lg py-5 max-sm:py-3 max-sm:px-2;
 }
 
 .prose img {
-  @apply my-0 mx-auto;
+  @apply w-9/12 block mt-7 border rounded-2xl p-5 shadow-md mx-auto max-sm:w-full;
 }
+
 .prose img + span {
   display: block;
   margin-top: 0.5rem;
