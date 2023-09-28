@@ -9,6 +9,17 @@ interface PageProps {
 	};
 }
 
+export async function generateStaticParams() {
+	let tagsArr: string[] = [];
+	[...allLogs, ...allArticles].map(log => {
+		log.tags && log.tags.map(tag => tag && tagsArr.push(tag));
+	});
+	tagsArr = [...new Set(tagsArr)];
+	return tagsArr.map(tag => {
+		slug: tag;
+	});
+}
+
 export default function Page({ params }: PageProps) {
 	const slug = params.slug;
 
