@@ -21,9 +21,9 @@ export async function generateStaticParams() {
 	});
 }
 
-export default async function Slug({ params }: PageProps) {
-	const posting = await getLogFromParams(allLogs, params.slug);
-	const readingTime = await getFromReadingTime(allLogs, params.slug);
+export default function Slug({ params }: PageProps) {
+	const posting = getLogFromParams(allLogs, params.slug);
+	const readingTime = getFromReadingTime(allLogs, params.slug);
 	const date = posting.date.slice(0, 10);
 
 	return (
