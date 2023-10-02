@@ -4,7 +4,7 @@ const { withContentlayer } = require('next-contentlayer');
 /** @type {import('next').NextConfig} */
 const options = {
 	reactStrictMode: true,
-	swcMinify: true,
+	swcMinify: false,
 	experimental: {
 		fontLoaders: [
 			{ loader: '@next/font/google', options: { subsets: ['latin'] } },
