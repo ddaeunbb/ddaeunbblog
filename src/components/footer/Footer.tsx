@@ -32,7 +32,7 @@ export default function Footer() {
 				</div>
 				<p>
 					<span className="max-sm:text-xs">© 2023 </span>
-					<a className="max-sm:text-xs">ddaeunbblog</a>
+					<a className="max-sm:text-xs">ddaeunbblog </a>
 					<span className="max-sm:text-xs">Powerd by </span>
 					<a
 						href="https://nextjs.org/"
