@@ -9,43 +9,43 @@ import RenderAnimation from '@/framer/RenderAnimation';
 export default function Home() {
 	return (
 		<RenderAnimation>
-			<div className="flex pt-32">
-				<div className="w-full h-42 bg-blue-300">
-					기록여정
-					<Image
-						src={'/main/yellow.jpeg'}
-						alt="gd"
-						width={900}
-						height={900}
-						objectFit="contain"
-					/>
-				</div>
-
-				{/* <Image
-					className="mr-5 object-contain pb-3"
-					src={'/navbar/logo.svg'}
-					width={100}
-					height={100}
-					alt="병아리이미지"
-				/> */}
-
-				{/* <div>
-					<h1 className="mb-4 text-3xl font-extrabold tracking-tight sm:text-5xl dark:text-yellow-300">
-						ddaeunbblog
-					</h1>
-					<section className="font-normal">
-						<main className="mt-0.5 inline-block font-bold underline-offset-4 hover:underline mb-4 dark:text-neutral-300">
-							🐤 Frontend Developer
-						</main>
-						<div>
-							<p className="text-middleGray mb-4 text-sm">
+			<div className="flex pt-14 mb-72">
+				<div className="absolute left-0 w-screen h-60 bg-gradient-to-b from-yellow-200 to-white dark:to-neutral-900">
+					<div className="flex justify-center items-center ">
+						<Image
+							src={'/main/duck.png'}
+							alt="gd"
+							width={200}
+							height={200}
+							objectFit="contain"
+							className="max-sm:w-40"
+						/>
+						<div className="flex flex-col text-center mx-28 max-md:mx-5 max-sm:mx-0">
+							<h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl">
+								ddaeunbblog
+							</h1>
+							<span className="inline-block font-bold underline-offset-4 mt-4 dark:text-neutral-300 text-neutral-600">
+								🐤 Frontend Developer
+							</span>
+							<span className="text-middleGray mb-4 text-xs dark:text-neutral-300">
 								Junior developer who studies step by step like a `chick`.
-							</p>
+							</span>
 						</div>
-					</section>
-				</div> */}
+						<Image
+							src={'/main/duck2.png'}
+							alt="gd"
+							width={200}
+							height={200}
+							objectFit="contain"
+							className="max-sm:w-40"
+						/>
+					</div>
+				</div>
 			</div>
 
+			<h2 className="text-2xl font-extrabold tracking-tight sm:text-4xl dark:text-yellow-300">
+				Featured
+			</h2>
 			<motion.section
 				className="mt-5 pb-10"
 				variants={staggerHalf}
@@ -57,29 +57,29 @@ export default function Home() {
 					className="grid gap-2 md:grid-cols-4 max-md:gap-5"
 				>
 					<PostItem
-						href="/log/Making-Blog-With-NextJs"
-						imgUrl={'/featured/featured1.jpeg'}
-						title="Next.js 13로 블로그 만들기"
-						date="2023.09.16"
+						href="/articles/RSC-RCC"
+						imgUrl={'/featured/crown.png'}
+						title="React Server Component"
+						date="2023.09.27"
 					/>
 					<PostItem
-						href="/log/Making-Table-Of-Contents"
-						imgUrl={'/featured/featured2.jpeg'}
-						title="Toc(목차) 만들기"
-						date="2023.09.19"
+						href="/articles/Frontend-accessToken-refreshToken"
+						imgUrl={'/featured/star.png'}
+						title="액세스토큰과 리프레시토큰은 어디에 저장해야할까?"
+						date="2023.09.22"
 					/>
 					<PostItem
-						href="/articles/Cookie-Session"
-						imgUrl={'/featured/featured3.jpeg'}
-						title="프로젝트와 섞어 말하는 쿠키와 세션"
-						date="2023.09.20"
+						href="/log/Nextjs-SSR-SSG"
+						imgUrl={'/featured/cloud.png'}
+						title="Next.js의 프리렌더링, SSR, SSG"
+						date="2023.09.29"
 					/>
 
 					<PostItem
-						href="/articles/CSR-SSR-ISR-SSG"
-						imgUrl={'/featured/featured4.jpg'}
-						title="CSR, SSR, ISR, SSG 알아보기"
-						date="2023.09.19"
+						href="/log/Making-Blog-With-NextJs"
+						imgUrl={'/featured/moon.png'}
+						title="Next.js 13로 블로그 만들기"
+						date="2023.09.16"
 					/>
 				</motion.div>
 			</motion.section>

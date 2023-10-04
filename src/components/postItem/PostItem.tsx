@@ -13,7 +13,7 @@ export default function PostItem(props: {
 }) {
 	return (
 		<motion.div
-			className="w-full h-80 max-md:h-60 max-md:m-auto relative overflow-hidden rounded-xl caption-box dark:hover:border"
+			className="w-full h-64 bg-neutral-100 max-md:h-60 max-md:m-auto relative overflow-hidden rounded-xl caption-box dark:hover:border border dark:bg-neutral-800 dark:border-neutral-700"
 			variants={fadeInUp}
 			whileHover={{ scale: 0.98, transformOrigin: 'center' }}
 			whileTap={{ scale: 0.98 }}
@@ -29,13 +29,13 @@ export default function PostItem(props: {
 					</div>
 				</div>
 
-				<div>
+				<div className="flex justify-center items-center text-center">
 					<Image
 						src={props.imgUrl}
 						alt={props.title}
 						width={300}
-						height={500}
-						className="h-full w-full object-cover max-sm:object-bottom"
+						height={300}
+						className="h-64 w-full object-contain max-sm:object-top"
 						draggable={false}
 					/>
 				</div>
