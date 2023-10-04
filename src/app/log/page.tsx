@@ -7,7 +7,7 @@ export default function Log() {
 	const sortedLogs = sortDocsFromRecent(allLogs);
 
 	return (
-		<main className="relative pb-16">
+		<main className="relative pb-16 pt-28">
 			<div className="mb-4 flex items-end gap-2">
 				<h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl dark:text-yellow-300">
 					Log
@@ -26,7 +26,7 @@ export default function Log() {
 					</p>
 				</div>
 
-				<div className="mt-12 grid w-full gap-5 lg:grid-cols-2 lg:gap-6">
+				<div className="mt-12 grid w-full gap-5 lg:grid-cols-3 lg:gap-6 lg:gap-y-8">
 					{sortedLogs.map(log => (
 						<div key={log.slug}>
 							<div>

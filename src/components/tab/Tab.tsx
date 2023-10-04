@@ -16,7 +16,7 @@ export default function Tab({ path, children }: TabProp) {
 	return (
 		<Link
 			href={path}
-			className={`flex items-center px-3 py-1.5 transition-all font-normal rounded-lg hover:bg-[#ededed] text-tabGary dark:text-neutral-300 text-semibold dark:hover:text-yellow-300 dark:hover:bg-neutral-700 ${
+			className={`flex items-center px-3 py-1.5 transition-all font-normal rounded-lg hover:bg-neutral-300 text-tabGary dark:text-neutral-300 text-sm text-semibold dark:hover:text-yellow-300 dark:hover:bg-neutral-500 ${
 				pathname === path && 'font-[600]'
 			}`}
 		>

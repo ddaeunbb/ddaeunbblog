@@ -27,8 +27,8 @@ export default function RootLayout({
 				)}
 			>
 				<NextThemeProvider>
-					<div className="font-sans text-neutral-800 mx-auto max-w-3xl px-6 lg:max-w-6xl lg:px-8 ">
-						<Header />
+					<Header />
+					<div className="font-sans text-neutral-800 mx-auto max-w-3xl px-6 lg:max-w-6xl lg:px-8">
 						{children}
 						<Footer />
 					</div>

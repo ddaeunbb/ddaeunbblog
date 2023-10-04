@@ -7,7 +7,7 @@ export default function Articles() {
 	const sortedArticles = sortDocsFromRecent(allArticles);
 
 	return (
-		<main className="relative pb-16">
+		<main className="relative pb-16 pt-28">
 			<div className="mb-4 flex items-end gap-2">
 				<h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl dark:text-yellow-300">
 					Articles
@@ -26,7 +26,7 @@ export default function Articles() {
 					</p>
 				</div>
 
-				<div className="mt-12 grid w-full gap-5 lg:grid-cols-2 lg:gap-6">
+				<div className="mt-12 grid w-full gap-5 lg:grid-cols-3 lg:gap-6 lg:gap-y-8">
 					{sortedArticles.map(scrap => (
 						<div key={scrap.slug}>
 							<div>
