@@ -44,12 +44,12 @@ export default function Footer() {
 					</a>
 					<span>, </span>
 					<a
-						href="https://pages.github.com/"
+						href="https://vercel.com/"
 						className="transition hover:text-secondary max-sm:text-xs"
 						target="_blank"
 						rel="noopener noreferrer"
 					>
-						Github Pages
+						Vercel
 					</a>
 				</p>
 			</div>
