@@ -63,6 +63,10 @@ const fields = {
 		type: 'boolean',
 		default: false,
 	},
+	thumbnail: {
+		type: 'string',
+		required: true,
+	},
 };
 
 export const Log = defineDocumentType(() => ({

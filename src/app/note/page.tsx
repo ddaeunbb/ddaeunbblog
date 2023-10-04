@@ -2,7 +2,7 @@ import RenderAnimation from '@/framer/RenderAnimation';
 
 export default function Note() {
 	return (
-		<main className="relative pb-16">
+		<main className="relative pb-16 pt-28">
 			<h1 className="mb-4 text-3xl font-extrabold tracking-tight sm:text-5xl dark:text-yellow-300">
 				Note
 			</h1>

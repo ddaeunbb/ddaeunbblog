@@ -23,6 +23,7 @@ export type Articles = {
 	date: IsoDateTimeString;
 	tags?: string[] | undefined;
 	featured: boolean;
+	thumbnail: string;
 	/** MDX file body */
 	body: MDX;
 	slug: string;
@@ -41,6 +42,7 @@ export type Log = {
 	date: IsoDateTimeString;
 	tags?: string[] | undefined;
 	featured: boolean;
+	thumbnail: string;
 	/** MDX file body */
 	body: MDX;
 	slug: string;

@@ -60,6 +60,10 @@ var fields = {
   featured: {
     type: "boolean",
     default: false
+  },
+  thumbnail: {
+    type: "string",
+    required: true
   }
 };
 var Log = defineDocumentType(() => ({
@@ -117,4 +121,4 @@ export {
   Log,
   contentlayer_config_default as default
 };
-//# sourceMappingURL=compiled-contentlayer-config-UNAFQNFP.mjs.map
+//# sourceMappingURL=compiled-contentlayer-config-LDTK6I5N.mjs.map

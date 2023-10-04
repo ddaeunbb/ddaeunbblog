@@ -9,18 +9,29 @@ import RenderAnimation from '@/framer/RenderAnimation';
 export default function Home() {
 	return (
 		<RenderAnimation>
-			<div className="flex">
-				<Image
+			<div className="flex pt-32">
+				<div className="w-full h-42 bg-blue-300">
+					기록여정
+					<Image
+						src={'/main/yellow.jpeg'}
+						alt="gd"
+						width={900}
+						height={900}
+						objectFit="contain"
+					/>
+				</div>
+
+				{/* <Image
 					className="mr-5 object-contain pb-3"
 					src={'/navbar/logo.svg'}
 					width={100}
 					height={100}
 					alt="병아리이미지"
-				/>
+				/> */}
 
-				<div>
+				{/* <div>
 					<h1 className="mb-4 text-3xl font-extrabold tracking-tight sm:text-5xl dark:text-yellow-300">
-						ddaeunbb
+						ddaeunbblog
 					</h1>
 					<section className="font-normal">
 						<main className="mt-0.5 inline-block font-bold underline-offset-4 hover:underline mb-4 dark:text-neutral-300">
@@ -32,7 +43,7 @@ export default function Home() {
 							</p>
 						</div>
 					</section>
-				</div>
+				</div> */}
 			</div>
 
 			<motion.section
