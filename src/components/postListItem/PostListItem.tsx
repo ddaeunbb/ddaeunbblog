@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import CalendarIcon from '@/components/icons/CalendarIcon';
 import ClockIcon from '@/components/icons/ClockIcon';
 import { Log, Articles } from 'contentlayer/generated';
@@ -24,6 +25,17 @@ export default function PostListItem({ post }: PostListItemProp) {
 							</Link>
 						))}
 				</div>
+				{post.featured && (
+					<div className="absolute left-3 top-3">
+						<Image
+							className="fill-[rgb(244, 201, 13)]"
+							src="/navbar/logo.svg"
+							alt="logo"
+							width={25}
+							height={25}
+						/>
+					</div>
+				)}
 				<img
 					src={post.thumbnail}
 					alt="thumbnail"

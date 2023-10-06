@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { Log, Articles } from 'contentlayer/generated';
 
 type AllType = Log[] | Articles[];
-type PartType = Log[] | Articles[];
+type PartType = Log[] | Articles[] | (Log | Articles)[];
 
 export function getLogFromParams(all: AllType, slug: string) {
 	const posting = all.find(doc => doc.slugAsParams === slug);

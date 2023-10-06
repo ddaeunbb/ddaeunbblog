@@ -33,6 +33,6 @@
 		".next/types/**/*.ts",
 		"./.contentlayer/generated",
 		"contentlayer.config.ts"
-, "src/components/mdx/Component.jsx", "tailwind.config.js"	],
+, "src/components/mdx/Component.jsx", "tailwind.config.js", "content/log/Input-Typescript.mdx"	],
 	"exclude": ["node_modules"]
 }

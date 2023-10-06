@@ -1,0 +1,219 @@
+---
+title: Input과 Ref를 다루는 TypeScript
+date: 2023-10-04
+category: Log
+tags:
+  - typescript
+thumbnail: https://mir-s3-cdn-cf.behance.net/project_modules/max_3840/9617ad163493153.646f7212e49d4.jpg
+---
+
+Input, ref + TypeScript를 사용할 때마다 자꾸 애를 먹어서 쓰는 포스트입니다.
+오늘은 Input을 사용할 때 타입을 어떻게 넘겨줘야하는지 알아볼까 합니다.
+
+## Input의 이벤트
+input에는 onChange, onKeyUp, onKeyDown과 같은 이벤트가 있습니다. 이런 이벤트를 사용할 때는 아래와 같이 타입을 넘겨주면 됩니다.
+
+
+### onChange
+```typescript
+const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { value } = e.target;
+  setInput(value);
+}
+```
+
+### onKeyUp, onKeyDown
+```typescript
+const onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  ...
+}
+
+const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  ...
+}
+```
+<br/>
+---
+
+## useRef와 친해지기
+TS에서 ref를 사용하려면, 아래와 같이 초기값과 제네릭 설정을 해주어야합니다.
+
+- 값 저장 용도
+  - 제네릭 : 값의 타입을 넣어준다.
+  - 초기값 : 반드시 타입에 맞는 초기값을 할당해준다.
+
+```typescript
+// 값 저장 용도(number)
+const count = useRef<number>(0);
+const text = useRef<string>("")
+```
+
+- DOM 취득 용도
+  - 제네릭 : 참조하는 HTML 엘리먼트를 넣어준다.
+  - 초기값: null을 넣어준다.
+```typescript
+// DOM button 참조: 제네릭으로 html엘리먼트(button) 설정. 초기값은 null로 설정
+const buttonRef = useRef<HTMLButtonElement>(null);
+
+// DOM input 참조 : 제네릭으로 html엘리먼트(input) 설정
+const inputRef = useRef<HTMLInputElement>(null);
+```
+**useRef로 취득하는 DOM은 최초 mount되기 전엔 null입니다.**
+
+
+저는 위와 같은 내용으로 취득의 용도로 나누어 null값을 설정해주거나, 아니면 다른 초기값을 설정해주어야한다고 알고 있었는데요, 그 이유에 대해서 더 자세하게 알아보도록 하겠습니다.
+<br/>
+
+### useRef?
+useRef는 React Hook의 일종으로, 인자로 넘어온 초깃값을 useRef 객체의 `.current` 프로퍼티에 저장합니다. DOM 객체를 직접 가리켜서 내부 값을 변경하거나 `focus()` 메소드를 사용하거나 하는 때에 주로 사용하고, 변경되어도 컴포넌트가 리렌더링되지 않도록 하기 위한 값들을 저장하기 위해서도 사용한다. (이는 useRef가 내용이 변경되어도 state와 다르게 이를 알려주지 않기 때문입니다. `.current` 프로피터를 변경시키는 것은 리렌더링을 발생시키지 않고, 따라서 로컬 변수 용도로 사용할 수 있습니다.)
+
+본질적으로 useRef는 `.current` 프로퍼티에 **변경 가능한 값을 담고 있는 “상자”** 와 같습니다.
+위의 말은 useRef의 반환 타입인 `MutableRefObject`와 `RefObject`의 정의를 보면 더욱 명확하게 이해할 수 있습니다.
+
+```typescript
+interface MutableRefObject<T> {
+    current: T;
+}
+
+interface RefObject<T> {
+    readonly current: T | null;
+}
+```
+위의 코드를 보면 그저 함수 초깃값을 current에 저장할 뿐입니다.
+
+---
+
+## useRef의 3가지 정의
+
+@types/react의 index.d.ts를 보면 useRef 훅은 3개의 정의가 오버로딩되어있는데요.
+
+언제 어떤 useRef가 쓰이는지 몰라서 ref를 사용할 때 많은 에러들이 발생하는데, 세 개의 오버로딩된 useRef를 하나씩 살펴보겠습니다.
+<br/>
+
+### MutableRefObject
+`useRef<T>(initialValue: T): MutableRefObject<T>;`
+인자의 타입과 제네릭의 타입이 T로 일치하는 경우, `MutableRefObject<T>`를 반환합니다.
+즉, 제네릭으로 number로 넘겨주고 초기값도 숫자로 설정하면 `MutableRefObject<T>`를 반환하는 것입니다. 
+`MutableRefObject<T>`의 경우, 이름에서도 볼 수 있고 위의 정의에서도 확인할 수 있듯 current 프로퍼티 그 자체를 직접 변경할 수 있습니다.
+
+### RefObject
+`useRef<T>(initialValue: T|null): RefObject<T>;`
+인자의 타입이 null을 허용하는 경우, `RefObject<T>`를 반환합니다.
+`RefObject<T>`는 위에서 보았듯 current 프로퍼티를 직접 수정할 수 없습니다.
+
+### MutableRefObject (T | undefined)
+`useRef<T = undefined>(): MutableRefObject<T | undefined>;`
+제네릭의 타입이 undefined인 경우(타입을 제공하지 않은 경우), `MutableRefObject<T | undefined>`를 반환합니다.
+
+---
+
+## 코드 보며 이해하기
+
+```tsx
+import React, { useRef } from "react";
+
+const App = () => {
+  const localVarRef = useRef<number>(0);  // MutableRefObject
+
+  const handleButtonClick = () => {
+		if (localVarRef.current) {
+	    localVarRef.current += 1;
+	    console.log(localVarRef.current);
+		}
+  };
+
+  return (
+    <div className="App">
+      <button onClick={handleButtonClick}>+1</button>
+    </div>
+  );
+};
+
+export default App;
+```
+
+간단하게 useRef를 로컬 변수 용도로 사용하는 경우입니다. 버튼을 클릭할 경우 `localVarRef.current`의 값이 1씩 증가하게 됩니다. useRef에 제네릭 타입과 동일한 타입의 초기 인자를 줬으므로, 여기에 사용된 useRef는 1번 케이스가 됩니다. 즉 `localVarRef`는 `MutableRefObject<number>` 타입이고, 그러므로 current를 직접 수정하여 로컬 변수처럼 사용할 수 있는 것입니다.
+
+만약 다음과 같이 useRef에 인자를 null로 초기화했다면 어떤 일이 벌어질까요?
+
+```tsx
+...
+  const localVarRef = useRef<number>(null); // RefObject
+
+  const handleButtonClick = () => {
+    localVarRef.current += 1;
+    console.log(localVarRef.current);
+  };
+...
+```
+
+![231006-182708](/posts/Input-Ref-TypeScript/231006-182708.png)
+
+
+current 프로퍼티를 수정할 수 없는 것을 볼 수 있습니다. IDE에서도 `read-only` 프로퍼티라고 설명하는 것을 알 수 있습니다. 이는 여기에서 사용된 useRef가 2번 경우로, current가 readonly인 RefObject를 반환했기 때문입니다.
+
+또 다른 예시를 들어보겠습니다.
+
+```tsx
+import React, { useRef } from "react";
+
+const App = () => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const handleButtonClick = () => {
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+  };
+
+  return (
+    <div className="App">
+      <button onClick={handleButtonClick}>+1</button>
+
+      <input ref={inputRef} />
+      <button onClick={handleButtonClick}>Clear</button>
+    </div>
+  );
+};
+
+export default App;
+```
+
+input DOM element를 ref로 받아서, 버튼을 클릭하면 input의 value를 직접 빈 문자열로 수정하는 예제입니다.
+이 예제에서 useRef는 2번 경우로, 정상적으로 동작하게 됩니다. (RefObject)
+
+> 잠깐! 2번 경우의 useRef는 수정 불가능한 `RefObject<T>`를 반환하는데, 왜 inputRef.current.value는 수정 가능할까요?
+
+→ 정의 상 current 프로퍼티만 읽기 전용으로, current 프로퍼티의 하위 프로퍼티인 value는 여전히 수정 가능합니다. 이는 readonly가 shallow하기 때문입니다. `HTMLInputElement`를 받아온 시점에서 그럴 일은 없겠지만, current 프로퍼티를 직접 수정하려 하면 에러가 발생하는 것을 볼 수 있습니다.
+
+
+여기에서 다음과 같이 useRef의 인자를 undefined로 바꿔보겠습니다.
+
+```tsx
+...
+  const inputRef = useRef<HTMLInputElement>();
+...
+```
+
+![231006-183059](/posts/Input-Ref-TypeScript/231006-183059.png)
+
+이렇게 하면, `<input ref={inputRef} />` 쪽에서 에러가 발생하게 됩니다. ref 프로퍼티는 `RefObject`형만 받는데, inputRef는 정의 상 `MutableRefObject`가 되고, 이를 ref 프로퍼티에 집어넣으려 해서 발생하는 에러이기 때문입니다. 
+
+---
+
+## 정리
+정리하면 다음과 같습니다.
+```tsx
+const localVarRef = useRef<number>(0);
+```
+로컬 변수 용도로 useRef를 사용하는 경우, `MutableRefObject<T>`를 사용해야 하므로 제네릭 타입과 같은 타입의 초깃값을 넣어줘야합니다.
+
+```tsx
+const inputRef = useRef<HTMLInputElement>(null);
+```
+DOM을 직접 조작하기 위해 프로퍼티로 useRef 객체를 사용할 경우, `RefObject<T>`를 사용해야 하므로 초깃값으로 null을 넣어줘야합니다.
+
+<br/>
+
+## Reference Doc
+[TypeScript React에서 useRef의 3가지 정의와 각각의 적절한 사용법](https://driip.me/7126d5d5-1937-44a8-98ed-f9065a7c35b5)
