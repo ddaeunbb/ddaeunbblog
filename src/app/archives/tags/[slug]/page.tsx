@@ -27,7 +27,7 @@ export default function Page({ params }: PageProps) {
 	const sortedArticles = sortBasedOnSlug(allArticles, slug as string);
 
 	return (
-		<main className="relative pb-16">
+		<main className="relative pb-16 pt-28">
 			<div className="mb-4 flex items-end gap-2">
 				<h1 className="text-3xl font-extrabold tracking-tight sm:text-5xl dark:text-yellow-300">
 					Tags - {slug}
@@ -49,7 +49,7 @@ export default function Page({ params }: PageProps) {
 					</span>
 				</div>
 
-				<div className="mt-4 grid w-full gap-5 lg:grid-cols-2 lg:gap-6">
+				<div className="mt-4 grid w-full gap-5 lg:grid-cols-3 lg:gap-6">
 					{sortedLogs &&
 						sortedLogs.map(scrap => (
 							<div key={scrap.slug}>
@@ -69,7 +69,7 @@ export default function Page({ params }: PageProps) {
 					</span>
 				</div>
 
-				<div className="mt-4 grid w-full gap-5 lg:grid-cols-2 lg:gap-6">
+				<div className="mt-4 grid w-full gap-5 lg:grid-cols-3 lg:gap-6">
 					{sortedArticles &&
 						sortedArticles.map(scrap => (
 							<div key={scrap.slug}>
