@@ -1,17 +1,14 @@
-'use client';
-
+import Link from 'next/link';
 import Image from 'next/image';
-import { staggerHalf } from '@/constants/animations';
-import { motion } from 'framer-motion';
-import PostItem from '@/components/postItem/PostItem';
 import RenderAnimation from '@/framer/RenderAnimation';
-// import { allArticles, allLogs } from 'contentlayer/generated';
-
-// import { sortDocsFromRecent } from '@/lib/getPagefn';
+import FeaturedList from '@/components/featuredList/FeaturedList';
+import { allArticles, allLogs } from 'contentlayer/generated';
+import { sortDocsFromRecent } from '@/lib/getPagefn';
+import PostListItem from '@/components/postListItem/PostListItem';
 
 export default function Home() {
-	// const arr = [...allArticles, ...allLogs];
-	// const sortedPostings = sortDocsFromRecent(arr).slice(0, 9);
+	const arr = [...allArticles, ...allLogs];
+	const sortedPostings = sortDocsFromRecent(arr).slice(0, 9);
 
 	return (
 		<RenderAnimation>
@@ -52,49 +49,28 @@ export default function Home() {
 			<h2 className="text-2xl font-extrabold tracking-tight sm:text-4xl dark:text-yellow-300">
 				Featured
 			</h2>
-			<motion.section
-				className="mt-5 pb-10"
-				variants={staggerHalf}
-				initial="initial"
-				animate="animate"
-			>
-				<motion.div
-					variants={staggerHalf}
-					className="grid gap-2 md:grid-cols-4 max-md:gap-5"
-				>
-					<PostItem
-						href="/articles/RSC-RCC"
-						imgUrl={'/featured/crown.png'}
-						title="React Server Component"
-						date="2023.09.27"
-					/>
-					<PostItem
-						href="/articles/Frontend-accessToken-refreshToken"
-						imgUrl={'/featured/star.png'}
-						title="액세스토큰과 리프레시토큰은 어디에 저장해야할까?"
-						date="2023.09.22"
-					/>
-					<PostItem
-						href="/log/Nextjs-SSR-SSG"
-						imgUrl={'/featured/cloud.png'}
-						title="Next.js의 프리렌더링, SSR, SSG"
-						date="2023.09.29"
-					/>
 
-					<PostItem
-						href="/log/Making-Blog-With-NextJs"
-						imgUrl={'/featured/moon.png'}
-						title="Next.js 13로 블로그 만들기"
-						date="2023.09.16"
-					/>
-				</motion.div>
-			</motion.section>
+			<FeaturedList />
 
 			<hr className="my-12" />
 
 			<h2 className="text-2xl font-extrabold tracking-tight sm:text-4xl dark:text-yellow-300">
 				Posted
 			</h2>
+
+			<Link href={'/log'}>
+				<span className="text-xs hover:underline text-neutral-400 hover:text-neutral-500 hover:underline-offset-4 dark:hover:text-neutral-300">{`View more Posts ->`}</span>
+			</Link>
+
+			<div className="mt-12 grid w-full gap-5 lg:grid-cols-3 lg:gap-6 lg:gap-y-8 mb-16">
+				{sortedPostings.map(scrap => (
+					<div key={scrap.slug}>
+						<div>
+							<PostListItem post={scrap} />
+						</div>
+					</div>
+				))}
+			</div>
 		</RenderAnimation>
 	);
 }
