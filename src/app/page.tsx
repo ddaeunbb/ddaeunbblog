@@ -1,18 +1,17 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
 import { staggerHalf } from '@/constants/animations';
 import { motion } from 'framer-motion';
 import PostItem from '@/components/postItem/PostItem';
 import RenderAnimation from '@/framer/RenderAnimation';
-import { allArticles, allLogs } from 'contentlayer/generated';
-import PostListItem from '@/components/postListItem/PostListItem';
-import { sortDocsFromRecent } from '@/lib/getPagefn';
+// import { allArticles, allLogs } from 'contentlayer/generated';
+
+// import { sortDocsFromRecent } from '@/lib/getPagefn';
 
 export default function Home() {
-	const arr = [...allArticles, ...allLogs];
-	const sortedPostings = sortDocsFromRecent(arr).slice(0, 9);
+	// const arr = [...allArticles, ...allLogs];
+	// const sortedPostings = sortDocsFromRecent(arr).slice(0, 9);
 
 	return (
 		<RenderAnimation>
@@ -96,20 +95,6 @@ export default function Home() {
 			<h2 className="text-2xl font-extrabold tracking-tight sm:text-4xl dark:text-yellow-300">
 				Posted
 			</h2>
-
-			<Link href={'/log'}>
-				<span className="text-xs hover:underline text-neutral-400 hover:text-neutral-500 hover:underline-offset-4 dark:hover:text-neutral-300">{`View more Posts ->`}</span>
-			</Link>
-
-			<div className="mt-12 grid w-full gap-5 lg:grid-cols-3 lg:gap-6 lg:gap-y-8 mb-16">
-				{sortedPostings.map(scrap => (
-					<div key={scrap.slug}>
-						<div>
-							<PostListItem post={scrap} />
-						</div>
-					</div>
-				))}
-			</div>
 		</RenderAnimation>
 	);
 }
