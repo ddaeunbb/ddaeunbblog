@@ -1,18 +1,14 @@
 'use client';
 
+import Link from 'next/link';
 import Image from 'next/image';
 import { staggerHalf } from '@/constants/animations';
 import { motion } from 'framer-motion';
 import PostItem from '@/components/postItem/PostItem';
 import RenderAnimation from '@/framer/RenderAnimation';
-// import { allArticles, allLogs } from 'contentlayer/generated';
-
-// import { sortDocsFromRecent } from '@/lib/getPagefn';
+import MainList from '@/components/mainList/MainList';
 
 export default function Home() {
-	// const arr = [...allArticles, ...allLogs];
-	// const sortedPostings = sortDocsFromRecent(arr).slice(0, 9);
-
 	return (
 		<RenderAnimation>
 			<div className="flex pt-14 mb-72">
@@ -95,6 +91,12 @@ export default function Home() {
 			<h2 className="text-2xl font-extrabold tracking-tight sm:text-4xl dark:text-yellow-300">
 				Posted
 			</h2>
+
+			<Link href={'/log'}>
+				<span className="text-xs hover:underline text-neutral-400 hover:text-neutral-500 hover:underline-offset-4 dark:hover:text-neutral-300">{`View more Posts ->`}</span>
+			</Link>
+
+			<MainList />
 		</RenderAnimation>
 	);
 }
