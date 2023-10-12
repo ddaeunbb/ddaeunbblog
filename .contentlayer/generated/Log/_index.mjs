@@ -12,6 +12,8 @@ import log__nextjsSsrSsgMdx from './log__Nextjs-SSR-SSG.mdx.json' assert { type:
 import log__processThreadMdx from './log__Process-Thread.mdx.json' assert { type: 'json' }
 import log__programmersBruteForceMdx from './log__Programmers-Brute-Force.mdx.json' assert { type: 'json' }
 import log__replaceMethodMdx from './log__Replace-Method.mdx.json' assert { type: 'json' }
+import log__stackAndHeapMdx from './log__Stack-and-Heap.mdx.json' assert { type: 'json' }
 import log__typeScriptPractice1Mdx from './log__TypeScript-Practice1.mdx.json' assert { type: 'json' }
+import log__eventLoopQueueMdx from './log__EventLoop-Queue.mdx.json' assert { type: 'json' }
 
-export const allLogs = [log__debounceThrottleMdx, log__fluxMdx, log__generateStaticParamsMdx, log__inputRefTypeScriptMdx, log__mvcMvpMvvmMdx, log__makingBlogWithNextJsMdx, log__makingTableOfContentsMdx, log__multiProcessMultiThreadMdx, log__nextjsSsrSsgMdx, log__processThreadMdx, log__programmersBruteForceMdx, log__replaceMethodMdx, log__typeScriptPractice1Mdx]
+export const allLogs = [log__debounceThrottleMdx, log__fluxMdx, log__generateStaticParamsMdx, log__inputRefTypeScriptMdx, log__mvcMvpMvvmMdx, log__makingBlogWithNextJsMdx, log__makingTableOfContentsMdx, log__multiProcessMultiThreadMdx, log__nextjsSsrSsgMdx, log__processThreadMdx, log__programmersBruteForceMdx, log__replaceMethodMdx, log__stackAndHeapMdx, log__typeScriptPractice1Mdx, log__eventLoopQueueMdx]

@@ -1,6 +1,6 @@
 ---
 title: 타입스크립트 제대로 톺아보기 I
-date: 2023-10-10
+date: 2023-10-11
 category: Log
 tags:
   - typescript
@@ -12,7 +12,352 @@ thumbnail: https://mir-s3-cdn-cf.behance.net/project_modules/1400_opt_1/05f4db17
 
 ---
 
-## 
+## Never와 ! (exclamation-mark)
 
-##Reference Doc
+### 빈 배열의 타입지정
+```typescript
+// 'bad'
+const array = [];
+array.push('a');
+
+// 'good'
+const array: string[] = [];
+array.push('a);
+```
+
+왜냐하면 빈배열을 타입을 지정하지 않고 선언해버리면 `never`타입이 되어버리기때문에 메서드를 사용할 수 없게 됩니다.
+
+<br/>
+
+### !과 DOM
+
+만약에 아래와 같이 DOM을 `querySelector`를 통해서 가져오고 그 안에 `innerHTML`에 내용을 채운다고 가정했을 때,
+
+```typescript
+const head: Element = document.querySelector('#head');
+head.innerHTML = "hello world"
+```
+
+`Element | null' 형식은 'Element' 형식에 할당할 수 없습니다.` 라는 에러 메시지를 마주하게 됩니다. 타입스크립트는 모든 상황을 가정하기 때문에 DOM이 없을 때 상황도 가정하기 때문입니다. 따라서 정말 내가 이 DOM이 있다는 것에 전재산을 건다😎 했을 경우에는 `!` 연산자를 써주면 에러를 해결할 수 있습니다.
+
+```typescript
+const head: Element = document.querySelector("#head")!;
+head.innerHTML = "hello world";
+```
+
+하지만 정말 보증할 수 있을지, 나중에 문제가 될 수 있기 때문에 아래와 같이 안정성 있게 코드를 짜는 것이 좋습니다.
+
+```typescript
+const head: Element = document.querySelector("#head");
+
+if(head){
+  head.innerHTML = "hello world";
+}
+```
+<br/>
+---
+
+## enum
+확실하게 값 자체로 추론하길 바란다면 `as const`를 입력해주어 사용할 수 있습니다.
+
+```typescript
+const Direction = {
+  Up: 0,
+  Down: 1,
+  Left: 2,
+  Right: 3,
+}
+
+// 위의 객체가 추론 되고 있는 값
+//const Direction: {
+//  Up: number;
+//  Down: number;
+//  Left: number;
+//  Right: number;
+//}
+```
+as const 로 쓰게 된다면?
+
+```typescript
+const Direction = {
+  Up: 0,
+  Down: 1,
+  Left: 2,
+  Right: 3,
+} as const
+
+// const Direction: {
+//   readonly Up: 0;
+//   readonly Down: 1;
+//   readonly Left: 2;
+//   readonly Right: 3;
+// }
+```
+
+---
+
+## 객체의 key와 값
+
+- 객체의 key만 타입으로 가져오고 싶은 경우
+```typescript
+const obj = { a: '123', b: 'hello', c: 'world' };
+type Key = keyof typeof obj
+// type Key = "a" | "b" | "c"
+```
+
+- 객체의 값을 타입으로 가져오고 싶은 경우
+```typescript
+const obj = { a: '123', b: 'hello', c: 'world' };
+type key = typeof obj[keyof typeof obj]
+// type Key = string
+```
+
+위와 같이 `const obj` 뒤에 `as const를` 적지 않으면 `string`으로 타입이 추론됩니다.
+따라서 `as const`는 타입을 더 좁히는데 or 명확하게 하는데에 사용되기도 합니다.
+
+```typescript
+const obj = { a: '123', b: 'hello', c: 'world' } as const;
+```
+
+---
+
+## 넓은 타입과 좁은 타입
+
+- 넓은 타입과 좁은 타입 구분하기
+```typescript
+type A = string;
+type B = number;
+type C = string |  number;
+type D = string & number;
+```
+위에서 타입 C는 A, B보다 넓은 타입일까요? 좁은 타입일까요?
+정답은 넓은 타입입니다.
+반대로 타입 D는 좁은 타입입니다.
+
+```typescript
+type E = { name: string };
+type F = { age: number };
+type G = { number: string; age: number; };
+type H = E | F;
+```
+객체에서 타입 G는 E와 F보다 넓은 타입일까요? 좁은 타입일까요?
+정답은 좁은 타입입니다. 객체는 구체화 될수록 좁은 타입이 됩니다.
+반대로 H는 넓은 타입입니다.
+
+- 잉여속성검사
+
+```typescript
+interface I { a: string };
+
+// 에러 발생
+const iObj: I = { a: 'daeun', b: 'kim' };
+```
+위와 같이 객체리터럴로 바로 대입을 하게 되면 잉여속성 검사를 하기 때문에 에러가 발생하게 됩니다.
+
+```typescript
+const iObj = { a: 'daeun', b: 'kim' };
+// 에러 발생 X
+const iObj2: I = iObj;
+```
+
+---
+
+## void
+
+### void가 쓰이는 여러가지 상황
+
+void는 return 값을 넣으면 안된다는 것을 의미합니다.
+void는 `undefined`를 return 해도 되지만 `null`은 불가능합니다.
+
+```typescript
+interface Human {
+  talk: () => void;
+}
+
+const human: Human = {
+  talk() { return 3;}
+}
+```
+하지만 메서드로 사용되는 함수에서 return 값이 있음에도 불구하고 에러가 발생하지 않고 있습니다.
+
+왜냐하면 void가 쓰이는 경우는 크게 3가지로 나눠볼 수 있습니다.
+- 리턴 값이 void인 경우 
+- 매개변수의 함수가 void인 경우
+- 메서드가 void인 경우
+
+매개변수인 함수가 리턴값을 반환하는 경우를 좀 더 자세히 보자면 아래와 같은 상황이 있습니다.
+
+```typescript
+function testFn(callback: () => void): void{
+
+}
+
+testFn(()=>{
+  return '3';
+})
+```
+이런 경우에도 메서드의 함수가 void로 쓰이는 경우와 마찬가지로 에러가 발생하지 않습니다.
+왜냐하면 메서드로 쓰이는 void와 매개변수의 함수 void는 **메서드의 리턴값을 사용하지 않겠다**라는 의미이기 때문입니다.
+
+실제로 다른 예제를 가져오면 아래와 같습니다.
+
+```typescript
+declare forEach(arr: number[], callback: (el) => undefined): void
+
+let target: number[] = [];
+forEach(target, el => target.push(el));
+```
+위와 같은 예시로 작성하는 경우, `target.push(el)`라는 값을 리턴하고 있기 때문에, `undefined`로 타입을 지정했으므로 에러가 나게 됩니다.
+
+```typescript
+declare function forEach(arr: number[], callback: (el) => void): void;
+
+let target: number[] = [];
+forEach(target, el => target.push(el));
+```
+위와 같이 수정하게 되면, 에러가 발생하지 않습니다. 이때 매개변수로 사용되는 콜백함수의 void는 리턴값을 사용하지 않는다는 의미이기 때문입니다.
+
+<br/>
+
+### 타입 강제 변환 방식
+아래는 위에 쓰였던 메서드 void 예제를 다시 가져온 예시입니다.
+
+```typescript
+interface Human {
+  talk: () => void;
+}
+
+const human: Human = {
+  talk(){ return 3; }
+}
+
+const testReturn = human.talk();
+```
+이때 `testReturn`은 `const testReturn: void`으로 타입이 잘못 추론되고 있습니다. 사실은 `number`로 타입이 추론되는게 맞는데 말이죠.
+
+따라서 메서드로 쓰이는 void로 타입이 통일되기 때문에 `testReturn`은 타입을 강제 변환해야하게 됩니다.
+
+```typescript
+const testReturn =  human.talk() as unknown as number;
+const testReturn = <number><unknown>human.talk();
+```
+타입 강제 변환은 위와 같은 두가지 방법이 있으며, `<>`를 사용하는 것은 jsx의 태그들과 섞여 타입스크립트가 타입추론하는데 방해가 될 수도 있기 때문에, `as` 연산자를 사용하여 타입을 변환하는 것이 더 좋습니다.
+
+---
+
+## any와 unknown
+any보다는 unknown을 쓰는 것이 더 낫습니다.
+any는 지금 이후ㅗㄹ 타입검사를 하지 않겠다고 명시하는 것과 같고, unknown은 지금은 타입을 모르지만 추후에 명시하겠다고 이야기하는 것과 같습니다.
+
+```typescript
+interface talkFn {
+  talk: () => void;
+}
+
+const testA: talkFn = {
+  talk(){ return 3; }
+}
+
+const testB: unknown = testA.talk();
+// unknow은 나중에 타입 지정해주어햔다.
+(testB as talkFn).talk();
+```
+
+try, catch문에서 쓰이는 매개변수 `error` 는 대표적인 unknown에 해당되기 때문에 늘 타입을 지정해주어야합니다.
+
+```typescript
+try{
+
+} catch(error) {
+  (error as Error).message 
+}
+```
+
+---
+
+## 타입가드
+
+### 객체에서의 타입가드
+클래스에서 타입가드를 하는 예시는 아래와 같습니다.
+```typescript
+class TestClassA {
+  aaa() {}
+}
+
+class TestClassB {
+  bbb() {}
+}
+
+// 클래스는 클래스 자체로 type이 될 수 있다.
+function aOrB(param: TestClassA | TestClassB){
+  if( param instanceof TestClassA){
+    param.aaa();
+  }
+}
+
+aOrB(new TestClassA());
+aOrB(new TestClassB());
+```
+클래스는 클래스 자체로도 type이 가능하며, class의 인스턴스인지 확인하기 위해서는 `instanceof` 문법을 사용해 확인할 수 있습니다.
+
+객체에서 타입가드를 하는 방법은 아래와 같은 방법들이 있습니다.
+
+- typeof
+- Array.isArray
+- in
+- instanceof
+
+<br/>
+
+### 커스텀 타입가드 (is)
+
+```typescript
+interface Cat { meow: number };
+interface Dog { bow: number };
+function catOrDog(a: Cat | Dog): a is Dog {
+  if((a as Cat).meow) { return false; }
+  return true;
+}
+
+function pet(a: Cat | Dog) {
+  if(catOrDog(a)) {
+    console.log(a.bow);
+  }
+
+  if('meow' in a){
+    console.log(a.meow);
+  }
+}
+```
+
+위의 예제와 같이 `is`가 있으면 커스텀 타입가드 함수입니다. 커스텀 타입가드는 if문 안에서 쓰이고, 타입스크립트에게 정확한 타입이 무엇인지 알려주는 것과 같습니다.
+
+아래는 프로미스를 사용할 때 예시입니다.
+프로미스는 3가지 상태가 있습니다.
+`Promise -> Pending -> Settled(fulfiled, rejected)`
+
+```typescript
+const isRejected = (input: PromiseSettledResult<unknown>): input is PromiseRejectedResult => { 
+  return input.status === 'rejected'
+}
+
+const isFulfilled = <T>(input: PromiseSettledResult<T>): input is PromiseFulfilledResult<T> => {
+  return input.status === 'fulfilled'
+}
+
+const promises = await Promise.allSettled([Promise.resolve('a'), Promise.resolve('b')]);
+
+const errors = promises.filter((a)=> true);
+```
+`errors`는 `fulfiled`된 상태만 리턴되게 했는데 errors는 여전히 `const errors: PromiseSettledResult<string>[]`로 추론됩니다.
+
+따라서 이런 경우에 `is`가 사용된 타입가드 함수가 필요한 것입니다.
+
+```typescript
+// const errors: PromiseFulfilledResult<string>[]
+const errors = promises.filter(isFulfilled);
+```
+따라서 커스텀 타입가드 함수를 사용하면 타입스크립트가 제대로된 타입을 추론하게 할 수 있습니다.
+
+## Reference Doc
 []()
