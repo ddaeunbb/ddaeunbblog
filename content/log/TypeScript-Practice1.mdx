@@ -359,5 +359,32 @@ const errors = promises.filter(isFulfilled);
 ```
 따라서 커스텀 타입가드 함수를 사용하면 타입스크립트가 제대로된 타입을 추론하게 할 수 있습니다.
 
+---
+## `{}`, Object
+`{}`과 Object는 모든 타입을 의미합니다. 하지만 `null`과 `undefined`는 제외된 것입니다.
+
+```ts
+// 아래는 타입에러가 발생하지 않음
+const x: {} = 'hello';
+const y: Object = 'daeun';
+```
+위와 같이 문자열을 할당해도 타입에러가 발생하지 않습니다.
+따라서 정확한 타입을 할당하기 위해서 소문자 `object`를 사용하는 것이 좋습니다. 그래도 더 좋은건 `interface`나 `type`을 사용하는 것입니다.
+
+```ts
+const z: object = { name: 'daeun', age: 20 };
+const testZ: unknown = 'hi';
+
+if(testZ){
+  // const testZ: {}
+  // 여기서 testZ는 객체라는 뜻이 아니라 모든 타입이 가능하다는 뜻입니다.
+  testZ;
+} else {
+  // 여기서 testZ는 null | undefined 입니다.
+  testZ;
+}
+```
+
+
 ## Reference Doc
-[]()
+[제로초-타입스크립트 올인원](https://www.inflearn.com/course/%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EC%98%AC%EC%9D%B8%EC%9B%90-1)
