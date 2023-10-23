@@ -1,0 +1,463 @@
+---
+title: 우테코 프리코스 1주차(숫자야구)
+date: 2023-10-21
+category: Log
+tags:
+  - Javascript
+  - wooteco
+thumbnail: https://mir-s3-cdn-cf.behance.net/project_modules/max_1200/002480115171293.6049248b74ac5.jpg
+---
+
+처음으로 우아한테크코스 프리코스 1주차에 참여하게 되었습니다.😊
+설레는 마음과 함께 마지막주차까지 열심히 참여해보려합니다!
+
+1주차 주제는 숫자야구였는데요, 익숙한 주제이기도해서 어떤 식으로 게임이 이뤄지는 생략하겠습니다.
+아래는 우테코에서 공유해준 깃허브링크입니다.
+미션의 기능요구사항, 프로그래밍 요구사항, 과제 진행 요구 사항은 깃허브에서 확인하실 수 있습니다.
+[1주차 미션 - 숫자야구](https://github.com/woowacourse-precourse/javascript-baseball-6)
+
+---
+
+먼저 저는 미션의 기능요구사항, 프로그래밍 요구사항, 과제 진행 요구 사항을 모두 읽고 중요한 키워드를 정리했습니다.
+정리한 바는 아래와 같습니다.
+
+### 기능요구사항
+- 1부터 9까지 서로 다른 세 자리 숫자
+- 3개를 모두 맞히거나, 잘못된 값을 입력하면 즉시 게임 종료
+- 3개를 맞히면 재개할 것인지, 종료할 것인지 선택
+<br/>
+
+### 프로그래밍 요구사항
+- Node.js 18.17.1에서 정상적으로 동작하지 않을 경우 0점 처리
+- [자바스크립트 코드 컨벤션](https://github.com/woowacourse/woowacourse-docs/tree/main/styleguide/javascript)을 지킨다. (함수 및 상수명)
+- 테스트가 실패할 경우 0점
+- `@woowacourse/mission-utils` 라이브러리를 활용
+<br/>
+
+### 과제 진행 요구 사항
+- 기능을 구현하기 전 docs/README.md에 구현할 기능 목록을 정리
+
+---
+
+구현에 앞서기 이전에, 어떻게 구현할 것인지에 대한 기능목록을 작성하였습니다.
+
+## 작성한 기능목록
+```js
+1. 게임 시작 기능
+2. 랜덤으로 숫자를 3개 뽑는 기능 (1-9까지의 모두 다른 세 자리 수)
+3. 사용자의 입력을 받는 기능
+4. 사용자의 입력을 검증하는 기능
+5. 랜덤으로 뽑은 숫자와 사용자 입력을 비교해 결과(스트라이크, 볼)를 내는 기능
+6. 게임 결과를 출력하는 기능
+7. 게임을 맞췄다면 재시작할지, 종료할지 판단하는 기능
+```
+<br/>
+
+추가적으로 작성한 과제 진행 요구 사항은 아래와 같습니다.
+요구사항은 게임이 진행되는 순서에 따라 순차적으로 작성하려고 하였습니다.
+## 과제 진행 요구 사항
+
+- **1. 게임 시작 기능**
+  - 게임이 시작되면 `숫자 야구 게임을 시작합니다.`를 출력한다.
+- **2. 랜덤으로 숫자 3개를 뽑는 기능**
+  - 1부터 9까지 숫자를 **겹치지 않는 3개** 뽑아 3자리 숫자를 만든다.
+  - 뽑은 숫자는 배열로 저장한다.
+- **3. 사용자의 입력을 받는 기능**
+  - 사용자를 입력 받기 위해 `숫자를 입력해주세요 : `를 출력하면서 입력을 받는다.
+  - 사용자의 입력을 받아 변수에 저장한다.
+- **4. 사용자의 입력을 검증하는 기능**
+  - 입력한 값이 3자리가 맞는지 확인한다.
+  - 입력한 값이 숫자가 맞는지 확인한다.
+  - 입력한 값이 유효하지 않다면 `[ERROR ~]`를 출력하고 에러를 띄워 게임을 종료한다.
+- **5. 랜덤으로 뽑은 숫자와 사용자 입력을 비교해 결과(스트라이크, 볼)를 내는 기능**
+  - 랜덤으로 뽑은 숫자와 사용자 입력을 비교해 스트라이크 수와 볼의 수를 센다.
+  - 자리가 같고 같은 숫자라면 스트라이크이고, 자리가 다른데 숫자가 있다면 볼이다.
+  - 아무것도 없다면 스트라이크 볼 모두 0이다.
+- **6. 게임 결과를 나타내는 기능**
+  - 스트라이크가 몇개고 볼이 몇개인지 출력한다.
+  - 스트라이크, 볼 모두 없다면 `낫싱`을 출력한다.
+  - 만약 3스트라이크가 아니라면 3부터 재개한다.
+- **7. 게임을 맞췄다면 재시작할지, 종료할지 판단하는 기능**
+  - 3스트라이크라면 `3개의 숫자를 모두 맞히셨습니다! 게임 종료`을 출력한다.
+  - 사용자에게 `게임을 새로 시작하려면 1, 종료하려면 2를 입력하세요.`을 출력하고 1이나 2의 입력값을 받는다.
+  - 이외의 값을 받았다면 `[ERROR ~]`를 출력하고 에러를 띄운다.
+  - 1을 받았다면 실행 1부터 재개한다.
+  - 2라면 `게임이 종료됩니다.`을 출력하고 게임을 종료한다.
+- **etc**
+  - 추가적으로 출력 문구들은 모두 상수로 저장하여 관리한다.
+<br/>
+
+---
+
+먼저 구현하기 이전에, 저는 공유주셨던 코드 컨벤션과 우테코 라이브러리를 살펴보았습니다.
+라이브러리는 아래 링크를 통해 살펴보았습니다.
+[@woowacourse/mission-utils](https://github.com/woowacourse-projects/javascript-mission-utils)
+
+## @woowacourse/mission-utils 라이브러리 살펴보기
+
+### Console
+- print(message)
+```js
+const MissionUtils = require('@woowacourse/mission-utils');
+const { Console } = MissionUtils;
+
+Console.print('안녕하세요') // '안녕하세요'
+```
+라이브러리를 살펴보니 `Console.log`와 같은 기능을 구현하는 `Console.print`를 찾을 수 있었습니다. 따라서 이 피쳐를 사용해서 `숫자 야구 게임을 시작합니다.`와 같은 문구들을 출력해야겠다고 생각했습니다.
+
+- readLineAsync(query)
+```js
+const MissionUtils = require('@woowacourse/mission-utils');
+const { Console } = MissionUtils;
+
+async function getUserInput() {
+  const input = await Console.readLineAsync("값을 입력해주세요.");
+  Console.print(input); // 입력값이 출력됨
+}
+```
+Promise를 반환하는 비동기 함수이기 때문에 `async`를 사용하는 함수 아래에서 사용해야한다는 것을 알게 되었습니다. `readLine` 피쳐도 있었지만, `async`와 `await`를 사용하는 것이 더 코드 가독성이 좋을 것 같아 `readLineAsync`로 사용자의 입력값을 받고 그에 따른 처리를 해야겠다고 생각했습니다.
+
+### Random
+- pickNumberInRange(startInclusive, endInclusive)
+```js
+const MissionUtils = require('@woowacourse/mission-utils');
+const { Console, Random } = MissionUtils;
+
+const random = Random.pickNumberInRange(1,9);
+Console.print(random); // 1부터 9까지 랜덤한 숫자가 출력됨
+```
+숫자의 시작과 끝의 범위를 정하면 정해진 범위 내에서 한개의 숫자를 뽑아주는 함수입니다. 저는 이 함수만 보고 배열에 하나씩 뽑아서 넣어야겠다고 생각했습니다. 그리고 매번 중복된 숫자인지 확인해 랜덤한 숫자를 뽑는 기능을 구현해야겠다고 고안했습니다.
+
+- pickNumberInList(array)
+```js
+const MissionUtils = require('@woowacourse/mission-utils');
+const { Random } = MissionUtils;
+
+Random.pickNumberInList([1, 3, 10]); // 1
+Random.pickNumberInList([1, 3, 10]); // 10
+Random.pickNumberInList([1, 3, 10]); // 3
+```
+배열에 있는 숫자들 중 한개만을 뽑아줍니다. 이 피쳐보다는 아까 위의 `pickNumberInRange`가 구현하기 더 편할 것 같다는 생각이 들었습니다.
+
+- pickUniqueNumbersInRange(startInclusive, endInclusive, count)
+```js
+Random.pickUniqueNumbersInRange(1, 10, 2); // [1, 2]
+Random.pickUniqueNumbersInRange(1, 10, 5); // [1, 10, 7, 8, 5]
+```
+숫자 범위 내에서 지정된 개수만큼 겹치지 않는 숫자를 반환합니다. 구현하고 난 이후에 라이브러리를 더 자세히 살펴보며 포스팅을 정리하고 있는데, 코드를 다시 수정해야겠습니다.🤣 라이브러리를 더 자세히 살펴봐야한다는 배움을.. 얻어갑니다.. 사실 저는 `pickNumberInRange`를 사용해 구현하였는데, 이 함수가 가장 구현하기 적합할 것 같다는 생각이 들었습니다. `Random.pickUniqueNumbersInRange(1, 9, 3)`로 구현하면 되지 않을까? 란 생각이 바로 드네요. 아래에 포스팅에서 코드 수정 및 리팩토링도 작성할 예정입니다. 
+
+--- 
+
+## 코드 컨벤션 살펴보기
+공유주셨던 [코드 컨벤션](https://github.com/woowacourse/woowacourse-docs/tree/main/styleguide/javascript)은 내용이 짧아서 한눈에 파악할 수 있었습니다. 함수, 변수, 상수에 대한 이야기였는데, 상수를 사용해서 구현해야한다는 것처럼 들렸습니다. 그래서 먼저 저 자신만이 정한 코드 컨벤션이 있었는데요, 아래와 같습니다.
+```js
+- 함수는 무조건 동사로 시작한다.
+- 소스의 변수명, 클래스명 등에는 영문 이외의 언어를 사용하지 않는다.
+- 클래스, 메서드 등의 이름에는 특수 문자를 사용하지 않는다.
+- 상수는 `const MESSAGE = '안녕하세요'`와 같이 대문자로 `SNAKE_CASE`로 작성한다.
+```
+
+추가적으로 커밋컨벤션도 작성하였습니다.
+```js
+- Feat: 새로운 기능 추가
+- Fix: 버그/오타(typo)/로직 등 코드를 수정한 경우
+- Refactor: 코드 리팩토링
+- style   : 코드 포맷팅, 세미콜론 누락 수정 등 내부 로직 변경이 없이 코드를 수정한 경우
+- Docs    : README 문서 수정
+- Remove  : 코드/파일 삭제
+```
+
+---
+
+## 기능 구현하기
+사실 저는 파일을 열어보고 조금 당황했습니다. `jest`를 사용해본적도, 클래스를 많이 사용해 본적도 없었기 때문입니다.
+아래는 src 폴더 안에 있던 `App.js` 파일입니다.
+
+```js
+class App {
+  async play() {
+  }
+}
+```
+
+매번 테스트를 실행해보기만 했지 테스트 코드를 짜본적도 없었고 클래스는 개념만 조금 숙지하고 있었습니다.
+그래서 이번 기회에 시간이 남는다면 직접 테스트코드를 추가적으로 조금 짜보고, 클래스도 제대로 숙지하자는 마음과 함께 구현을 시작하였습니다.
+
+일단 코드를 살펴보았을 때, `play()` 메서드를 통해서 게임을 시작하는 거구나. 라고 생각했습니다.
+먼저 제가 위에서 적었던 과제 진행 요구 사항에 맞춰 코드 작성의 흐름을 적어보았습니다.
+<br/>
+
+### 1. 게임 시작 기능
+- 게임이 시작되면 `숫자 야구 게임을 시작합니다.`를 출력한다.
+<br/>
+
+먼저 문구는 모두 상수로 관리하였으며, `Console.print`를 사용하여 문구를 출력하였습니다.
+상수는 `SNAKE_CASE`인 `MESSAGE` 객체로 저장하였습니다.
+
+```js
+const MissionUtils = require('@woowacourse/mission-utils');
+const { Console } = MissionUtils;
+
+const MESSAGE = {
+  START: '숫자 야구 게임을 시작합니다.',
+}
+
+class App {
+  async play() {
+    Console.print(MESSAGE.START);
+  }
+}
+```
+<br/>
+
+### 2. 랜덤으로 숫자 3개를 뽑는 기능
+- 1부터 9까지 숫자를 **겹치지 않는 3개** 뽑아 3자리 숫자를 만든다.
+- 뽑은 숫자는 배열로 저장한다.
+<br/>
+
+다음 랜덤으로 숫자 3개를 뽑는 기능을 구현하였습니다.
+`play` 메서드 내부에서가 아닌 메서드 사용을 구분해야지 코드가 더 깔끔해질 것 같아 `generateRandomNumber`메서드를 만들어 구현하였습니다. 메서드는 모두 동사로 시작하게끔 네이밍하였습니다.
+랜덤으로 숫자를 뽑는 기능은 `Random.pickNumberInRange`를 사용하였습니다.
+그리고 뽑은 숫자를 저장하기 위해, `contructor`를 만들어 `randomNumber` 네이밍으로 변수를 배열로 초기화였습니다.
+
+```js
+const MissionUtils = require('@woowacourse/mission-utils');
+const { Console, Random } = MissionUtils;
+
+class App {
+  ...
+  constructor(){
+    this.randomNumber = [];
+  }
+
+  generateRandomNumber(){
+    const { randomNumber } = this;
+    
+    // 3개의 숫자가 뽑힐 때까지 숫자를 반복해 뽑는다.
+    // 만약에 뽑힌 숫자라면 배열에 추가하지 않는다. 오로지 뽑히지 않은 숫자만 추가한다.
+    while(randomNumber.length < 3){
+      const number = Random.pickNumberInRange(1, 9);
+      if(!randomNumber.includes(number)) randomNumber.push(number);
+    }
+  }
+}
+```
+<br/>
+
+### 3. 사용자의 입력을 받는 기능
+- 사용자를 입력 받기 위해 `숫자를 입력해주세요 : `를 출력하면서 입력을 받는다.
+- 사용자의 입력을 받아 변수에 저장한다.
+<br/>
+
+사용자의 입력을 받기 위해 `Console.readLineAsync`를 사용하였습니다. `getUserInput` 로직은 메서드 내부에서 구현하였으며, 입력을 받고 저장하기 위해 `userInput` 네이밍으로 변수를 배열로 초기화하였습니다.
+
+```js
+const MESSAGE = {
+  START: '숫자 야구 게임을 시작합니다.',
+  INPUT: '숫자를 입력해주세요 : ',
+}
+
+class App {
+  ...
+  constructor(){
+    this.randomNumber = [];
+    this.userInput = [];
+  }
+ 
+  async getUserInput(){
+    const input = await Console.readLineAsync(MESSAGE.INPUT);
+    this.userInput = [...input];
+  }
+}
+```
+<br/>
+
+### 4. 사용자의 입력을 검증하는 기능
+- 입력한 값이 3자리가 맞는지 확인한다.
+- 입력한 값이 숫자가 맞는지 확인한다.
+- 입력한 값이 유효하지 않다면 `[ERROR ~]`를 출력하고 에러를 띄워 게임을 종료한다.
+<br/>
+
+3까지 구현한 이후에, 사용자의 입력을 받고 검증 이후에 값을 저장해야겠다고 생각했습니다. 검증하기 위한 `validateInput` 메서드를 만들었고, 사용자의 입력의 길이가 3이상인지, 그리고 모두 숫자만 입력했는지 판단하게 하였습니다.
+만약에 위의 조건에 해당하지 않는다면 에러를 띄우게 하였습니다. 에러 메시지는 상수로 저장해 활용하였습니다.
+
+```js
+// 에러 메시지 추가
+const ERROR_MESSAGE = {
+  LENGTH: '[ERROR] 세 자리 숫자만 입력해야합니다.',
+  INT: "[ERROR] 정수만 입력해야합니다.",
+}
+
+class App {
+  ...
+  constructor(){
+    this.randomNumber = [];
+    this.userInput = [];
+  }
+ 
+  async getUserInput(){
+    const input = await Console.readLineAsync(MESSAGE.INPUT);
+    // 입력을 저장하기 이전에 validation 진행
+    this.validateInput(input)
+    this.userInput = [...input];
+  }
+
+  validateInput(input){
+    if(input.length !== 3) throw new Error(ERROR_MESSAGE.LENGTH);
+    if(!Number.isInteger(+input)) throw new Error(ERROR_MESSAGE.INT);
+  }
+}
+```
+<br/>
+
+### 5. 랜덤으로 뽑은 숫자와 사용자 입력을 비교해 결과(스트라이크, 볼)를 내는 기능
+- 랜덤으로 뽑은 숫자와 사용자 입력을 비교해 스트라이크 수와 볼의 수를 센다.
+- 자리가 같고 같은 숫자라면 스트라이크이고, 자리가 다른데 숫자가 있다면 볼이다.
+- 아무것도 없다면 스트라이크 볼 모두 0이다.
+<br/>
+
+다음으로 변수로 저장한 `randomNumber`와 `userInput` 값을 비교하여 스트라이크인지 볼인지 판단하는 기능을 구현하였습니다.
+`getResult`라는 메서드로 구현하였습니다.
+
+```js
+class App {
+  constructor(){
+    this.randomNumber = [];
+    this.userInput = [];
+    this.gameResults = {};
+  }
+ 
+  async getUserInput(){
+    ...
+    this.userInput = [...input];
+    getResult();
+  }
+
+  getResult(){
+    const { userInput } = this;
+    const { randomNumber } = this;
+    const result = { strike: 0, ball: 0};
+
+    userInput.forEach((num, idx)=> {
+      if(randomNumber[idx] === num) result.strike += 1;
+      if(randomNumber[idx] !== num && randomNumber.includes(num)) result.ball +=1 ;
+    })
+  
+    this.gameResults = result;
+  }
+}
+```
+
+원래는 변수인 `gameResults`에 값을 직접적으로 저장하고, 가변하는 식으로 코드를 짰었는데, 생각해보니 다음 게임을 할 때에는 gameResult및 모든 변수가 매번 초기화되어야한다는 것을 알게 되었습니다. 따라서 추가적으로 초기화하는 코드를 추가하였으며, `getResult`에서도 `const result = { strike: 0, ball: 0}` 코드를 추가하여 초기화해주었습니다. 
+
+이외에도 변수인 `randomNumber`, `userInput`도 모두 초기화해주어야했는데, `userInput`같은 경우에는 validation을 판독한 이후에 바로 초기화되고 있었기때문에 `randomNumber`만 초기화설정을 해주었습니다.
+
+```js
+class App {
+  generateRandomNumber(){
+    // 매번 게임을 할때마다 변수 초기화
+    this.randomNumber = [];
+    const { randomNumber } = this;
+    
+    while(randomNumber.length < 3){
+      const number = Random.pickNumberInRange(1, 9);
+      if(!randomNumber.includes(number)) randomNumber.push(number);
+    }
+  }
+}
+```
+<br/>
+
+### 6. 게임 결과를 나타내는 기능
+- 스트라이크가 몇개고 볼이 몇개인지 출력한다.
+- 스트라이크, 볼 모두 없다면 `낫싱`을 출력한다.
+- 만약 3스트라이크가 아니라면 3부터 재개한다.
+<br/>
+
+결과를 판별하였으니, 결과를 **출력**만 하는 메서드를 구현하였습니다. `Console.print`를 활용해 결과를 출력하였습니다.
+조건은 모두 `if`, `else if`, `else`문으로 구현하였습니다.
+
+```js
+class App {
+  constructor(){
+    ...
+  }
+
+  async getUserInput(){
+    ...
+    this.getResult();
+    this.printResult();
+  }
+
+  printResult(){
+    const { strike, ball } = this.gameResults;
+    
+    if(ball === 0 && strike ===0) Console.print(`낫싱`);
+    else if(ball > 0 && strike > 0) Console.print(`${ball}볼 ${strike}스트라이크`);
+    else if(ball > 0) Console.print(`${ball}볼`);
+    else Console.print(`${strike}스트라이크`);
+  }
+}
+```
+<br/>
+
+### 7. 게임을 맞췄다면 재시작할지, 종료할지 판단하는 기능
+- 3스트라이크라면 `3개의 숫자를 모두 맞히셨습니다! 게임 종료`을 출력한다.
+- 사용자에게 `게임을 새로 시작하려면 1, 종료하려면 2를 입력하세요.`을 출력하고 1이나 2의 입력값을 받는다.
+- 이외의 값을 받았다면 `[ERROR ~]`를 출력하고 에러를 띄운다.
+- 1을 받았다면 실행 1부터 재개한다.
+- 2라면 `게임이 종료됩니다.`을 출력하고 게임을 종료한다.
+<br/>
+
+만약에 스트라이크가 3개라면 `3개의 숫자를 모두 맞히셨습니다! 게임 종료` 문구를 출력하고, 사용자의 입력값을 받게 하였습니다.
+이 기능은 `restart` 라는 메서드로 구현하였습니다.
+사용자 입력값이 1 또는 2가 아니라면 에러를 띄웁니다. 에러문구는 상수로 저장하였습니다.
+1이라면 다시 `play`메서드가 실행되게 하고, 아니라면 게임을 종료합니다.
+스트라이크가 3개가 아니라면 다시 `getUserInput` 함수를 실행하게 합니다.
+
+```js
+const MESSAGE = {
+  START: '숫자 야구 게임을 시작합니다.',
+  INPUT: '숫자를 입력해주세요 : ',
+  FINISH: '3개의 숫자를 모두 맞히셨습니다! 게임 종료',
+  RESTART: '게임을 새로 시작하려면 1, 종료하려면 2를 입력하세요.',
+  END: '게임이 종료되었습니다.'
+}
+
+const ERROR_MESSAGE = {
+  LENGTH: '[ERROR] 세 자리 숫자만 입력해야합니다.',
+  INT: "[ERROR] 정수만 입력해야합니다.",
+  RESTART: '[ERROR] 숫자가 잘못된 형식입니다.',
+}
+
+class App {
+  constructor(){
+    ...
+  }
+
+  async getUserInput(){
+    ...
+
+    const { strike } = this.gameResults;
+    if(strike === 3) await this.restart();
+    else this.getUserInput();
+  }
+
+  async restart(){
+    Console.print(MESSAGE.FINISH);
+    Console.print(MESSAGE.RESTART);
+    const input = await Console.readLineAsync('');
+    if(input === '1') await this.play();
+    else if(input === '2') Console.print(MESSAGE.END);
+    else throw new Error(ERROR_MESSAGE.RESTART);
+  }
+}
+```
+<br/>
+---
+
+## 보충해야할 점
+구현을 모두 마친 이후에, 제 스스로 코드에 어떤점이 부족한지 그리고 어떤걸 채워나가면 좋을 지에 대해서 생각해보았습니다.
+
+구현을 한 이후에, 이전에 기수 분들이 어떤식으로 보완해나아가셨는지 조금 서칭해보았습니다. 많은 분들이 로직구분에 많이 신경을 쓰신 것 같았고, 좀 더 로직을 명확히 구분해 보면 어떨까? 라는 생각과 `jest` 사용법을 모르니 이번 기회에 `jest`를 공부하면서 테스트 코드를 추가해보는 것이 좋을 것 같다는 생각이 들었습니다. 또한 예외사항들에 대해서 더 추가적으로 생각해보아야한다고 판단했습니다.
+
