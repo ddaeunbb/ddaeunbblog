@@ -461,3 +461,350 @@ class App {
 
 구현을 한 이후에, 이전에 기수 분들이 어떤식으로 보완해나아가셨는지 조금 서칭해보았습니다. 많은 분들이 로직구분에 많이 신경을 쓰신 것 같았고, 좀 더 로직을 명확히 구분해 보면 어떨까? 라는 생각과 `jest` 사용법을 모르니 이번 기회에 `jest`를 공부하면서 테스트 코드를 추가해보는 것이 좋을 것 같다는 생각이 들었습니다. 또한 예외사항들에 대해서 더 추가적으로 생각해보아야한다고 판단했습니다.
 
+아래는 제가 추가적으로 보완하면 좋을 것 같은 부분들을 정리하였습니다.
+- **정리**
+  - 메서드를 인스턴스에서 접근해 랜덤숫자를 변경하면 어떡하지?🧐
+  - 변수로 저장하지 않고 매개변수로 넘겨주고 있는 것들 로직구분
+  - 사용자 입력값 예외사항 추가로 고려하기
+  - 추가적으로 가독성을 높일 수 있는 코드로 수정해보자!😎
+  - jest 테스트 코드 추가
+<br/>
+
+---
+## 코드 보완하기
+
+### 1. 메서드를 인스턴스에서 접근해 랜덤숫자를 변경하면 어떡하지?🧐
+로직을 짜면서 여러 메서드들과 프로퍼티들이 모두 `public`이여서 직접적으로 접근해 랜덤으로 뽑은 수를 수정하면 어떻게 해야하나 라는 생각이 들었습니다.. 그래서 `private` 프로퍼티를 사용해야하나? 라는 생각이 들었는데요,
+우테코에서 나눠주셨던 자바스크립트 컨벤션 가이드에 아래와 같은 문구가 있었습니다.
+> 클래스, 메서드 등의 이름에는 특수 문자를 사용하지 않습니다.
+
+`private`프로퍼티를 사용하려면 `#`특수 문자를 사용해야하는데, 그럼 사용하면 안되는건가.. 생각이 문득들었습니다.
+아직 정식으로 채택이 되지 않은 문법이라 허용하지 않는걸까? 라고 생각하며, 섣불리 코드를 수정하기보다 추후 피드백을 받고 수정하면 좋겠다는 생각이 들었습니다.🥸
+<br/>
+
+### 2. 변수로 저장하지 않고 매개변수로 넘겨주고 있는 것들 로직구분
+제가 작성하였던 메서들 모두 매개변수를 받고 있지 않게 로직을 짜놨었는데, 한 개의 메서드만 매개변수를 받고 있었습니다.
+`validateInput`였는데요. 매개변수를 받는 이유는 변수를 활용해 저장하지 않고 바로 메서드에 넘겨주었기 때문이었습니다.
+따라서 `Model`과 로직처리의 구분을 명확히하기 위해 변수를 하나 만들어 매개변수를 받지 않게 로직을 수정하였습니다.
+
+**수정 이전 코드**
+```js
+class App {
+  constructor(){
+    this.randomNumber = [];
+    this.userInput = [];
+    this.gameResults = {};
+  }
+  
+  async getUserInput(){
+    const input = await Console.readLineAsync(MESSAGE.INPUT);
+    // 매개변수를 받던 validateInput 메서드
+    this.validateInput(input);
+    this.userInput = [...input].map(Number);
+    ...
+   }
+   
+   validateInput(input){
+    if(input.length !== 3) throw new Error(ERROR_MESSAGE.LENGTH);
+    if(!Number.isInteger(+input)) throw new Error(ERROR_MESSAGE.INT);
+    if(Math.sign(input) !== 1) throw new Error(ERROR_MESSAGE.NEGATIVE);
+   }
+}
+```
+<br/>
+
+**수정 이후 코드**
+```js
+class App {
+  constructor(){
+    this.randomNumber = [];
+    // userStringInput 변수 추가
+    this.userStringInput = '';
+    this.userInput = [];
+    this.gameResults = {};
+  }
+  
+  async getUserInput(){
+    const input = await Console.readLineAsync(MESSAGE.INPUT);
+    this.userStringInput = input;
+    // 매개변수 제거
+    this.validateInput();
+    ...
+  }
+  validateInput(){
+    // 변수를 꺼내와서 검증시작
+    const { userStringInput } = this;
+
+    if(userStringInput.length !== 3) throw new Error(ERROR_MESSAGE.LENGTH);
+    if(!Number.isInteger(+userStringInput)) throw new Error(ERROR_MESSAGE.INT);
+    if(Math.sign(userStringInput) !== 1) throw new Error(ERROR_MESSAGE.NEGATIVE);
+  }
+}
+```
+<br/>
+
+### 3. 사용자 입력값 예외사항 추가로 고려하기
+사용자 입력값을 검증할 때, 저는 아래와 같은 상황들을 예외처리 하였습니다. (에러처리)
+- **처리했던 예외사항**
+  - 사용자가 3개의 이상의 문자를 입력했을 경우 에러처리
+  - 정수가 아닌 경우 에러처리
+
+하지만 예외사항을 더 생각해보니 아래와 같은 예외사항이 더 있었습니다.
+- **생각하지 못했던 예외사항들**
+  - `019`를 입력했을 경우
+  - `-12`를 입력했을 경우
+
+그래서 위의 사항들을 고려하여 예외처리를 수정하였습니다.
+
+
+```js
+// 정규표현식 추가
+const REGEX = /^[1-9]+$/;
+
+class App {
+  ...
+  validateInput(){
+    // 수정 이전
+    // if(userStringInput.length !== 3) throw new Error(ERROR_MESSAGE.LENGTH);
+    // if(!Number.isInteger(+userStringInput)) throw new Error(ERROR_MESSAGE.INT);
+
+    const { userStringInput } = this;
+    // 입력의 길이가 3이 넘어가는지 판별
+    if(userStringInput.length !== 3) throw new Error(ERROR_MESSAGE.LENGTH);
+    // 1-9로만 이뤄진 숫자인지 판별
+    if(!REGEX.test(userStringInput)) throw new Error(ERROR_MESSAGE.INT);
+    // 음수인지 판별
+    if(Math.sign(userStringInput) !== 1) throw new Error(ERROR_MESSAGE.NEGATIVE);
+  }
+}
+```
+
+코드를 수정하고 나니 또 다른 예외사항이 있었습니다.😅 생각해보니 1-9까지의 숫자가 모두 한번만 입력되어야한다는 것이었습니다.
+따라서 그에 대한 코드도 수정하였습니다.
+
+```js
+const REGEX = /^[1-9]+$/;
+
+class App {
+  ...
+  validateInput(){
+    // 수정 이전
+    // if(userStringInput.length !== 3) throw new Error(ERROR_MESSAGE.LENGTH);
+    // if(!Number.isInteger(+userStringInput)) throw new Error(ERROR_MESSAGE.INT);
+
+    // 수정 이후
+    const { userStringInput } = this;
+    const uniqueArr = [...new Set([...input])];
+
+    if(userStringInput.length !== 3) throw new Error(ERROR_MESSAGE.LENGTH);
+    if(!REGEX.test(userStringInput)) throw new Error(ERROR_MESSAGE.INT);
+    // 각 고유한 것들만 뽑은 길이와 비교하고, 새로운 에러를 던졌습니다.(상수로 저장)
+    if(userStringInput.length !== uniqueArr.length) throw new Error(ERROR_MESSAGE.UNIQUE);
+    if(Math.sign(userStringInput) !== 1) throw new Error(ERROR_MESSAGE.NEGATIVE);
+  }
+}
+```
+<br/>
+
+### 4. 추가적으로 가독성을 높일 수 있는 코드로 수정해보자!😎
+`if`문을 사용할 때, `else if`문을 사용하면 가독성이 떨어진다는 이야기가 있어, `else if`문으로 처리하던 로직을 모두 `if`문 하나로 수정하였습니다.
+
+```js
+class App {
+  ...
+
+  
+  printResult(){
+    const { strike, ball } = this.gameResults;
+    
+    // 수정 이전
+    // if(ball === 0 && strike ===0) Console.print(`낫싱`);
+    // else if(ball > 0 && strike > 0) Console.print(`${ball}볼 ${strike}스트라이크`);
+    // else if(ball > 0) Console.print(`${ball}볼`);
+    // else Console.print(`${strike}스트라이크`);
+
+    if(ball === 0 && strike === 0) Console.print(`낫싱`);
+    if(ball > 0 && strike > 0) Console.print(`${ball}볼 ${strike}스트라이크`);
+    if(ball > 0 && strike === 0) Console.print(`${ball}볼`);
+    if(strike > 0 && ball === 0) Console.print(`${strike}스트라이크`);
+  }
+}
+```
+위의 코드 제외하고 `else if`문이 쓰인 부분들 모두 `if`문으로 처리하였습니다.
+<br/>
+
+---
+## Jest 테스트 코드 작성하기
+
+테스트 코드를 작성하기 이전에, `Jest`에 대해서 간단하게 공부를 해보았습니다.
+<a target="_blank" href="/log/Jest">Jest 사용해보기</a>
+
+먼저 저는 제가 적었던 예외사항들이 테스트케이스를 통과하는지가 궁금했습니다.
+
+아까 위에서 적었던바와 같이 제가 사용자 입력 시, 추가적으로 고려했던 예외사항들은 아래와 같습니다.
+- **고려했던 예외사항**
+  - `019`를 입력했을 경우
+  - `-12`를 입력했을 경우
+  - `119`를 입력했을 경우
+
+따라서 먼저, 제가 고려했던 예외사항들이 제대로 테스트케이스에서 통과가 되는지 확인해보았습니다.
+<br/>
+
+### 사용자 입력값 예외사항 테스트 케이스 작성하기
+테스트코드를 적기 전, `__test__`폴더 안에 `ValidationTest.js` 파일을 만들어 주었습니다.
+
+**ValidationTest.js**
+```js
+import App from "../src/App.js";
+
+describe("사용자 입력 예외 처리 테스트", () => {
+  const app = new App();
+  app.userStringInput = '019'; // 테스트할 가짜 입력 값 지정
+
+  expect(() => app.validateInput()).toThrow("[ERROR] 1부터 9사이의 숫자가 하나씩 있어야합니다.");
+});
+```
+
+진짜 될까? 너무 궁금했어요. `npm test`를 실행하니 아래과 같은 결과가 나오게 되었습니다.
+
+![231024-111049](/posts/Wooteco-Precourse1/231024-111049.png)
+🫢 너무 신기했습니다.. 그래서 추가적으로 `-12`, `119`를 입력했을 때도 추가적으로 테스트 코드를 작성해주었습니다.
+
+```js
+import App from "../src/App.js";
+
+describe("사용자 입력 예외 처리 테스트", () => {
+  
+  test("숫자가 중복되면 오류가 발생합니다.", () => {
+    const app = new App();
+    app.userStringInput = '113';
+    expect(() => app.validateInput()).toThrow("[ERROR] 1부터 9사이의 숫자가 하나씩 있어야합니다.");
+  });
+
+  test("0은 입력될 수 없습니다.", () => {
+    const app = new App();
+    app.userStringInput = '019';
+    expect(() => app.validateInput()).toThrow("[ERROR] 1부터 9사이의 숫자만 입력해야합니다.");
+  })
+  
+  test("음수는 입력될 수 없습니다.", () => {
+    const app = new App();
+    app.userStringInput = "-19";
+    expect(() => app.validateInput()).toThrow("[ERROR] 양수만 입력해야합니다.");
+  })
+});
+```
+
+위와 같이 테스트 코드를 적었는데요, 적고 난뒤, 에러를 마주할 수 있었습니다.
+![231024-111456](/posts/Wooteco-Precourse1/231024-111456.png)
+왜 이런 에러를 마주한 걸까요?
+
+`validateInput`메서드 로직을 다시 살펴봐니 코드는 아래와 같았습니다.
+```js
+const ERROR_MESSAGE = {
+  LENGTH: '[ERROR] 세 자리 숫자만 입력해야합니다.',
+  INT: '[ERROR] 1부터 9사이의 숫자만 입력해야합니다.',
+  UNIQUE: '[ERROR] 1부터 9사이의 숫자가 하나씩 있어야합니다.',
+  NEGATIVE: '[ERROR] 양수만 입력해야합니다.',
+  RESTART: '[ERROR] 숫자가 잘못된 형식입니다.',
+}
+
+const REGEX = /^[1-9]+$/;
+
+  validateInput(){
+    const { userStringInput } = this;
+    const uniqueArr = [...new Set([...userStringInput])];
+
+    if(userStringInput.length !== 3) throw new Error(ERROR_MESSAGE.LENGTH);
+    // 정규표현식 부분
+    if(!REGEX.test(userStringInput)) throw new Error(ERROR_MESSAGE.INT);
+    if(userStringInput.length !== uniqueArr.length) throw new Error(ERROR_MESSAGE.UNIQUE);
+    // 음수인 숫자 거르는 부분
+    if(Math.sign(userStringInput) !== 1) throw new Error(ERROR_MESSAGE.NEGATIVE);
+  }
+```
+확인해보니 `-19`, `-30` 이런 음수의 숫자들은 정규표현식에서 먼저 걸러져 에러를 던지고 있던 것이었습니다. 테스트케이스를 짜기 이전에는 정규표현식쪽에서 걸러지지 않을거라고 잘못예상하고, 마지막 부분에 음수인 숫자를 거르는 예외사항을 추가하였습니다.
+`jest`를 사용해보면서 이전에 결과값을 예상해보고, 정말 그대로 나오는지 직접적으로 확인할 수 있는부분이 너무 좋은 것 같다고 느꼈습니다. 예상한 바와 다르게 나오니 큰일날뻔했다 싶기도했고..😉 `jest`의 장점을 제대로 실감할 수 있었습니다.
+
+따라서 `jest`를 통해서 불필요했던 예외사항 코드를 삭제하였습니다.
+상수로 관리했던 에러메시지는 `import`로 가져와 중복을 제거해주었습니다.
+<br />
+
+### 게임결과 테스트코드
+이미 테스트 코드로 짜여있긴 하지만, 그냥 연습삼아 게임 결과 출력값이 뽑히는 테스트 코드도 짜보았습니다.
+**printResultTest.js**
+```js
+import App from "../src/App.js";
+import { MissionUtils } from "@woowacourse/mission-utils";
+
+const mockGetResult = (randomNumber, userInput) => {
+  const app = new App();
+  app.randomNumber = randomNumber;
+  app.userInput = userInput;
+  app.getResult();
+  app.printResult();
+}
+
+const getLogSpy = () => {
+  const logSpy = jest.spyOn(MissionUtils.Console, "print");
+  logSpy.mockClear();
+  return logSpy;
+}
+
+describe("게임 결과 출력 테스트", () => {
+  test("3스트라이크인 경우", () => {
+    const logSpy = getLogSpy();
+    mockGetResult([1,5,8], [1,5,8])    
+    expect(logSpy).toHaveBeenCalledWith('3스트라이크');
+  });
+
+  test("1볼 1스트라이크인 경우", () => {
+    const logSpy = getLogSpy();
+    mockGetResult([1,5,8], [9,5,1])    
+    expect(logSpy).toHaveBeenCalledWith('1볼 1스트라이크');
+  });
+
+  test("낫싱인 경우", () => {
+    const logSpy = getLogSpy();
+    mockGetResult([1,5,8], [2,4,9])    
+    expect(logSpy).toHaveBeenCalledWith('낫싱');
+  });
+});
+```
+<br />
+
+### 게임 종료 이후, 사용자 입력값 테스트코드
+`3스트라이크`를 하고 난 이후에 사용자에게 게임을 재개할지 아니면 종료할지에 대한 입력값을 받아야했는데요,
+1을 입력했을 때 게임이 재개되는 지, 2를 입력했을 때는 종료가 잘되는지 그리고 예외사항도 잘 걸러지는지 테스트코드를 짜보았습니다.
+```js
+import App from "../src/App.js";
+import { MissionUtils } from "@woowacourse/mission-utils";
+import { MESSAGE, ERROR_MESSAGE } from '../src/App.js';
+
+const mockConsoleFn = (input) => {
+  MissionUtils.Console.readLineAsync = jest.fn();
+  MissionUtils.Console.readLineAsync.mockImplementation(()=> input);
+}
+
+const getLogSpy = () => {
+  const logSpy = jest.spyOn(MissionUtils.Console, "print");
+  logSpy.mockClear();
+  return logSpy;
+}
+
+describe("게임 종료 및 재개 테스트", () => {
+  test("게임을 종료하는 경우", async () => {
+    const app = new App();
+    const logSpy = getLogSpy();
+    mockConsoleFn('2');
+    await app.restart();
+    expect(logSpy).toHaveBeenCalledWith(MESSAGE.END);
+  })
+
+  test("1과 2가 아닌 다른 값을 입력했을 경우", async () => {
+    const app = new App();
+    mockConsoleFn('게임종료해줘.');
+    await expect(app.restart()).rejects.toThrow(ERROR_MESSAGE.RESTART);
+  })
+})
+```
