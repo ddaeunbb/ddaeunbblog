@@ -14,7 +14,7 @@
 }
 
 .prose p {
-  @apply text-base leading-9 mx-3 text-neutral-700 dark:text-neutral-400 max-sm:text-sm max-sm:leading-8 max-sm:mx-2 mb-10;
+  @apply text-base leading-9 mx-3 text-neutral-700 dark:text-neutral-400 max-sm:text-sm max-sm:leading-8 max-sm:mx-2 mb-5;
 }
 
 .prose blockquote {

@@ -1,0 +1,140 @@
+---
+title: Jest 사용해보기
+date: 2023-10-23
+category: Log
+tags:
+  - TDD
+  - Jest
+thumbnail: https://velog.velcdn.com/images/kozel/post/e3937819-59b7-4fb0-b2cb-09bc1191c7a7/image.png
+---
+우테코에 참여하면서 의도치않게 테스트코드를 보았는데, `jest`는 `npm test`명령어만 써보고 직접 테스트코드를 짜본적은 없었어서 
+테스팅라이브러리인 `jest`에 대한 사용법을 알아볼까합니다.
+
+
+## 기본적인 사용법
+
+기본적으로 jest의 test파일은 `테스트할함수파일명.test.js`로 해줍니다.
+jest 공식문서에서는 아래와 같은 예시를 보여주고 있습니다. (공식문서 + 예시추가)
+**sum.js**
+```js
+function sum(a,b){
+  return a + b;
+}
+module.exports = sum;
+```
+
+**sum.test.js**
+```js
+const sum = require('./sum');
+describe('계산테스트', () => {
+  const a = 1, b = 2; 
+  test('a + b는 3이다.', () => { 
+    expect(sum(a,b)).toEqual(3); 
+  })
+})
+```
+위의 예시만 보아도 쉽게 테스트를 이해할 수 있었는데요, `describe`같은 경우에는 **테스트 그룹을 묶어주는 역할**을 합니다.
+`a`나 `b`는 테스트에서 쓰일 가짜 변수이고, `expect`에는 검증대상을 넣어줄 수 있습니다. 다음으로 오는 `toBeXXX`에는 검증결과를 넣어 테스트를 돌려주면 됩니다.
+`toBeXXX`부분에서 사용되는 함수들을 `Test Matcher`라고 합니다.
+
+`Jest`는 기본적으로 `test.js`로 끝나거나, `__test__` 디렉터리 안에 있는 파일들은 모두 테스트 파일로 인식한다고 합니다.
+
+---
+
+## mocking (모킹)
+`Jest`관련해서 서칭하면서 모킹이란 단어를 마주할 수 있었는데요, 저는 자꾸 미드를 많이 봐서 그런지 `you moking me?`이런 말만자꾸 생각나더라구요😅
+여기서 `moking`이란 **모조품**이란 뜻 그대로 사용됩니다.
+즉, 테스트하고자 하는 코드가 의존하는 함수나 클래스에 대해 모조품을 만들어서, 일단 돌아가게 만드는 것입니다.
+
+왜 가짜로 대체하는 것일까요?
+정답은 **테스트하고 싶은 기능이 다른 기능들과 엮여있는 경우, 정확한 테스트를 하기 힘들기 때문입니다.**
+예를들어 `request body`에 사용자의 아이디와 패스워드를 담아서 post요청을 보낸다고 가정해보겠습니다.
+즉, 컨트롤러에서 정보를 추출한 후 데이터베이스에 넣어주는 단위테스트를 해본다고 가정해보겠습니다. (여기서 컨트롤러는 그냥 함수입니다.)
+
+<img src="https://blog.kakaocdn.net/dn/c8kPTf/btrriWxbb9s/ROAXmsTEQvvoAOeBX4ejoK/img.png" />
+데이터 베이스에서 어떠한 응답이든 올 것이고, 반환된 응답을 기준으로 성공과 실패를 구분하게 됩니다.
+하지만 이 과정은 좋은 방법이라고 할 수 없습니다.
+- 만약 실패하는 경우, 컨트롤러 내부에 있는 로직때문인지 아니면 데이터베이스의 문제인지 판단하기 어렵게 됩니다.
+- 실제 트랜잭션이 일어나는 IO시간도 테스트에 포함됩니다.
+
+따라서 데이터베이스에 실제 데이터를 넣는게 아니라, **넣는 셈을 치자**는 개념입니다.
+데이터베이스가 잘 작동하는지는 데이터베이스 관련 테스트에서 확인하면 되고,
+우리는 지금 컨트롤러에 대한 테스트를 진행하고 있으니 데이터베이스가 잘 작동한다는 전제를 깔고 가자는 뜻입니다.
+
+<img src="https://blog.kakaocdn.net/dn/mwKXG/btrriqZzzYg/Z2NZ0OVbQEFSD4KgMcCWHK/img.png" />
+기존의 데이터베이스 저장 메소드를 mock 함수로 만듭니다.
+이제 이 아무 의미 없는 mock함수를 호출했을때 반환 받기 원하는 값을 우리가 직접 지정해 줍니다.
+우리는 controller의 로직에 집중해야하니 데이터베이스는 "대충 이런이런 값을 반환한다고 치자"라고 하고 넘어가는 개념입니다.
+
+---
+## Mocking 메소드 - jest.fn
+Jest는 가짜 함수(mock functiton)를 생성할 수 있도록 `jest.fn()` 함수를 제공합니다.
+이를 이용해서 일회성 테스트용으로서 내부의 함수를 진짜같이 구동해서 코드를 구동 시킬 수 있습니다.
+
+### jest.fn의 종류
+- mockReturnValue(value)
+```js
+const mockFn = jest.fn();
+// 아래 코드는 모두 undefined, 기본적으로 빈 함수이기때문에 undefined를 출력합니다.
+console.log(mockFn()) 
+console.log(mockFn(1))
+console.log(mockFn('2'))
+console.log(mockFn([1,2,3]))
+```
+mock함수를 만들고 나서, 실행하면 `undefined`가 출력됩니다. 따라서 함수의 리턴값을 지정할 수 있습니다.
+
+```js
+const mockFn = jest.fn();
+mockFn.mockReturnValue('다은짱짱만세');
+const result = mockFn();
+console.log(result) // '다은짱짱만세'
+```
+<br/>
+
+- mockImplemetation(value)
+
+모크 함수는 기본적으로 비어있습니다. (아무런 동작, 리턴을 하지 않는다.)
+mockImplemetation() 는 모크 함수를 즉석으로 구현할 수 있습니다. 동작하는 모크 함수를 만드는 것이라고 보면 됩니다.
+
+```js
+const mockFn = jest.fn();
+mockFn.mockImplemetation((name) => `I am ${name}!`);
+console.log(mockFn('Daeun')) // I am Daeun!
+
+// 다른 방법
+const mockFn = jest.fn((name) => `I am ${name}!` );
+console.log(mockFn("Daeun")); // I am Daeun!
+```
+단축 속성법으로 `jest.fn()`함수 내부에 써서 똑같이 구현할 수 있습니다.
+
+- mockResolvedValue(value) / mockRejectedValue(value)
+위의 함수를 사용하면 가짜 비동기 함수를 만들 수 있습니다.
+```js
+test('async resolve test', async () => {
+  const asyncMock = jest.fn().mockResolvedValue(43);
+  await asyncMock(); // 43
+})
+
+test('async reject test', async () => {
+  const asyncMock = jest.fn().mockRejectedValue(new Error('Async Error'));
+  await asyncMock(); //  throws "Async error"
+})
+```
+테스트를 작성할 때 가짜 함수가 진짜로 유용한 이유는 가짜 함수는 자신이 어떻게 호출되었는지를 모두 기억한다는 점입니다.
+
+```js
+test('mock test', () => {
+  const mockFn = jest.fn();
+  mockFn.mockImplemetation((name) => `I am ${name}!`);
+
+  mockFn('Daeun');
+  mockFn(['Dale', 'James']);
+
+  mockFn.toBeCalledTimes(2); // 2번 호출되었니?
+  mockFn.toBeCalledWith('Daeun'); // 'Daeun'으로 호출된 적있니?
+  mockFn.toBeCalledWith(['Dale', 'James']); // 매개변수로 들어온 배열로 호출된 적 있니? 
+})
+```
+
+[[JEST] 📚 JEST 소개 & 기본 사용법 정리](https://inpa.tistory.com/entry/JEST-%F0%9F%93%9A-jest-%EB%AC%B8%EB%B2%95-%EC%A0%95%EB%A6%AC)
+
