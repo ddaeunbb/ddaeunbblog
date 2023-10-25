@@ -808,3 +808,294 @@ describe("게임 종료 및 재개 테스트", () => {
   })
 })
 ```
+
+---
+## 추가적으로 어떤걸?
+사실 저는 이번 1주차에서 우테코에서 나눠주신 문제를 구현하는 것과 테스트 코드를 이해하자가 목표였습니다.😭
+그런데 생각보다 구현과 테스트 코드까지 빠르게 짜게 되어서 다행이라고 생각이 들었어요ㅠㅠ
+그래도 예상했던 일정보다 빠르게 목표에 달성했다고 안주하지 말고, 어떤 것을 더 보완해나가면 좋을지에 대해서 생각하게 되었습니다.
+
+디스코드 채널에서 프리코스에 참여하시는 많은 분들이 객체지향프로그래밍(OOP)에 대한 블로그를 자주 공유해주시길래, 나도 최대한 SOLID원칙에 근거하여 코드를 좀 더 리팩토링 해보면 어떨까? 란 생각이 들었습니다.
+<br/>
+
+### S (Single Responsibility Principle / 단일 책임 원칙)
+아래는 SOLID원칙 중에 S, 단일 책임 원칙에 대한 예시인데요,
+
+> Functions should do one thing
+함수는 한 가지 작업을 수행해야 합니다.
+이것은 소프트웨어 엔지니어링에서 단연코 가장 중요한 규칙입니다. 함수가 한 가지 이상을 수행할 때 구성, 테스트 및 추론하기가 더 어렵습니다. 함수를 하나의 작업으로 분리할 수 있으면 쉽게 리팩토링할 수 있고 코드가 훨씬 더 깔끔하게 읽힙니다. 이 가이드에서 이것 외에 다른 것을 빼지 않는다면 당신은 많은 개발자들보다 앞서게 될 것입니다.
+
+**Bad**
+```js
+function emailClients(clients: Client[]) {
+  clients.forEach((client) => {
+    const clientRecord = database.lookup(client);
+    if (clientRecord.isActive()) {
+      email(client);
+    }
+  });
+}
+```
+
+```js
+function emailClients(clients: Client[]) {
+  clients.filter(isActiveClient).forEach(email);
+}
+
+function isActiveClient(client: Client) {
+  const clientRecord = database.lookup(client);
+  return clientRecord.isActive();
+}
+```
+확실히 예제를 보니까 뭔가 개안하는 느낌이 들었습니다.. 가독성이 확실히 높아지는 것을 느꼈어요.
+예제를 보니 제가 작성하였던 코드에도 개선하고 싶었던 점이 있었습니다. 바로 `validation`부분이었는데요,
+
+```js
+validateInput(){
+    const { userStringInput } = this;
+    const uniqueArr = [...new Set([...userStringInput])];
+
+    if(userStringInput.length !== 3) throw new Error(ERROR_MESSAGE.LENGTH);
+    if(!REGEX.test(userStringInput)) throw new Error(ERROR_MESSAGE.INT);
+    if(userStringInput.length !== uniqueArr.length) throw new Error(ERROR_MESSAGE.UNIQUE);
+  }
+```
+제가 작성했던 코드를 보면 3가지 `if`문을 보실 수 있습니다. `if`이 길어지다보니 좀 가독성이 떨어지는 것 같다고 느꼈거든요. 그래서 뭔가 `if`문 안에 있는 로직을 함수로 각각빼어서 `boolean`값으로 리턴하게끔 하면 어떨까? 라는 생각이 들었습니다.
+예제에도 `isActiveClient`함수문도 로직을 나누고 `boolean`값으로 리턴하고 있어서 적용해보면 좋을 것 같다고 느껴 적용해보기로 했습니다.
+
+먼저 `if`문이 3개니까, `boolean`값을 리턴하는 3개의 메서드를 만들면 좋겠다고 생각이 들었습니다.
+그래서 `constructor`에 메서들을 추가해주었어요.
+
+```js
+class App {
+  constructor(){
+    ...
+    this.validate = {
+      isLenThree: () => {},
+      isInt: () => {},
+      isUnique: () => {},
+    }
+  }
+
+  validateInput(){
+    const { userStringInput } = this;
+    const uniqueArr = [...new Set([...userStringInput])];
+
+    // 길어서 보기 좋지 않은 if문 
+    if(userStringInput.length !== 3) throw new Error(ERROR_MESSAGE.LENGTH);
+    if(!REGEX.test(userStringInput)) throw new Error(ERROR_MESSAGE.INT);
+    if(userStringInput.length !== uniqueArr.length) throw new Error(ERROR_MESSAGE.UNIQUE);
+  }
+}
+```
+그리고 `if`문에서 사용되고 있는 로직들을 `this.validate`의 메서드들로 추가해주었습니다.
+
+```js
+class App {
+  constructor(){
+    ...
+    this.validate = {
+      isLenThree: (input) => input.length === 3,
+      isInt: (input) => REGEX.test(input),
+      isUnique: (input) => {
+        const uniqueArr = [...new Set([...input])];
+        return input.length === uniqueArr.length;
+      },
+    }
+  }
+
+  validateInput(){
+    const { userStringInput } = this;
+    const { isLenThree, isInt, isUnique } = this.validate;
+
+    if(!isLenThree(userStringInput)) throw new Error(ERROR_MESSAGE.LENGTH);
+    if(!isInt(userStringInput)) throw new Error(ERROR_MESSAGE.INT);
+    if(!isUnique(userStringInput)) throw new Error(ERROR_MESSAGE.UNIQUE);
+  }
+}
+```
+위의 코드 이외에도 스트라이크인지, 볼인지 판별하는 결과를 계산하는 메서드가 있었는데, 이때도 `if`문 내에서의 로직이 있어서 위와 같이 메서드로 정리해 빼어 코드를 수정하였습니다.
+
+**수정 이전 코드**
+```js
+class App {
+  ...
+  getResult(){
+    const { userInput } = this;
+    const { randomNumber } = this;
+    const result = { strike: 0, ball: 0};
+
+    userInput.forEach((num, idx)=> {
+      if(randomNumber[idx] === num) result.strike += 1;
+      if(randomNumber[idx] !== num && randomNumber.includes(num)) result.ball += 1;
+    })
+  
+    this.gameResults = result;
+  }
+}
+```
+
+**수정 이후 코드**
+```js
+class App {
+  constructor(){
+    ...
+    this.compare = {
+      isStrike: (num, idx) => {
+        const { randomNumber } = this;
+        return randomNumber[idx] === num
+      },
+      isBall: (num, idx) => {
+        const { randomNumber } = this;
+        return randomNumber[idx] !== num && randomNumber.includes(num)
+      },
+    }
+  }
+
+  getResult(){
+    const { userInput } = this;
+    const { isStrike, isBall } = this.compare;
+    const result = { strike: 0, ball: 0};
+
+    userInput.forEach((num, idx)=> {
+      if(isStrike(num, idx)) result.strike += 1;
+      if(isBall(num, idx)) result.ball += 1;
+    })
+  
+    this.gameResults = result;
+  }
+}
+```
+<br/>
+
+### O (Open-Closed Principle / 개방-폐쇄 원칙)
+OCP의 원칙의 의미는 새로운 기능의 추가가 일어 났을때에는 기존코드의 수정 없이 추가가 되어야 하고, 내부 매커니즘이 변경이 되어야 할때에는 외부의 코드 변화가 없어야 한다 라는 것입니다.
+
+함수형 프로그래밍에서 이 OCP를 가장 잘 느낄 수 있는 것은 바로 map, filter, reduce와 같은 Higer order Function(or Method)와 webpack loader와 같은 플러그인 또는 middleware 개념입니다.
+
+그래서 사실 변수를 변경하는 부분들을 모두 `getter`나 `setter`함수를 직접 만들어 사용하려고 했는데, 변수들을 모두 `public`으로 사용하고 있어서 의미가 있을까? 란 생각이 조금 들긴 했습니다.🥲
+만약에 특수기호들을 메서드에 사용할 수 있었다면 `private`이나 `_`기호들... 변수 지정을 `private`하게 만들고, `getter`나 `setter`함수를 만들어서 코드에 적용했을거예요.
+<br/>
+
+### L (Liskov substitution principle / 리스코프 치환 원칙)
+리스코프 치환원칙같은 경우는 상속을 받은 부분에서 사용되는 개념이기 때문에, 이번 문제에는 크게 적용될 부분이 없다고 생각하여 아래의 링크에서 개념만 이해하고 넘어갔습니다.
+<a target="_blank" href="https://velog.io/@teo/Javascript%EC%97%90%EC%84%9C%EB%8F%84-SOLID-%EC%9B%90%EC%B9%99%EC%9D%B4-%ED%86%B5%ED%95%A0%EA%B9%8C#l---lsp--%EB%A6%AC%EC%8A%A4%EC%BD%94%ED%94%84-%EC%B9%98%ED%99%98-%EC%9B%90%EC%B9%99">SOLID 원칙</a>
+
+<br/>
+
+### I (Interface segregation principle / 인터페이스 분리 원칙)
+사실 이 원칙을 보면서 제 코드에서도 조금 분리하면 좋을 것 같다고 생각했던 코드 부분이 있었습니다.
+바로 사용자 입력을 받는 부분이었는데요.
+```js
+class App {
+  async getUserInput(){
+    const input = await Console.readLineAsync(MESSAGE.INPUT);
+    this.userStringInput = input;
+    this.validateInput();
+    this.userInput = [...input].map(Number);
+
+    this.getResult();
+    this.printResult();
+
+    const { strike } = this.gameResults;
+    if(strike === 3) await this.restart();
+    else this.getUserInput();
+  }
+}
+```
+코드를 보면 입력을 받고, 결과를 구하고, 결과를 콘솔에 출력하고 결과에 따라 종료할지 재시작할지에 대한 로직이 모두 담겨있습니다. 물론 구체적인 로직은 모두 모듈화 하여 코드를 나눴지만, 이 코도들을 `play`메서드에 순서대로 넣는게 훨씬 메서드명이나 로직상 옳을 것 같다고 느꼈기 때문입니다.
+
+그래서 아래와 같이 로직 `play` `start` 로직을 구분하여 `getUserInput`에 몰려있는 로직들을 구분하였습니다.
+
+```js
+class App {
+  async play() {
+    Console.print(MESSAGE.START);
+    this.generateRandomNumber();
+    await this.start();
+  }
+
+  async start(){
+    await this.getUserInput();
+    this.validateInput();
+    this.setUserInput();
+    this.getResult();
+    this.printResult();
+
+    const { strike } = this.gameResults;
+    if(strike === 3) await this.wantToReplay();
+    else await this.start();
+  }
+
+  async getUserInput(){
+    const input = await Console.readLineAsync(MESSAGE.INPUT);
+    this.userStringInput = input;
+  }
+
+  setUserInput(){
+    const { userStringInput } = this;
+    this.userInput = [...userStringInput].map(Number);
+  }
+
+  async wantToReplay(){
+    Console.print(MESSAGE.FINISH);
+    Console.print(MESSAGE.RESTART);
+    const input = await Console.readLineAsync('');
+
+    if(input === INPUT.RESTART) await this.play();
+    if(input === INPUT.END) Console.print(MESSAGE.END);
+    if(input !== INPUT.RESTART && input !== INPUT.END) throw new Error(ERROR_MESSAGE.RESTART);
+  }
+}
+```
+메서드명에 맞게 완전히 로직 구분이 더 되었다고 확실히 느끼게 되었습니다.🙂 넘무넘무 신기했어요.
+<br/>
+
+### D (Dependency inversion principle / 의존관계 역전 원칙)
+> 프로그래머는 “추상화에 의존해야지, 구체화에 의존하면 안된다.” 의존성 주입은 이 원칙을 따르는 방법 중 하나다.
+
+이 역시 직관적으로 이해해봅시다. 우리가 전기기구를 사용하기 위해서는 콘센트에 플러그를 꽃는 방법만 알면됩니다. 실제로 전기의 배선을 붙여가며 전기기구를 사용하지 않죠. "전기를 이용하기 위해서는 플러그를 꽃으면 된다."(추상화) 라는 추상화된 방법만 전달을 하고 있다면 플러그에서 실제 전기 배선이 어떻게 되던간에(구체화) 사용자는 관여하지 않아도 됩니다. 우리가 필요한것은 전기이며 실제로 전기를 얻기 위한 구체적인 방법이 아니니까요.
+
+저는 다른 원칙들에 맞게 코드를 수정하면서 제 코드에서 의존관계 역전 원칙도 저절로 적용된 부분을 확인할 수 있었습니다.
+```js
+class App {
+  constructor(){
+    ...
+    this.validate = {
+      isLenThree: (input) => input.length === 3,
+      isInt: (input) => REGEX.test(input),
+      isUnique: (input) => {
+        const uniqueArr = [...new Set([...input])];
+        return input.length === uniqueArr.length;
+      },
+    }
+  }
+
+  validateInput(){
+    const { userStringInput } = this;
+    const { isLenThree, isInt, isUnique } = this.validate;
+
+    if(!isLenThree(userStringInput)) throw new Error(ERROR_MESSAGE.LENGTH);
+    if(!isInt(userStringInput)) throw new Error(ERROR_MESSAGE.INT);
+    if(!isUnique(userStringInput)) throw new Error(ERROR_MESSAGE.UNIQUE);
+  }  
+}
+```
+바로 `validateInput`이었습니다. 그냥 `validateInput()` 메서드를 실행만해도, 검증이 진행되고 있기 때문입니다. 세부 로직은 `this.validate`로 빼놓았기 때문에, 하위 모듈이 어떻게 돌아가는지 판단하지 않고 true, false로 `boolean`값에 따라 에러만 내뱉도록 코드를 적어두었기때문입니다.
+> 추상화하는 방향으로 의존하라. 상위 레벨 모듈이 하위 레벨 세부 사항에 의존해서는 안된다.
+따라서 상위모듈은 하위레벨 세부 사항 로직에 관계 없이 작동하고 있기 때문에 의존관계 역전 원칙을 준수하고 있는 예시가 될 수 있겠다고 생각했습니다.
+
+---
+## 마무리
+과제를 받는 당일은 일정이있어서 다음날부터 과제를 시작해야했다는 점이 조금 아쉽다는 생각도 들기도했고, **짧은 시간 동안 `jest` 라이브러리를 학습**하고, **MVC 패턴에 대해서 다시금 상기**시킬 수 있어서 좋았습니다. 또한 SOLID 원칙은 알고는 있었지만 제대로 알지는 못했어서 이번 기회에 확실히 접해볼 수 있었습니다. SOLID원칙을 제 코드에 반영하면서 **하나의 원칙만 준수되는게 아니라 하나만 준수해도 여러 원칙들이 병행적으로 준수**된다는 사실도 경험할 수 있었습니다.
+
+또한 과제 구현 이후에도, 안주하지않고 리팩토링할 부분을 찾아 스스로 찾아 나가는 과정이 꽤나 재밌었습니다.
+개선점을 꾸준히 찾고 개념, 패턴, 원칙을 공부해 실제로 적용해보았을 때, 정말로 코드의 가독성이나 높아지고 제 자신 스스로 점점 더 모듈화를 할 수 있다는 것이 신기했습니다.
+**저에게 정말로 많은 것을 배울 수 있었던 경험이었다고 확신**합니다. 다음 주차 과제에서도 학습할 거리를 찾으러 가야겠습니다!
+
+## Reference Doc
+<a target="_blank" href="https://velog.io/@teo/Javascript%EC%97%90%EC%84%9C%EB%8F%84-SOLID-%EC%9B%90%EC%B9%99%EC%9D%B4-%ED%86%B5%ED%95%A0%EA%B9%8C#-s---srp--%EB%8B%A8%EC%9D%BC-%EC%B1%85%EC%9E%84-%EC%9B%90%EC%B9%99">Javascript에서도 SOLID 원칙이 통할까?</a>
+<br/>
+<a target="_blank" href="https://velog.io/@yooha9621/nodejavascript-class-%EC%83%9D%EC%84%B1%ED%95%98%EA%B8%B0">[javascript]class 생성 , getter setter 적용하기</a>
+<br/>
+<a target="_blank" href="https://velog.io/@teo/MVI-Architecture">프론트엔드에서 비즈니스 로직과 뷰 로직 분리하기 (feat. MVI 아키텍쳐)</a>
