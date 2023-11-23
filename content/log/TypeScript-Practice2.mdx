@@ -1,0 +1,160 @@
+---
+title: 타입스크립트 제대로 톺아보기 II
+date: 2023-11-23
+category: Log
+tags:
+  - typescript
+thumbnail: https://mir-s3-cdn-cf.behance.net/project_modules/1400_opt_1/05f4db179891059.65018019ebc4a.jpg
+---
+
+## 📌 Partial 구현해보기
+
+```ts
+interface Profile {
+  name: string;
+  age: number;
+  married: boolean;
+}
+
+const daeun: Profile = {
+  name: 'daeun',
+  age: 19,
+  married: false,
+}
+```
+위의 Profile 타입을 가지면 모든 속성을 가져야한다. 하지만 Profile 중 두 개의 속성만 가지고 싶다면?
+
+```ts
+interface Profile {
+  name: string;
+  age: number;
+  married: boolean;
+}
+
+const daeun: Partial<Profile> = {
+  name: 'daeun',
+  age: 19,
+}
+```
+
+위의 `Partial` 타입을 사용하면 가능하다. 그럼 모든 속성이 앞에 `?`가 붙은 것과 같아지는데, 이 `Partial`을 직접 구현해보자.
+
+```ts
+type MyPartial<T> = {
+  [Key in keyof T]?: T[Key];
+}
+```
+
+---
+
+## 📌 Pick 구현해보기
+`Pick`은 객체에서 원하는 프로퍼티만 가져오는 타입입니다.
+
+```ts
+interface Profile {
+  name: string;
+  age: number;
+  married: boolean;
+}
+
+const daeun: Pick<Profile, 'name' | 'age'> = {
+  name: 'daeun',
+  age: 19,
+}
+```
+
+이를 직접 구현한다면?
+
+```ts
+type MyPick<T, U extends keyof T> = {
+  [Key in U]: T[Key];
+}
+```
+
+---
+
+## 📌 Omit, Exclude 구현하기
+`Omit`은 객체에서 원하는 프로퍼티만 제외하고 가져오는 타입입니다.
+
+```ts
+interface Profile {
+  name: string;
+  age: number;
+  married: boolean;
+}
+
+const daeun: Omit<Profile, 'married'> = {
+  name: 'daeun',
+  age: 19,
+}
+```
+
+`Omit`을 직접 구현하기 전에, `Exclude`를 구현할 수 있어야합니다.
+
+타입 T가 "a" | "b" | "c"이고 , U가 "a"라고 생각해보면, "a"를 제외한 타입을 구하는 것이 `Exclude` 입니다.
+직접 구현해보면 아래와 같습니다.
+```ts
+type MyExclude<T, U> = T extends U ? never : T;
+```
+여기서 분배법칙으로 차례대로 검증된다.
+```ts
+/*
+    Set T is "a" | "b" | "c" and U is "a"
+
+    = T extends U ? never : T
+    = ("a" extends "a" ? never : "a") 
+	  | ("b" extends "a" ? never : "b")
+      | ("c" extends "a" ? never : "c")
+    = never | "b" | "c"
+    = "b" | "c"
+*/
+type MyExclude<T, U> = T extends U ? never : T;
+```
+
+`Omit`은 `Pick`과 `Exclude`의 조합입니다. 그렇다면 `Omit`을 구현한다면?
+
+```ts
+type MyOmit<T, U extends keyof any> = Pick<T, Exclude<keyof T, U>>
+```
+여기서 `U extends keyof any`은 객체의 키값으로 올 수 있는 string, number, symbol을 뜻합니다.
+
+---
+
+## 📌 Extract 구현하기
+`Extract`는 말 그대로 값을 추출하는 것입니다.
+```ts
+type Animal = 'Cat' | 'Dog' | 'Human';
+type Human = Extract<Animal, 'Cat' | 'Dog'>;  // 'Cat' | 'Dog';
+```
+
+직접 구현한다면?
+```ts
+type MyExtract<T, U> = T extends U ? T : never;
+```
+위는 분배법칙에 따라서 T가 `Cat | Dog | Human`이므로 하나씩 뜯어서 차례대로 검증된다.
+
+```ts
+'Cat' extends 'Cat' | 'Dog' ? 'Cat' : never;
+'Dog' extends 'Cat' | 'Dog' ? 'Dog' : never;
+'Human' extends 'Cat' | 'Dog' ? 'Human' : never;
+
+type Human = Extract<Animal, 'Cat' | 'Dog'>; // 'Cat' | 'Dog' | never
+// never는 공집합이므로 'Cat' | 'Dog'
+```
+
+## 📌 ReturnType 구현하기
+```ts
+function sum(a: number, b: number): number {
+  return a + b;
+}
+
+type ReturnNum = ReturnType<typeof sum> // number
+```
+
+`ReturnType`은 위와 같이 함수의 리턴타입을 반환해줍니다.
+이를 직접 구현해본다면 아래와 같습니다.
+
+```ts
+type MyReturnType<T> = T extends (...args: any[]) => infer R ? R : any;
+type MyReturnType<T> = T extends (...args: any) => infer R ? R : any;
+```
