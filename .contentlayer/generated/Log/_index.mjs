@@ -11,9 +11,10 @@ import log__jestMdx from './log__Jest.mdx.json' assert { type: 'json' }
 import log__mvcMvpMvvmMdx from './log__MVC-MVP-MVVM.mdx.json' assert { type: 'json' }
 import log__makingBlogWithNextJsMdx from './log__Making-Blog-With-NextJs.mdx.json' assert { type: 'json' }
 import log__makingTableOfContentsMdx from './log__Making-Table-Of-Contents.mdx.json' assert { type: 'json' }
-import log__multiProcessMultiThreadMdx from './log__MultiProcess-MultiThread.mdx.json' assert { type: 'json' }
+import log__multiProcessMultiThreadsMdx from './log__MultiProcess-MultiThreads.mdx.json' assert { type: 'json' }
 import log__nextjsSsrSsgMdx from './log__Nextjs-SSR-SSG.mdx.json' assert { type: 'json' }
-import log__processThreadMdx from './log__Process-Thread.mdx.json' assert { type: 'json' }
+import log__processThreadIMdx from './log__Process-Thread-I.mdx.json' assert { type: 'json' }
+import log__processThreadIiMdx from './log__Process-Thread-II.mdx.json' assert { type: 'json' }
 import log__programmersBruteForceMdx from './log__Programmers-Brute-Force.mdx.json' assert { type: 'json' }
 import log__replaceMethodMdx from './log__Replace-Method.mdx.json' assert { type: 'json' }
 import log__stackAndHeapMdx from './log__Stack-and-Heap.mdx.json' assert { type: 'json' }
@@ -22,4 +23,4 @@ import log__typeScriptPractice2Mdx from './log__TypeScript-Practice2.mdx.json' a
 import log__wootecoPrecourse1Mdx from './log__Wooteco-Precourse1.mdx.json' assert { type: 'json' }
 import log__wootecoPrecourse2Mdx from './log__Wooteco-Precourse2.mdx.json' assert { type: 'json' }
 
-export const allLogs = [log__dataBindingMdx, log__debounceThrottleMdx, log__eventLoopQueueMdx, log__fluxMdx, log__generateStaticParamsMdx, log__hashMdx, log__inputRefTypeScriptMdx, log__jestMdx, log__mvcMvpMvvmMdx, log__makingBlogWithNextJsMdx, log__makingTableOfContentsMdx, log__multiProcessMultiThreadMdx, log__nextjsSsrSsgMdx, log__processThreadMdx, log__programmersBruteForceMdx, log__replaceMethodMdx, log__stackAndHeapMdx, log__typeScriptPractice1Mdx, log__typeScriptPractice2Mdx, log__wootecoPrecourse1Mdx, log__wootecoPrecourse2Mdx]
+export const allLogs = [log__dataBindingMdx, log__debounceThrottleMdx, log__eventLoopQueueMdx, log__fluxMdx, log__generateStaticParamsMdx, log__hashMdx, log__inputRefTypeScriptMdx, log__jestMdx, log__mvcMvpMvvmMdx, log__makingBlogWithNextJsMdx, log__makingTableOfContentsMdx, log__multiProcessMultiThreadsMdx, log__nextjsSsrSsgMdx, log__processThreadIMdx, log__processThreadIiMdx, log__programmersBruteForceMdx, log__replaceMethodMdx, log__stackAndHeapMdx, log__typeScriptPractice1Mdx, log__typeScriptPractice2Mdx, log__wootecoPrecourse1Mdx, log__wootecoPrecourse2Mdx]
