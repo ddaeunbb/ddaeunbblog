@@ -22,7 +22,8 @@ import log__typeEqaulMdx from './log__Type-Eqaul.mdx.json' assert { type: 'json'
 import log__typeScriptPractice1Mdx from './log__TypeScript-Practice1.mdx.json' assert { type: 'json' }
 import log__typeScriptPractice2Mdx from './log__TypeScript-Practice2.mdx.json' assert { type: 'json' }
 import log__typeScriptPractice3Mdx from './log__TypeScript-Practice3.mdx.json' assert { type: 'json' }
+import log__typeScriptPractice4Mdx from './log__TypeScript-Practice4.mdx.json' assert { type: 'json' }
 import log__wootecoPrecourse1Mdx from './log__Wooteco-Precourse1.mdx.json' assert { type: 'json' }
 import log__wootecoPrecourse2Mdx from './log__Wooteco-Precourse2.mdx.json' assert { type: 'json' }
 
-export const allLogs = [log__dataBindingMdx, log__debounceThrottleMdx, log__eventLoopQueueMdx, log__fluxMdx, log__generateStaticParamsMdx, log__hashMdx, log__inputRefTypeScriptMdx, log__jestMdx, log__mvcMvpMvvmMdx, log__makingBlogWithNextJsMdx, log__makingTableOfContentsMdx, log__multiProcessMultiThreadsMdx, log__nextjsSsrSsgMdx, log__processThreadIMdx, log__processThreadIiMdx, log__programmersBruteForceMdx, log__replaceMethodMdx, log__stackAndHeapMdx, log__typeEqaulMdx, log__typeScriptPractice1Mdx, log__typeScriptPractice2Mdx, log__typeScriptPractice3Mdx, log__wootecoPrecourse1Mdx, log__wootecoPrecourse2Mdx]
+export const allLogs = [log__dataBindingMdx, log__debounceThrottleMdx, log__eventLoopQueueMdx, log__fluxMdx, log__generateStaticParamsMdx, log__hashMdx, log__inputRefTypeScriptMdx, log__jestMdx, log__mvcMvpMvvmMdx, log__makingBlogWithNextJsMdx, log__makingTableOfContentsMdx, log__multiProcessMultiThreadsMdx, log__nextjsSsrSsgMdx, log__processThreadIMdx, log__processThreadIiMdx, log__programmersBruteForceMdx, log__replaceMethodMdx, log__stackAndHeapMdx, log__typeEqaulMdx, log__typeScriptPractice1Mdx, log__typeScriptPractice2Mdx, log__typeScriptPractice3Mdx, log__typeScriptPractice4Mdx, log__wootecoPrecourse1Mdx, log__wootecoPrecourse2Mdx]
