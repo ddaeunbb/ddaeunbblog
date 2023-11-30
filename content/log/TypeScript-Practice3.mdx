@@ -1,0 +1,227 @@
+---
+title: 타입스크립트 제대로 톺아보기 III
+date: 2023-11-27
+category: Log
+tags:
+  - typescript
+  - axios
+thumbnail: https://mir-s3-cdn-cf.behance.net/project_modules/1400_opt_1/05f4db179891059.65018019ebc4a.jpg
+---
+
+오늘은 axios 라이브러리의 타입을 열어보고 직접 구현해볼까 합니다.🧐
+axios 라이브러리는 보통 아래와 같이 사용합니다.
+
+```js
+import axios from 'axios';
+
+const getData = async () => {
+  const response = await axios.get('https://jsonplaceholder.typicode.com/posts/1');
+  return response;
+}
+```
+이때 `axios`는 뭘까요?
+
+```ts
+export interface AxiosStatic extends AxiosInstance {
+  create(config?: CreateAxiosDefaults): AxiosInstance;
+  Cancel: CancelStatic;
+  CancelToken: CancelTokenStatic;
+  Axios: typeof Axios;
+  AxiosError: typeof AxiosError;
+  HttpStatusCode: typeof HttpStatusCode;
+  readonly VERSION: string;
+  isCancel: typeof isCancel;
+  all: typeof all;
+  spread: typeof spread;
+  isAxiosError: typeof isAxiosError;
+  toFormData: typeof toFormData;
+  formToJSON: typeof formToJSON;
+  getAdapter: typeof getAdapter;
+  CanceledError: typeof CanceledError;
+  AxiosHeaders: typeof AxiosHeaders;
+}
+
+declare const axios: AxiosStatic;
+```
+`index.d.ts`에서 `axios`는 `AxiosStatic`이라고 엠비언트 선언을 해두었는데요, 이때 `AxiosStactic`을 보면 `AxiosInstance`를 상속하는 객체로 타입이 정의되어 있습니다. 이때 `AxiosInstance를 따라가보면` 아래와 같습니다.
+
+```ts
+export interface AxiosInstance extends Axios {
+  <T = any, R = AxiosResponse<T>, D = any>(config: AxiosRequestConfig<D>): Promise<R>;
+  <T = any, R = AxiosResponse<T>, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R>;
+
+  defaults: Omit<AxiosDefaults, 'headers'> & {
+    headers: HeadersDefaults & {
+      [key: string]: AxiosHeaderValue
+    }
+  };
+}
+```
+`AxiosInstance`는 함수로 정의되어있습니다. `AxiosInstance`는 아래와 같이 `axios`를 사용할 때의 타입을 정의해두었네요.
+
+```ts
+axios('https://jsonplaceholder.typicode.com/posts/1', {
+  method: 'GET',
+  ...
+})
+
+axios({
+  url: 'https://jsonplaceholder.typicode.com/posts/1',
+  method: 'GET',
+  ...
+})
+```
+
+그럼 `AxiosInstance`가 상속하는 `Axios`는 뭘까요?
+
+```ts
+export class Axios {
+  constructor(config?: AxiosRequestConfig);
+  defaults: AxiosDefaults;
+  interceptors: {
+    request: AxiosInterceptorManager<InternalAxiosRequestConfig>;
+    response: AxiosInterceptorManager<AxiosResponse>;
+  };
+  get<T = any, R = AxiosResponse<T>, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R>;
+  delete<T = any, R = AxiosResponse<T>, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R>;
+  head<T = any, R = AxiosResponse<T>, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R>;
+  options<T = any, R = AxiosResponse<T>, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R>;
+  post<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<R>;
+  ...
+}
+```
+`Axios` 는 클래스였네요! 그래서 아래와 같은 방식으로 axios를 사용할 때의 타입이 정의되어있습니다.
+
+```ts
+axios.get('https://jsonplaceholder.typicode.com/posts/1')
+```
+따라서 어떤 방식으로 axios를 사용하든, 알아서 타입이 불러와 사용할 수 있는 것을 알 수 있습니다.
+먼저 `get`을 사용하는 경우, 제네릭 타입을 어떻게 넣는게 맞는지 확인해보겠습니다.
+
+---
+
+## 📌 get, post, ... 사용해보기
+```ts
+const getData = async () => {
+  const response = await axios.get('https://jsonplaceholder.typicode.com/posts/1');
+  return response;
+}
+
+// const response: AxiosResponse<any, any>
+```
+위와 같이 axios로 데이터를 불러온다면, 이때 `AxiosResponse`는 any타입으로 지정된 것을 IDE에서 확인할 수 있습니다.
+
+```ts
+export interface AxiosResponse<T = any, D = any> {
+  data: T;
+  status: number;
+  statusText: string;
+  headers: RawAxiosResponseHeaders | AxiosResponseHeaders;
+  config: InternalAxiosRequestConfig<D>;
+  request?: any;
+}
+```
+`AxiosResponse`의 제네릭 T는 데이터의 타입을 지정하게 되고, D같은 경우에는 axios 설정 객체의 타입을 지정하게 됩니다.
+따라서 아래와 같이 설정한다면, any를 제거할 수 있습니다.
+
+```ts
+interface MyData {
+  userId: number;
+  id: number;
+  title: string;
+  body: string;
+}
+
+// get<T = any, R = AxiosResponse<T>, D = any>(url: string, config?: AxiosRequestConfig<D>): Promise<R>;
+const getData = async () => {
+  const response = await axios.get<Data>('https://jsonplaceholder.typicode.com/posts/1');
+  return response;
+}
+// const response: AxiosResponse<MyData, any>
+```
+
+그럼 post 메서드를 사용하는 경우도 열어보겠습니다.
+
+```ts
+// post<T = any, R = AxiosResponse<T>, D = any>(url: string, data?: D, config?: AxiosRequestConfig<D>): Promise<R>;
+const postData = async () => {
+  const response = await axios.post('https://jsonplaceholder.typicode.com/posts/1', {
+      title: 'foo',
+      body: 'bar',
+      userId: 1,
+    });
+  return response;
+}
+// const response: AxiosResponse<any, any>
+```
+
+이때 `post` 타입을 열어보았을 때, `D`제네릭에 필요한 interface도 필요하므로 채워줍니다.
+
+```ts
+interface PostResponse {}
+
+interface MyPayload {
+  title: string;
+  body: string;
+  userId: number;
+}
+
+const postData = async () => {
+  const response = await axios.post<PostResponse, AxiosResponse<PostResponse>, MyPayload>('https://jsonplaceholder.typicode.com/posts/1', {
+      title: 'foo',
+      body: 'bar',
+      userId: 1,
+    });
+  return response;
+}
+```
+응답은 어떻게 올지 모르기때문에 위와 같이 설정해주었습니다.
+만약 post를 아래와 같이 사용한다면 어떨까요?
+
+```ts
+const postData2 = async () => {
+  const response = await axios({
+    url: 'https://jsonplaceholder.typicode.com/posts/1',
+    method: 'post',
+    data: {
+      title: 'foo',
+      body: 'bar',
+      userId: 1,
+    }
+  });
+  return response;
+}
+
+// <T = any, R = AxiosResponse<T>, D = any>(config: AxiosRequestConfig<D>): Promise<R>;
+```
+이때 타입은 `AxiosInstance`에 있는 함수로 타입이 지정됩니다.
+
+---
+
+## 📌 axios 에러처리하기
+
+타입스크립트에서 `error` 객체는 `unknown` 타입으로 처리 되기때문에 에러타입에 따른 분기처리를 추후에 꼭 해주어야합니다.
+
+```ts
+(async () => {
+  try {
+    const response = await myAxios.get<Post, AxiosResponse<Post>>('https://jsonplaceholder.typicode.com/posts/1');
+  }
+  catch (error) {
+    if(axios.isAxiosError(error)) { // 커스텀 타입가드
+      // { message: '서버 장애입니다. 다시 시도해주세요.' }
+      console.error((error.response as AxiosResponse<{ message: string}>)?.data.message);
+    }
+    const errorResponse = (error as AxiosError).response;
+    console.log(errorResponse?.data);
+  }
+})()
+```
+실제 `axios`에서는 `isAxiosError` 메서드를 제공해주고 있기 때문에, `instanceof` 인지, if문 처리를 통해 타입가드로 좁혀 활용해서 에러를 처리해주어야합니다.
+
+이외에도 타입스크립트는 바보가 될때가 가끔 있기 때문에, instanceof로 타입을 좁혀도, 에러가 생길때가 있습니다.
+타입스크립트에서의 인터페이스와 클래스의 차이는, 컴파일 과정을 거친후 js 파일에 코드가 남냐 안남느냐의 차이가 있기 때문인데요, 
+따라서 이때는 타입 단언을 해주어야한다고 합니다!
+
+아래에서 더 자세하게 커스텀 Error 처리하는 방법을 확인하실 수 있습니다.
+[타입스크립트 커스텀 Error 처리하기](https://inpa.tistory.com/entry/TS-%F0%9F%93%98-%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EC%BB%A4%EC%8A%A4%ED%85%80-Error-%EC%B2%98%EB%A6%AC%ED%95%98%EA%B8%B0)
