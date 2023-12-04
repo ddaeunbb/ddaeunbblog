@@ -1,7 +1,9 @@
+import { SERIES_EN } from '@/router/path';
 import { sortDocsFromRecent } from '@/lib/getPagefn';
 import { allLogs } from 'contentlayer/generated';
 import RenderAnimation from '@/framer/RenderAnimation';
 import PostListItem from '@/components/postListItem/PostListItem';
+import SeriesBox from '@/components/seriesBox/SeriesBox';
 
 export default function Log() {
 	const sortedLogs = sortDocsFromRecent(allLogs);
@@ -25,6 +27,20 @@ export default function Log() {
 						재밌는건 🐤 도장
 					</p>
 				</div>
+
+				<hr />
+				<section className="my-6">
+					<h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl dark:text-yellow-300">
+						series
+					</h2>
+
+					<div className="flex gap-x-3 gap-y-3 mt-4 flex-wrap">
+						{SERIES_EN.map(series => (
+							<SeriesBox key={series} title={series} />
+						))}
+					</div>
+				</section>
+				<hr />
 
 				<div className="mt-12 grid w-full gap-5 lg:grid-cols-3 lg:gap-6 lg:gap-y-8">
 					{sortedLogs.map(log => (

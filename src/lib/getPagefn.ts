@@ -3,6 +3,7 @@ import { Log, Articles } from 'contentlayer/generated';
 
 type AllType = Log[] | Articles[];
 type PartType = Log[] | Articles[] | (Log | Articles)[];
+type LogType = Log[];
 
 export function getLogFromParams(all: AllType, slug: string) {
 	const posting = all.find(doc => doc.slugAsParams === slug);
@@ -16,6 +17,10 @@ export function getFromReadingTime(all: AllType, slug: string) {
 
 	if (!posting) notFound();
 	return posting.readingTime.text.slice(0, -8).trim();
+}
+
+export function getSeriesFromLogs(log: LogType, title: string) {
+	return log.filter(doc => doc.title.includes(title));
 }
 
 export function sortDocsFromRecent(all: PartType) {
