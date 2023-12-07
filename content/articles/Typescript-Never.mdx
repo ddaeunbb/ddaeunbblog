@@ -226,7 +226,7 @@ const CatList: MyOmit<Cat, 'kind'> = {
 ```ts
 type IsNever<T> = T extends never ? true : false
 type Res = IsNever<never> // never
-``
+```
 `Res`는 true 일까요, 아님 false 일까요? 실제로 Res의 타입이 `never`임에도, 값은 `never`입니다.
 
 - **왜 never가 될까?**
