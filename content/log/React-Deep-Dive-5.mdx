@@ -191,3 +191,45 @@ function ChildC() {
 리액트가 `Parent`를 렌더링 할 때마다 이전 `contextValue`와 다른 참조 값을 갖는 새로운 `contextValue`를 생성하게 됩니다. 결과적으로 `context consumer`인 `ChildC`는 다른 `context value`를 갖게 되며, 리액트는 변경 사항을 반영하기 위해 `ChildC`를 리렌더링 합니다.
 
 만약 `contextValue`가 숫자나 문자열 같은 원시 값이면 리렌더링 시 동등성이 변경되지 않기 때문에 `ChildC`가 리렌더링 되지 않는다는 것에 주의하세요. (지금은 객체를 사용하였기 때문에, 참조 값이 달라 렌더링 되는 것 입니다.)
+<br/>
+
+## 📌 props는 매 랜더링 마다 새로 생성되는가?
+이전에 리액트 스터디에서 리액트는 `Object.is`와 내부적으로 구현되는 `shallow`한 비교를 통해서 렌더링 할지말지에 대한 비교를 한다는 내용이 나온적이 있습니다. 의존성 배열이나 `props`를 비교할 때 사용한다고 하는데요, 그때 스터디에서도 그럼 매 렌더링때마다 새로운 props를 만드는 것인가? 에 대한 의문이 있었습니다.
+
+결론적으로 이는 **맞다.**인데요. 아래를 보면 더 쉽게 이해할 수 있습니다.
+
+책 초반에서도 알 수 있듯이 리턴문에있는 `jsx`문법은 `React.createElement`를 사용해 리액트 엘리먼트를 생성하게 됩니다. 그리고 추후 단계에서 리액트 엘리먼트가 fiber로 변경되게 되는데요.
+이때 리액트 엘리먼트는 매번 새로 생성되지만, `fiber`같은 경우는 재사용될 수 있습니다.
+- 순서 : jsx > react.element > fiber
+
+결론적으로 컴포넌트의 props는 `React.createElement`에서 생성한 `ReactElement`의 속성입니다. `ReactElement는` 불변이므로 리액트가 컴포넌트를 렌더링(호출) 할 때마다 `React.createElement`가 호출되어 새 `ReactElement`가 생성됩니다. **따라서 컴포넌트의 `props`는 리렌더링할 때마다 처음부터 생성됩니다.**
+
+```jsx
+function Parent() {
+  return (
+    <div>
+      <Child />
+    </div>
+  );
+}
+```
+`Parent`에서 반환된 `<Child />`는 Babel에 의해 `React.createElement(Child, null)`로 컴파일되고 `{type: Child, props: {}}` 이러한 형태의 `ReactElement`가 생성됩니다. props는 자바스크립트 객체이기 때문에, 이전 `props`와 현재 `props`를 비교하게 되는데요, **이때 `Object.is`와 `shallow`한 비교가 도입되어 비교됩니다.** 따라서 참조값이 다르기때문에 달라졌다고 판단하게 됩니다.
+
+만약 `Parent`가 렌더링되면, `Child`가 자식이기 때문에 렌더링되겠죠? 추가적으로도 매번 새로운 `ReactElement`를 생성하게 되기때문에, 매번 다른 `props`의 참조값을 가져, 리렌더링 되게 됩니다. 즉, 렌더링되는 이유가 2가지로 할 수 있겠어욥.
+
+하지만 만약 Child를 Parent의 props로 전달할 수 있다면 어떻게 될까요?
+```jsx
+function App() {
+  return (
+    <Parent>
+      <Child />
+    </Parent>
+  );
+}
+
+function Parent({ children }) {
+  return <div>{children}</div>;
+}
+```
+리액트에 의해 `Parent`가 렌더링 될 때 `Child`에 대한 `React.createElement` 함수가 호출되지 않습니다. 따라서 `Child`의 새로운 `props`가 생성되지 않고, 이는 위에서 언급한 네 가지 렌더링 제외 기준을 모두 충족시킵니다.
+

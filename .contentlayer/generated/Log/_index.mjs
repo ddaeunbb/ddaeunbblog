@@ -6,6 +6,7 @@ import log__eventLoopQueueMdx from './log__EventLoop-Queue.mdx.json' assert { ty
 import log__fluxMdx from './log__FLUX.mdx.json' assert { type: 'json' }
 import log__generateStaticParamsMdx from './log__Generate-Static-Params.mdx.json' assert { type: 'json' }
 import log__hashMdx from './log__Hash.mdx.json' assert { type: 'json' }
+import log__heapPriorityQueueMdx from './log__Heap-PriorityQueue.mdx.json' assert { type: 'json' }
 import log__inputRefTypeScriptMdx from './log__Input-Ref-TypeScript.mdx.json' assert { type: 'json' }
 import log__jestMdx from './log__Jest.mdx.json' assert { type: 'json' }
 import log__mvcMvpMvvmMdx from './log__MVC-MVP-MVVM.mdx.json' assert { type: 'json' }
@@ -32,4 +33,4 @@ import log__typeScriptPractice4Mdx from './log__TypeScript-Practice4.mdx.json' a
 import log__wootecoPrecourse1Mdx from './log__Wooteco-Precourse1.mdx.json' assert { type: 'json' }
 import log__wootecoPrecourse2Mdx from './log__Wooteco-Precourse2.mdx.json' assert { type: 'json' }
 
-export const allLogs = [log__dataBindingMdx, log__debounceThrottleMdx, log__eventLoopQueueMdx, log__fluxMdx, log__generateStaticParamsMdx, log__hashMdx, log__inputRefTypeScriptMdx, log__jestMdx, log__mvcMvpMvvmMdx, log__makingBlogWithNextJsMdx, log__makingTableOfContentsMdx, log__multiProcessMultiThreadsMdx, log__nextjsSsrSsgMdx, log__processThreadIMdx, log__processThreadIiMdx, log__programmersBruteForce_2Mdx, log__programmersBruteForceMdx, log__reactDeepDive_1Mdx, log__reactDeepDive_2Mdx, log__reactDeepDive_3Mdx, log__reactDeepDive_4Mdx, log__reactDeepDive_5Mdx, log__replaceMethodMdx, log__stackAndHeapMdx, log__typeEqaulMdx, log__typeScriptPractice1Mdx, log__typeScriptPractice2Mdx, log__typeScriptPractice3Mdx, log__typeScriptPractice4Mdx, log__wootecoPrecourse1Mdx, log__wootecoPrecourse2Mdx]
+export const allLogs = [log__dataBindingMdx, log__debounceThrottleMdx, log__eventLoopQueueMdx, log__fluxMdx, log__generateStaticParamsMdx, log__hashMdx, log__heapPriorityQueueMdx, log__inputRefTypeScriptMdx, log__jestMdx, log__mvcMvpMvvmMdx, log__makingBlogWithNextJsMdx, log__makingTableOfContentsMdx, log__multiProcessMultiThreadsMdx, log__nextjsSsrSsgMdx, log__processThreadIMdx, log__processThreadIiMdx, log__programmersBruteForce_2Mdx, log__programmersBruteForceMdx, log__reactDeepDive_1Mdx, log__reactDeepDive_2Mdx, log__reactDeepDive_3Mdx, log__reactDeepDive_4Mdx, log__reactDeepDive_5Mdx, log__replaceMethodMdx, log__stackAndHeapMdx, log__typeEqaulMdx, log__typeScriptPractice1Mdx, log__typeScriptPractice2Mdx, log__typeScriptPractice3Mdx, log__typeScriptPractice4Mdx, log__wootecoPrecourse1Mdx, log__wootecoPrecourse2Mdx]
