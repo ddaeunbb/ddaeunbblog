@@ -51,10 +51,9 @@ Min Heap 은 위의 두 가지 규칙 덕분에 항상 최상위 부모 노드�
 
 힙을 배열로 구현하기때문에, 요소를 삭제하기 위해서는 항상 맨앞에있는 루트 노드 부터 삭제하게 됩니다. 그리고 맨 앞에있는 요소 항상 루트노드입니다. 그리고 삽입을 하는 과정은 두 가지가 있습니다.
 
+JS로 구현하면 아래와 같습니다.
 
-구현하면 아래와 같습니다.
-
-```JS로
+```js
 class MinHeap {
   constructor() {
     this.heap = [];
@@ -115,4 +114,86 @@ class MinHeap {
 }
 ```
 
-나중에 `heapifyUp`과 `heapifyDown`을 조금 추가적으로 구현해봐야겠네요..
+추가적으로 로직을 분리하여 외운 코드는 아래와 같습니다.
+
+```js
+class MinHeap {
+  constructor() {
+    this.heap = [];
+  }
+
+  size() {
+    return this.heap.length;
+  }
+
+  swap(index1, index2) {
+    [this.heap[index1], this.heap[index2]] = [this.heap[index2], this.heap[index1]];
+  }
+
+  getLeftIdx(parentIdx) {
+    return parentIdx * 2  + 1;
+  }
+
+  getRightIdx(parentIdx) {
+    return parentIdx * 2 + 2;
+  }
+
+  getParentIdx(childIdx) {
+    return Math.floor((childIdx - 1) / 2);
+  }
+
+  add(value) {
+    this.heap.push(value);
+    this.bubbleUp();
+  }
+
+  pop() {
+    if(this.heap.length === 0) return null;
+    if(this.heap.length === 1) return this.heap.pop();
+
+    const rootNode = this.heap[0];
+    this.heap[0] = this.heap.pop();
+    this.bubbleDown();
+
+    return rootNode;
+  }
+
+  bubbleUp() {
+    let idx = this.heap.length - 1;
+    let parentIdx = this.getParentIdx(idx);
+
+    while
+    (
+      this.heap[parentIdx] &&
+      this.heap[parentIdx] > this.heap[idx]
+    ) {
+      this.swap(parentIdx, idx);
+      idx = parentIdx;
+      parentIdx = this.getParentIdx(idx);
+    }
+  }
+
+  bubbleDown() {
+    let idx = 0;
+    let leftIdx = this.getLeftIdx(idx);
+    let rightIdx = this.getRightIdx(idx);
+
+    while(
+      (this.heap[leftIdx] && this.heap[leftIdx] > this.heap[idx]) ||
+      (this.heap[rightIdx] && this.heap[rightIdx] > this.heap[idx])
+    ) {
+      let smallerIdx;
+      if(this.heap[rightIdx] && this.heap[rightIdx] > this.heap[leftIdx]){
+        smallerIdx = leftIdx;
+      } else smallerIdx = rightIdx;
+
+      this.swap(idx, smallerIdx);
+      idx = smallerIdx;
+      leftIdx = this.getLeftIdx(idx);
+      rightIdx = this.getRightIdx(idx);
+    }
+  }
+}
+```
+
+완벽하게 다 외웠다..! 🥺🥺🥺
