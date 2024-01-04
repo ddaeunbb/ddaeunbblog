@@ -32,6 +32,14 @@ export function sortDocsFromRecent(all: PartType) {
 	return copy;
 }
 
+export function sortDocsFromYear(all: PartType) {
+	const fromRecent = sortDocsFromRecent(all);
+	const year2024 = fromRecent.filter(el => el.date.includes('2024'));
+	const year2023 = fromRecent.filter(el => el.date.includes('2023'));
+
+	return [year2024, year2023];
+}
+
 export function sortBasedOnSlug(all: PartType, slug: string) {
 	const copy = [...all].filter(doc => {
 		if (doc.tags) return doc.tags?.includes(slug);
