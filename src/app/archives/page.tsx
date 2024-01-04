@@ -2,7 +2,7 @@ import SearchIcon from '@/components/icons/SearchIcon';
 import Link from 'next/link';
 import { allLogs, allArticles, Articles, Log } from 'contentlayer/generated';
 import RenderAnimation from '@/framer/RenderAnimation';
-import { sortDocsFromRecent } from '@/lib/getPagefn';
+import { sortDocsFromRecent, sortDocsFromYear } from '@/lib/getPagefn';
 
 function getTotalTags(logs: Log[], articles: Articles[]) {
 	const total = [...logs, ...articles];
@@ -17,7 +17,7 @@ function getTotalTags(logs: Log[], articles: Articles[]) {
 
 export default function Archives() {
 	const tags = getTotalTags(allLogs, allArticles);
-	const sortedLogs = sortDocsFromRecent(allLogs);
+	const [year2024, year2023] = sortDocsFromYear(allLogs);
 	const sortedArticles = sortDocsFromRecent(allArticles);
 
 	return (
@@ -67,12 +67,33 @@ export default function Archives() {
 							Logs
 						</h2>
 						<div className="mt-4">
-							<div className="text-lg font-bold dark:text-neutral-400">
-								2023
-								<span className="ml-1 text-sm">{`(${allLogs.length})`}</span>
+							<div className="text-lg font-bold dark:text-neutral-400 mt-4">
+								2024
+								<span className="ml-1 text-sm">{`(${year2024.length})`}</span>
 							</div>
 							<ul>
-								{sortedLogs.map(log => (
+								{year2024.map(log => (
+									<li key={log.title}>
+										<Link
+											href={log.slug}
+											className="text-neutral-600 transition hover:text-basicFont dark:text-neutral-500 dark:hover:text-yellow-300"
+										>
+											<div className="flex items-end gap-1">
+												<span className="mb-0.5 w-8 text-xs">
+													{log.date.slice(5, 10).replace(/-/g, '.')}
+												</span>
+												<span>{log.title}</span>
+											</div>
+										</Link>
+									</li>
+								))}
+							</ul>
+							<div className="text-lg font-bold dark:text-neutral-400 mt-4">
+								2023
+								<span className="ml-1 text-sm">{`(${year2023.length})`}</span>
+							</div>
+							<ul>
+								{year2023.map(log => (
 									<li key={log.title}>
 										<Link
 											href={log.slug}
